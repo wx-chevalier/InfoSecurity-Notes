@@ -1,5 +1,3 @@
-
-
 # Web 应用安全基础
 
 ![](https://coding.net/u/hoteam/p/Cache/git/raw/master/2017/1/2/175360_bbd6_5.jpg)

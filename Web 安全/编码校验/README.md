@@ -259,11 +259,11 @@ Strict-Transport-Security: max-age=15768000
 # HTTP 响应设置
 
 ```js
-const express = require('express');
+const express = require("express");
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send(`<h1>Hello World</h1>`);
 });
 
