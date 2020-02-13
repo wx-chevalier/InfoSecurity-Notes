@@ -34,7 +34,7 @@ PKCS#7 常用的后缀是: .P7B .P7C .SPC PKCS#12 常用的后缀有: .P12 .PFX 
 
 特点 : 1、p7b 以树状展示证书链，不含私钥 2、p7r 为 CA 对证书请求签名的回复，只能用于导入
 
-格式 : CMS 扩展名 : .p7c/.p7m/.p7s 描述 : 【Cryptographic Message Syntax 】 特点 : 1、p7c 只保存证书 2、p7m : signature with enveloped data 3、p7s ：时间戳签名文件
+格式 : CMS 扩展名 : .p7c/.p7m/.p7s 描述 : 【Cryptographic Message Syntax 】 特点 : 1、p7c 只保存证书 2、p7m : signature with enveloped data 3、p7s：时间戳签名文件
 
 格式 : PEM 扩展名 : .pem 描述 : 【Printable Encoded Message 】 特点 : 1、该编码格式在 RFC1421 中定义，其实 PEM 是【Privacy-Enhanced Mail 】的简写，但他也同样广泛运用于密钥管理 2、ASCII 文件 3、一般基于 base 64 编码 4. Apache 用到的 CA 证书链就是 PEM 格式 , 它实际上可保存普通多个 X509 证书 (.cer), 将每个证书简单加在一起就可以了
 
