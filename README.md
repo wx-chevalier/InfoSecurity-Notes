@@ -16,14 +16,14 @@
   <p align="center">
     信息安全与渗透测试
     <br />
-    <a href="https://github.com/wx-chevalier/InfoSecurity-Series"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/wx-chevalier/InfoSecurity-Series"><strong>在线阅读</strong></a>
     <br />
     <br />
-    <a href="https://github.com/wx-chevalier/InfoSecurity-Series">View Demo</a>
+    <a href="https://github.com/wx-chevalier/InfoSecurity-Series">速览手册</a>
     ·
     <a href="https://github.com/wx-chevalier/InfoSecurity-Series/issues">InfoSecurity-Seriesrt Bug</a>
     ·
-    <a href="https://github.com/wx-chevalier/InfoSecurity-Series/issues">Request Feature</a>
+    <a href="https://github.com/wx-chevalier/InfoSecurity-Series/issues">参考资料</a>
   </p>
 </p>
 
