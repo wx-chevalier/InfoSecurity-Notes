@@ -10,8 +10,6 @@ CSRF(Cross-Site Request Forgery，跨站点伪造请求)是一种网络攻击方
 
 CSRF (Cross-site request forgery)，中文名称：跨站请求伪造，也被称为：one click attack/session riding，缩写为：CSRF/XSRF。CSRF 与 XSS 在攻击手段上有点类似，都是在客户端执行恶意代码，有些文章中认为 CSRF 与 XSS 的区别在于 CSRF 不注重于获取用户 Cookie，笔者认为可能还有区别在于 CSRF 不仅可以在源站发起攻击，还可以引导用户访问其他危险网站的同时发起攻击。XSS 全程是跨站脚本攻击，即攻击者向某个 Web 页面中插入恶意的 JavaScript 脚本，而当普通用户访问时，该恶意脚本自动执行而从盗取用户的 Cookie 等信息。对于 XSS 的防御手段主要就是输入检查与输出检查，譬如对用户输入的文本框内容进行 <、> 这样的特殊字符检查。而输出检查则是指对于输出到网页的内容进行过滤或者编解码，譬如使用 HTML 编码将 < 转义。CSRF 为跨站请求伪造，其与 XSS 有点类似，不过区别在于 CSRF 不一定依赖于 JavaScript，并且不仅可以在源站发起攻击，还有可能当用户访问恶意网站时引导其访问原网站。CSRF 攻击是源于 WEB 的隐式身份验证机制，WEB 的身份验证机制虽然可以保证一个请求是来自于某个用户的浏览器，但却无法保证该请求是用户批准发送的。对于 CSRF 的防御也分为服务端防御与客户端防御两种，服务端防御典型的譬如给某个页面添加随机数，使得无法从第三方页面直接提交。在客户端防御的话可以利用譬如 Firefox 提供的一些检查工具。注意，CSRF 并没有打破同源策略。
 
-![](https://coding.net/u/hoteam/p/Cache/git/raw/master/2016/8/1/ED00B51D-6854-4B92-9416-AC108B3FF2A1.png)
-
 以下面的这个例子来说：银行网站 A，它以 GET 请求来完成银行转账的操作，如：`http://www.mybank.com/Transfer.php?toBankId=11&money=1000`危险网站 B，它里面有一段 HTML 的代码如下：
 
 ```
