@@ -8,7 +8,7 @@ PKCS#7 常用的后缀是: .P7B .P7C .SPC PKCS#12 常用的后缀有: .P12 .PFX 
 
 一 用 openssl 创建 CA 证书的 RSA 密钥 (PEM 格式 ): openssl genrsa -des3 -out ca.key 1024
 
-二用 openssl 创建 CA 证书 (PEM 格式 , 假如有效期为一年 ): openssl req -new -x509 -days 365 -key ca.key -out ca.crt -config openssl.cnf openssl 是可以生成 DER 格式的 CA 证书的，最好用 IE 将 PEM 格式的 CA 证书转换成 DER 格式的 CA 证书。
+二用 openssl 创建 CA 证书 (PEM 格式, 假如有效期为一年 ): openssl req -new -x509 -days 365 -key ca.key -out ca.crt -config openssl.cnf openssl 是可以生成 DER 格式的 CA 证书的，最好用 IE 将 PEM 格式的 CA 证书转换成 DER 格式的 CA 证书。
 
 三 x509 到 pfx pkcs12 -export –in keys/client1.crt -inkey keys/client1.key -out keys/client1.pfx
 
@@ -36,7 +36,7 @@ PKCS#7 常用的后缀是: .P7B .P7C .SPC PKCS#12 常用的后缀有: .P12 .PFX 
 
 格式 : CMS 扩展名 : .p7c/.p7m/.p7s 描述 : 【Cryptographic Message Syntax 】 特点 : 1、p7c 只保存证书 2、p7m : signature with enveloped data 3、p7s：时间戳签名文件
 
-格式 : PEM 扩展名 : .pem 描述 : 【Printable Encoded Message 】 特点 : 1、该编码格式在 RFC1421 中定义，其实 PEM 是【Privacy-Enhanced Mail 】的简写，但他也同样广泛运用于密钥管理 2、ASCII 文件 3、一般基于 base 64 编码 4. Apache 用到的 CA 证书链就是 PEM 格式 , 它实际上可保存普通多个 X509 证书 (.cer), 将每个证书简单加在一起就可以了
+格式 : PEM 扩展名 : .pem 描述 : 【Printable Encoded Message 】 特点 : 1、该编码格式在 RFC1421 中定义，其实 PEM 是【Privacy-Enhanced Mail 】的简写，但他也同样广泛运用于密钥管理 2、ASCII 文件 3、一般基于 base 64 编码 4. Apache 用到的 CA 证书链就是 PEM 格式, 它实际上可保存普通多个 X509 证书 (.cer), 将每个证书简单加在一起就可以了
 
 格式 : PKCS10 扩展名 : .p10/.csr 描述 : 【PKCS #10 】公钥加密标准【Certificate Signing Request 】 特点 : 1、证书签名请求文件 2、ASCII 文件 3、CA 签名后以 p7r 文件回复
 
