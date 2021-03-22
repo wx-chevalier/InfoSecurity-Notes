@@ -8,6 +8,6 @@
 - SAMEORIGIN 时，只允许在同一域名页面的 中展示
 - ALLOW-FROM uri 时，允许制定 Uri 的页面的中展示
 
-# TBD
+# Links
 
 - https://kebingzao.com/2018/05/05/web-forbidden-iframe-embed/
