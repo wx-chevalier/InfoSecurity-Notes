@@ -214,13 +214,13 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 
 ## Use HSTS
 
-让用户从 HTTP 迁移到 HTTPS 可以来避免使用原始的 HTTP 请求带来的风险。为了帮助站点把用户从 HTTP 迁移到 HTTPS，现代的浏览器支持一个非常强力的安全特征叫做 HSTS(HTTP Strict Transport Security)，来告诉浏览器我这个站点只会接收来自于 HTTPS 的请求。这个特性最早来自于 2009 年的 Moxie Marlinspike's 提出的一个用于演示基于 HTTP 的潜在危险的 SSL 剥离攻击。可以用如下的设置来启用这个特性 :
+让用户从 HTTP 迁移到 HTTPS 可以来避免使用原始的 HTTP 请求带来的风险。为了帮助站点把用户从 HTTP 迁移到 HTTPS，现代的浏览器支持一个非常强力的安全特征叫做 HSTS(HTTP Strict Transport Security)，来告诉浏览器我这个站点只会接收来自于 HTTPS 的请求。这个特性最早来自于 2009 年的 Moxie Marlinspike's 提出的一个用于演示基于 HTTP 的潜在危险的 SSL 剥离攻击。可以用如下的设置来启用这个特性
 
 ```
 Strict-Transport-Security: max-age=15768000
 ```
 
-上述的设置会告诉浏览器只和使用 HTTPS 的站点进行交互，HSTS 是一个非常重要的强制使用 HTTPS 的特性。一旦开启之后，浏览器会自动把不安全的 HTTP 请求切换到 HTTPS，尽管用户没有显式的输入 "https://"。而在浏览器端开启HSTS特性只需要添加如下的一行代码：
+上述的设置会告诉浏览器只和使用 HTTPS 的站点进行交互，HSTS 是一个非常重要的强制使用 HTTPS 的特性。一旦开启之后，浏览器会自动把不安全的 HTTP 请求切换到 HTTPS，尽管用户没有显式的输入 "https://"。而在浏览器端开启 HSTS 特性只需要添加如下的一行代码：
 
 ```
 <VirtualHost *:443>
