@@ -1,7 +1,6 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzU0MjUwMTA2OQ==&mid=2247484649&idx=1&sn=42eb5319db1ca830ca81d75218e4c0e4&chksm=fb18f54bcc6f7c5de60395d03650aa7c6a30e37407989c604c31ffa1076d071a32afcb0556c4&mpshare=1&scene=1&srcid=0310Lj90mCDiRI2ZAIpqT7T4&sharer_sharetime=1646874335522&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
 
-前言
---
+## 前言
 
 是的，我重新发了，没想到一不小心就过了这么久了，发现这期间有天赋的大佬们现在对于 tls 指纹研究得比我还透彻了，真的强啊。有种感觉 tls 未来会出现一个单独的派系。
 
@@ -22,8 +21,7 @@
 
 Official Account
 
-到底什么是 ja3
----------
+## 到底什么是 ja3
 
 ### 简介
 
@@ -33,7 +31,7 @@ git:https://github.com/salesforce/ja3
 
 > JA3 是一种创建 SSL/TLS 客户端指纹的方法，它应该易于在任何平台上生成，并且可以轻松共享以用于威胁情报
 
- 更权威的介绍文章：https://engineering.salesforce.com/tls-fingerprinting-with-ja3-and-ja3s-247362855967
+更权威的介绍文章：https://engineering.salesforce.com/tls-fingerprinting-with-ja3-and-ja3s-247362855967
 
 浓缩一下大概意思就是：
 
@@ -67,13 +65,13 @@ https://engineering.salesforce.com/open-sourcing-ja3-92c9e53c3c41
 
 那么按照 ja 开发者自述，是在三次握手之后，客户端向服务端发起 client hello 包，这个包里带了客户端这边的一些特征发给服务端，服务端拿来解析数据包，然后回发一个 hello 给客户端，之后再进行 ssl 数据交互，下面这个图，就是 John Althouse 自己画的
 
- ![](https://mmbiz.qpic.cn/mmbiz_gif/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqc6R25IHBd7ORubcC0zHwGNqBKN3ibuhHI0pBGPaMNLr7pWibToTNzKIw/640?wx_fmt=gif)
+![](https://mmbiz.qpic.cn/mmbiz_gif/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqc6R25IHBd7ORubcC0zHwGNqBKN3ibuhHI0pBGPaMNLr7pWibToTNzKIw/640?wx_fmt=gif)
 
 怎么说？画的很传神很易懂对吧？
 
 更多原文解释，请看这里：https://engineering.salesforce.com/tls-fingerprinting-with-ja3-and-ja3s-247362855967
 
-John Althouse 有关 ja3 的 ppt 讲义，上面的动图就是 ppt 文件里的，费了老大劲搞到的：链接: https://pan.baidu.com/s/1pfQwRwg3tbOT2Y2nQZYoAA  提取码: ptj6 （链接失效了可以联系我）
+John Althouse 有关 ja3 的 ppt 讲义，上面的动图就是 ppt 文件里的，费了老大劲搞到的：链接: https://pan.baidu.com/s/1pfQwRwg3tbOT2Y2nQZYoAA   提取码: ptj6 （链接失效了可以联系我）
 
 ### 识别原理
 
@@ -81,21 +79,17 @@ John Althouse 有关 ja3 的 ppt 讲义，上面的动图就是 ppt 文件里的
 
 > 1.JA3 不是简单地查看使用的证书，而是解析在 SSL 握手期间发送的 TLS 客户端 hello 数据包中设置的多个字段。然后可以使用生成的指纹来识别、记录、警报和 / 或阻止特定流量。  
 > 2.JA3 在 SSL 握手中查看客户端 hello 数据包以收集 SSL 版本和支持的密码列表。如果客户端支持，它还将使用所有支持的 SSL 扩展、所有支持的椭圆曲线，最后是椭圆曲线点格式。这些字段以逗号分隔，多个值用短划线分隔（例如，每个支持的密码将在它们之间用短划线列出）
-> 
+>
 > 3. JA3 方法用于收集 Client Hello 数据包中以下字段的字节的十进制值：版本、接受的密码、扩展列表、椭圆曲线和椭圆曲线格式。然后按顺序将这些值连接在一起，使用 “,” 分隔每个字段，使用 “-” 分隔每个字段中的每个值
 
 其中第一条，也解释了我前一篇请求时尝试提交一个 ssl 证书为啥没有用的，第二条，服务端会在 3 次握手之后，收到客户端过来的 hello 包，然后解包，收集版本、接受的密码、扩展列表、椭圆曲线和椭圆曲线格式，在这时候就可以拿着 ja3 指纹去比对，哪些是限制了，哪些没有限制的，当确实有在限制名单里，就针对处理，当没有在限制名单里也返回一个 hello，接着再继续 ssl
 
 #### ja3 已收录指纹 / 黑名单
 
-*   https://sslbl.abuse.ch/blacklist/sslblacklist.csv  这个没有更新了只有上百条
-    
-*   https://github.com/salesforce/ja3/blob/master/lists/osx-nix-ja3.csv  这个不是很全，只有上百条
-    
-*   https://ja3er.com/getAllUasJson  这个一直在更新，十几万条
-    
-*   https://ja3er.com/getAllHashesJson  同上，只是给定标注字段不同
-    
+- https://sslbl.abuse.ch/blacklist/sslblacklist.csv  这个没有更新了只有上百条
+- https://github.com/salesforce/ja3/blob/master/lists/osx-nix-ja3.csv   这个不是很全，只有上百条
+- https://ja3er.com/getAllUasJson   这个一直在更新，十几万条
+- https://ja3er.com/getAllHashesJson  同上，只是给定标注字段不同
 
 我猜测，ja3er.com 里的十几万 ja3 指纹，就是所有人访问过该网站的客户端（浏览器或者语言请求库）的指纹，有一条算一条的收集
 
@@ -116,9 +110,9 @@ John Althouse 有关 ja3 的 ppt 讲义，上面的动图就是 ppt 文件里的
 全部的命令是啥意思这里就不多说了，更多的可以百度，只介绍几个这里会用到的命令：
 
 > ip.dst_host 就是目标地址，这里你可以理解为就是访问网站的服务端地址
-> 
+>
 > ip.src_host 就是源地址，这里你可以理解为就是你正在操作的电脑的 ip，这个 ip 大多是局域网 ip
-> 
+>
 > ip.host 跟上面一样，但是不会区分是 src 还是 dst，只要有指定地址的都会过滤出来
 
 给定过滤指令，回车，此时有可能你输入过滤命令之后，看不到有任何数据包，小问题，可能你打开 wireshark 完了，没抓到包，重新刷新下网页就行了，此时就看到如下的数据：
@@ -133,15 +127,15 @@ John Althouse 有关 ja3 的 ppt 讲义，上面的动图就是 ppt 文件里的
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqsU3W4YC5cgteqjRdWCsDEI13zMsbmuyCibY3PUd8rEPsj7WkZ6ibTTRw/640?wx_fmt=png)
 
- 展开 client hello：
+展开 client hello：
 
- ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqlkn6eUymDqic6KHVgvDwoQSQpgiamPkBaJIsYQ6uicHcRichPicyNErGIBw/640?wx_fmt=png)
+![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqlkn6eUymDqic6KHVgvDwoQSQpgiamPkBaJIsYQ6uicHcRichPicyNErGIBw/640?wx_fmt=png)
 
 滑到最后，就能看到 ja3 指纹了
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqzcWwzuusORbJRicd7TlJU8agY5521Hb6lyR8UdlFE4o5fWX7n2B3oBQ/640?wx_fmt=png)
 
-然后，看 JA3 Fullstring ：
+然后，看 JA3 Fullstring：
 
 > 771,43690-4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,64250-0-23-65281-10-11-35-16-5-13-18-51-45-43-27-17513-51914-21,51914-29-23-24,0
 
@@ -155,15 +149,15 @@ John Althouse 有关 ja3 的 ppt 讲义，上面的动图就是 ppt 文件里的
 
 python 终端跑一下，0x0303 就是 771，对上了：
 
- ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqg5tmajkAiayeYq8mWdhBYOc6iaTFzhV0pJQLwRlV3e5vdcs45GceiagfA/640?wx_fmt=png)
+![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqg5tmajkAiayeYq8mWdhBYOc6iaTFzhV0pJQLwRlV3e5vdcs45GceiagfA/640?wx_fmt=png)
 
 后续的就不细说了，直接看
 
-![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqlslZwdjZzPf48XUcW8iaicHovINlsAdjgtoLnNbdyibSTwEjVgS3B40iaw/640?wx_fmt=png) 
+![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqlslZwdjZzPf48XUcW8iaicHovINlsAdjgtoLnNbdyibSTwEjVgS3B40iaw/640?wx_fmt=png)
 
- ja3 图 1
+ja3 图 1
 
-细心的你发现了，我截图这里是没有第四个数相关的套件， 但是 ja 自己的文章里是有第四个数 EllipticCurves 相关的：
+细心的你发现了，我截图这里是没有第四个数相关的套件，  但是 ja 自己的文章里是有第四个数 EllipticCurves 相关的：
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqeB6dn9wcgPaFTjpvpKT4HrQbiaW9JybOXq2l48gclzcmsONkIQStctg/640?wx_fmt=png)
 
@@ -181,8 +175,7 @@ ja3 图 2
 
 实际的案例作为 ja3 概念解释就到这里了。
 
-如何突破 ja3
---------
+## 如何突破 ja3
 
 终于到了大家都很感兴趣的环节，怎么破它了。
 
@@ -200,18 +193,18 @@ ja3 图 2
 
 > ```
 > urllib3.util.ssl_.DEFAULT_CIPHERS = 'EECDH+AESGCMEDH+AESGCM'
-> 
+>
 > ```
 
 但是，相信对这个 tls 有过相关经验的大佬来说，其实在调试 requests 请求时，调试到这个 http/client.py 文件库里时，就能看到，在开始 connect 时 http 版本直接写死成了 1.0，还有这个建立连接的 tunnel_headers，代码给了个空值
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqEU5Ks4oYSjlsWe4UN3iaYZ0eibv3b8ia3xWfwT10tDox8VVDqZ4dEPQjA/640?wx_fmt=png)
 
- ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqbzmLgMy5QUnhzkxfEKA1nU4Ef8icTrtREhckoN3lUicIlsCNyiaIUqMew/640?wx_fmt=png)
+![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqbzmLgMy5QUnhzkxfEKA1nU4Ef8icTrtREhckoN3lUicIlsCNyiaIUqMew/640?wx_fmt=png)
 
 如果你再配上 fiddler 或者 charles 抓包看的时候，明显能看到，在 python 发送实际请求前的 CONNECT 请求如下：
 
- ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqJ3FJuxAnazmUVH15ibLOQbickUTj23ibYX1fciag53tlZvoV2DiaYBnweUg/640?wx_fmt=png)
+![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqJ3FJuxAnazmUVH15ibLOQbickUTj23ibYX1fciag53tlZvoV2DiaYBnweUg/640?wx_fmt=png)
 
 而浏览器的这个 CONNECT 请求是 http1.1，且 headers 是有值的，如下：
 
@@ -221,7 +214,7 @@ ja3 图 2
 
 而且根据我多方查阅，加上咨询了各位大佬之后，**python 目前只能改 Ciphers** **里面的算法套件，来生成非默认的 ja3 指纹，然后可以骗过检测不是太高的反爬机制。**
 
-但是其他的 Extensions,EllipticCurves,EllipticCurvePointFormats 是没法改的，原因是  **python 跟 openssl 没有很直接的联系，python 发 https 请求最后还是借助 openssl 库暴露出来的方法，**也就是的 ssl_.py 里的方法 create_urllib3_context**，因为 openssl 库对外提供的方法或者接口是没办法这么高度自定义的，****Ciphers 部分也最多能改改算法，都不能给个自己定义的算法进去的，**而 chrome 可以访问是因为 chrome 有自己的 ssl，且 chrome 肯定是不会被禁止的（闹呢，禁止了浏览器正常用户怎么访问？）
+但是其他的 Extensions,EllipticCurves,EllipticCurvePointFormats 是没法改的，原因是   **python 跟 openssl 没有很直接的联系，python 发 https 请求最后还是借助 openssl 库暴露出来的方法，**也就是的 ssl\_.py 里的方法 create_urllib3_context**，因为 openssl 库对外提供的方法或者接口是没办法这么高度自定义的，\*\***Ciphers 部分也最多能改改算法，都不能给个自己定义的算法进去的，\*\*而 chrome 可以访问是因为 chrome 有自己的 ssl，且 chrome 肯定是不会被禁止的（闹呢，禁止了浏览器正常用户怎么访问？）
 
 也就是说这是 python 自身的缺陷了？所以我之前测试时不管用 requests，httpx，还是 aiohttp 都不行，因为这三个库底层都借助了 openssl 库发请求。
 
@@ -235,7 +228,7 @@ WTF？python 的业务方向中引以为傲的爬虫居然有缺陷？而且这�
 
 这么明显的特征，如果是一个实际的网站案例，你觉得他会放过你吗？
 
-所以目前 python 针对 tls 指纹的有两个缺陷，**第一个发起 CONNECT 请求时 http1.0 被写死，headers 为空（当然这个可以改源码临时解决），第二个指纹没法完全自定义，有很多特征被识别**  
+所以目前 python 针对 tls 指纹的有两个缺陷，**第一个发起 CONNECT 请求时 http1.0 被写死，headers 为空（当然这个可以改源码临时解决），第二个指纹没法完全自定义，有很多特征被识别**
 
 说到这里，有朋友可能不信，口说无凭，这次来个实际的案例，一个大佬给我的某网站
 
@@ -251,7 +244,7 @@ python 代码，这里我用之前介绍的简写形式了，只加这两行，�
 
 运行时发现程序卡住且一直没有响应的状态，测试得知原因是这个网站强制验证了 http2.0 的问题，requests 暂不支持 http2 被该服务器识别一直不响应结果导致卡住。
 
-那换成 httpx，（有关 httpx 详细的代码如何突破 ja3 的，可以看我之前写的这篇：python 爬虫 - requests、httpx、aiohttp、scrapy 突破 ja3 指纹识别 ）
+那换成 httpx，（有关 httpx 详细的代码如何突破 ja3 的，可以看我之前写的这篇：python 爬虫 - requests、httpx、aiohttp、scrapy 突破 ja3 指纹识别  ）
 
 发现运行还是不行的。
 
@@ -284,10 +277,9 @@ python 代码，这里我用之前介绍的简写形式了，只加这两行，�
 官方解释：
 
 > 要想颠覆 JA3，需要修改 5 个 JA3 参数，可以在 Refraction Networking 的 utls 项目 ClientHelloSpec 提供的 struct 中修改。该包允许用户构建和执行 ClientHello 握手。第一个参数，TLS 版本，可以用和成员修改。第二个参数，可用密码套件，可以通过更新成员来更改。第三个参数 TLS 扩展可以通过更新成员来更改。参数的一个问题是所有参数都必须遵循 TLSVersionMinTLSVersionMaxCipherSuitesExtensionsExtensionsTLSExtension 界面。第四个和第五个参数，椭圆曲线和椭圆曲线点格式，分别是 TLS 扩展 SupportedCurvesExtension 和 的一部分 SupportedPointsExtension
-> 
->   
+>
 > 我们不是根据 JA3 字符串创建客户端，而是可以生成与 Web 浏览器等良性签名匹配的 JA3 签名。有一些预设允许 JA3 签名匹配 Chrome 或 Firefox，甚至更多。我们仅限于屏蔽使用 Go 可用的相同扩展的应用程序。例如，如果 Chrome 使用 Go 不支持的扩展程序，我们无法屏蔽它。屏蔽密码套件比较棘手，因为任何密码套件都可以进行广告，即使它没有实现。如果执行握手的服务器接受客户端通告但实际上并不支持的密码套件，则会出现问题。只要服务器接受实际支持的密码套件，虚假宣传比可用密码套件多的密码套件就不是问题
-> 
+>
 > Go 的 net/http 库有一个名为 Transport. 传输结构负责编写如何将数据包发送到目标服务器。由于 JA3 的签名是基于 ClientHello 数据包的，我们可以进行 TLS 握手，让 Go 完成剩下的工作。该 Transport 对象是一个参数 http.Client 结构其中大部分进入开发人员都很熟悉。通过生成 Transport 结构体，我们的库应该可以与任何现有的 Go 项目无缝协作
 
 浓缩下梗概，意思就是在 go 构建请求，三次握手之后，到实际要发起 client hello 包之前，ja3transport 把数据包拦截了，即上面说的 hello 包 hook 的方法，然后把原来的 ja3 指纹修改成了自传递的 ja3 字段发出 client hello，服务端就认了，然后就通过了。
@@ -375,19 +367,18 @@ python 代码，这里我用之前介绍的简写形式了，只加这两行，�
 ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqWwyUBrXdCh6fqzEnWuZvUga9fLAsp7iaicHHaKzs8qa6Y2ecVkPnjQww/640?wx_fmt=png)
 
 > chrome 访问 ja3 官网返回得到的：  
-> 　　　　771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43-27-21,29-23-24,0
-> 
+> 　　　　 771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,0-23-65281-10-11-35-16-5-13-18-51-45-43-27-21,29-23-24,0
+>
 > chrome 访问目标网站用 wireshark 抓包得到：
-> 
-> 　　第一个：  
-> 　　　　771,43690-4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,60138-0-23-65281-10-11-35-16-5-13-18-51-45-43-27-17513-51914-41,14906-29-23-24,0
-> 
-> 　　第二个：  
-> 　　　　771,10794-4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,14906-0-23-65281-10-11-35-16-5-13-18-51-45-43-27-17513-2570-21,60138-29-23-24,0
+>
+> 第一个：  
+> 　　　　 771,43690-4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,60138-0-23-65281-10-11-35-16-5-13-18-51-45-43-27-17513-51914-41,14906-29-23-24,0
+>
+> 第二个：  
+> 　　　　 771,10794-4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,14906-0-23-65281-10-11-35-16-5-13-18-51-45-43-27-17513-2570-21,60138-29-23-24,0
 
 仔细对比之后，也就刚好多了标记的
 
-  
 ![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqHrSBG6OXesb0hAQs7N6WaW4pVia73zCdMLoqpDbdlmLKNjxTiaZAWscg/640?wx_fmt=png)
 
 去掉上面标记出来的，其实第一个和第二个是一样的，仅仅是这个被我马赛克马死的平台是这样，我猜应该是这个平台自己多加了一层握手流程，所以会有 2 个 client hello，具体为啥有两个不纠结了，我也不是该平台的开发，也没法得知具体原因，不重要了，能获取数据就行了。
@@ -426,42 +417,35 @@ python 代码，这里我用之前介绍的简写形式了，只加这两行，�
 
 而且仔细看下面这个图，我鼠标放到 ja3 上面的时候，下面的进制数据并不会对应显示
 
- _![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqk4Qbd5X6IVuSVnaANkicJDAH9yfstpXcicviayt7pKLgXfd1NIjFEF1Jg/640?wx_fmt=png)_ 
+_![](https://mmbiz.qpic.cn/mmbiz_png/l4m5icTfxSXVdsh5VoUbWiaqGic0IY8QrOqk4Qbd5X6IVuSVnaANkicJDAH9yfstpXcicviayt7pKLgXfd1NIjFEF1Jg/640?wx_fmt=png)_
 
 用微信好友 chao 的话，"所有真实的信息都有二进制的数据，而 wireshark 的 ja3 都没有对应的二进制数据"
 
 所以我跟 chao 讨论之后，认为 **ja3 其实并不存在**（上一次这么醍醐灌顶还是读到《三体》里的那句台词 "物理学不存在"，不好意思又扯远了。。。），或者说 ja3 并不是实质性存在的字符，而是通过 TLSVersion,Ciphers,Extensions,EllipticCurves,EllipticCurvePointFormats 这五个 tls 组件根据自己的加密算法另类存在的，因为 wireshark 都能通过自己的解析逻辑解析显示啊。以上推论仅代表个人观点，有误请指正
 
-需要注意的点
-------
+## 需要注意的点
 
-1. 有没有发现，其实 ja3 在 2017 年就有了，据我了解，有很多公司的开发正在研究中。 
+1. 有没有发现，其实 ja3 在 2017 年就有了，据我了解，有很多公司的开发正在研究中。
 
 2. 有了一个 ja3，那我觉得后续肯定会出现升级版或者替代版了，红蓝对抗，反爬与反反爬，一直在对抗中进步，是好是坏，只能用时间来判定了。很多新东西靠自己一个人摸索是没法走到更远的，好比这个 ja3，如果一开始没有 Lee Brotherston 大佬在 2015 公开讲解，也就不会有这么牛逼的 ja3 指纹出现了，很喜欢微信好友 Regionover 在一篇文章里的一句话：【**故事要留给过去，但成长要用于分享**】
 
 3. 另外，希望国内外能有大神可以仿照这个 ja3transport 库或者 CycleTLS 库写一个 python 的库出来，唉，我自己也想写出来啊，过去这么久了，我也在看原理，还得花时间研究啊。
 
-后续怎么继续学习 tls 指纹
----------------
+## 后续怎么继续学习 tls 指纹
 
-1.  练习题：猿人学外部题 19 题，内部题 22，29，32 题，32 题是 app 版的 tls 指纹校验，强的一批，网洛者练习平台第 9 题（这个题正常的浏览器都会返回假数据，作者看了一会儿我的文章一晚上就搞了这道题出来，强的一批），只提示下，有几页假数据。 
-    
+1.  练习题：猿人学外部题 19 题，内部题 22，29，32 题，32 题是 app 版的 tls 指纹校验，强的一批，网洛者练习平台第 9 题（这个题正常的浏览器都会返回假数据，作者看了一会儿我的文章一晚上就搞了这道题出来，强的一批），只提示下，有几页假数据。
 2.  志远大佬的最新课程里有 tls 指纹的，感兴趣可以整一个。他的方法就是自编译 openssl
-    
-3.  感兴趣可以读下 openssl 源码  
-    
+3.  感兴趣可以读下 openssl 源码
 
-之前说的 tls 指纹研究怎么样了
------------------
+## 之前说的 tls 指纹研究怎么样了
 
 说来惭愧，搞了这么久，也没搞出个所以然来，我越去了解，就越觉得这个东西不是那么容易的，资料太少，全靠摸索，只能慢慢来了，因为我想实现的是完全自定义 tls 指纹，这个想法说实话，越来越觉得难实现了，不过一有空就在研究的。不仅研究突破 tls，也在研究怎么利用它更好实现反爬，欢迎有兴趣的朋友一起讨论。
 
-结语
---
+## 结语
 
 1. 真诚感谢一路下来认识的大佬们。以上都是个人见解，如果有误还望指正，有任何问题，我很乐意跟各位大佬们交流，我微信 id：**geekbyte，**备注来意
 
-2. 另外应有些朋友的建议建了个群，里面很多大佬，安全渗透，爬虫，web+app 逆向，前后端开发，ios 开发的大佬都有，已满 200 人，想进群的可以加我微信  
+2. 另外应有些朋友的建议建了个群，里面很多大佬，安全渗透，爬虫，web+app 逆向，前后端开发，ios 开发的大佬都有，已满 200 人，想进群的可以加我微信
 
 3. 推荐下蔡老板的星球，web 逆向必须学的 ast 技术。他虽然不在爬虫圈，但是在爬虫圈一直有他的传说，我能有今天，能认识这么多大佬，很大一部分原因是因为他。真的很感谢蔡老板。
 

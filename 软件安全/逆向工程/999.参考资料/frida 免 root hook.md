@@ -2,15 +2,7 @@
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/j6JcMCXCIIgjR4j04DUarll32p0Y8SYoeo8jNsFMARNkY2BrIic2VdSwK6o3k3BDshb8KJic9UTKhACvbibib1hiaicg/640?wx_fmt=png)
 
-        因为相信， 所以看见           
-
-  
-
-  
-
-  
-
-  
+因为相信， 所以看见
 
 答疑，就是在每周四，把问的比较多的，统一回答下。
 
@@ -18,13 +10,11 @@
 
 本来应该是昨天发的，昨天睡觉去了，拖到了今天。
 
-  
-
 0
 
 序言
 
-可能有的大佬并不知道 frida gadget 是个啥。  
+可能有的大佬并不知道 frida gadget 是个啥。
 
 这里先看看官方对于 gadget 的解释
 
@@ -43,47 +33,42 @@ frida Gadget 是一个动态库，如果注入不适用于当前场景 (一般�
 frida gadget 使用场景
 
 1.  免 root 使用 frida
-    
 2.  反调试 反 root 反 frida 很强，绕不过去的时候
-    
 3.  frida 持久化，frida gadget 直接嵌入 app 不用每次打开 frida_server 了
-    
 
-这里用一个案例演示 frida 免 root 注入  
+这里用一个案例演示 frida 免 root 注入
 
 app 一般分为有 so 库和无 so 库，**这篇文章演示有 so 库的情况**。
 
-连接方式一般分为等待连接  和 直接执行脚本，**这篇文章演示****直接执行脚本**。
+连接方式一般分为等待连接   和 直接执行脚本，**这篇文章演示\*\***直接执行脚本\*\*。
 
 主要分为以下几个步骤
 
-1  
+1
 
-    下载 frida gadget.so 
+下载 frida gadget.so
 
-**2**  
+**2**
 
-    app so 添加依赖 加入 frida gadget.so
+app so 添加依赖 加入 frida gadget.so
 
 3
 
-    编写 frida gadget config 配置文件
+编写  frida gadget config 配置文件
 
 4
 
-    编写注入 js
+编写注入 js
 
 5
 
-    打包新 apk 执行
-
-  
+打包新 apk 执行
 
 1
 
- 下载 frida gadget.so
+下载 frida gadget.so
 
-去哪里下载呢？  
+去哪里下载呢？
 
 当当当当
 
@@ -93,17 +78,15 @@ app 一般分为有 so 库和无 so 库，**这篇文章演示有 so 库的情�
 
 直接去 frida 的 github 仓，点击 release **找想要的版本** 去下载就可
 
-链接 https://github.com/frida/frida/releases  
+链接 https://github.com/frida/frida/releases
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/iaZmLGkOncrIOytnicwdymn8nict7UicT89TewpRHcTdoicnSvAZrHBn3K9cibdzIntcvGXtianHTxXqLxibSZXicreBtQQ/640?wx_fmt=png)
-
-  
 
 2
 
 app so 添加依赖 加入 frida gadget.so
 
-这一步的原理是，让 app 在执行 so 的文件的时候，加载 frida-gadget.so  
+这一步的原理是，让 app 在执行 so 的文件的时候，加载 frida-gadget.so
 
 大部分 so 文件，在运行的时候，都有一些依赖库。
 
@@ -140,7 +123,7 @@ wtt.apk 里面有一个 so  **libnative-lib.so**
 
 为了防止检测，frida 这特征也太明显了，很容易被检测 被针对
 
-最好把这个 so 改个名字，比如 libcaiji.so  改名后如下图
+最好把这个 so 改个名字，比如 libcaiji.so   改名后如下图
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/iaZmLGkOncrIOytnicwdymn8nict7UicT89TjsDvSh7W7jibxzFVmP50FXBs3ojw85AUmt3BOaewNLdF5M6fFtQtX1Q/640?wx_fmt=png)
 
@@ -160,13 +143,11 @@ libcaiji.so 就是 frida-gadget.so 改名后的 so
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/iaZmLGkOncrIOytnicwdymn8nict7UicT89To1G1baQmhyhxvVNzia0ia4ibudNAFXI1QtjqhntxgLJUYUpibTqUccBibwQ/640?wx_fmt=png)
 
-  
-
 3
 
-编写 frida gadget config 配置文件
+编写  frida gadget config 配置文件
 
-关于用 gadget.so 直接执行脚本  
+关于用 gadget.so 直接执行脚本
 
 官方文章是有介绍的，机器翻译还是有点问题的，凑合看吧
 
@@ -190,7 +171,7 @@ libxxx.config.so
 
 这里，按照上面的格式
 
-修改后的 so 名为 ：libcaiji.so
+修改后的 so 名为：libcaiji.so
 
 配置文件的名字为：libcaiji.config.so
 
@@ -208,7 +189,7 @@ libxxx.config.so
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/iaZmLGkOncrIOytnicwdymn8nict7UicT89Tmrlibj8ICSiaco3KJkZicTrId6VlWKuHYa7tCwFSLa04k4gdqW3x0rASQ/640?wx_fmt=png)
 
-这里虽然后缀名是 .so  内容其实是 json 配置文件，这点要注意
+这里虽然后缀名是 .so   内容其实是 json 配置文件，这点要注意
 
 4
 
@@ -222,15 +203,15 @@ apk 正常运行是这样的
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/iaZmLGkOncrIOytnicwdymn8nict7UicT89Tq7IeDsibZfxJkFcSv5LjicwapEas8iblWSkL9wIGx0bI8cMUTSenjtTMg/640?wx_fmt=png)
 
-这里  编写一个注入的 js
+这里   编写一个注入的 js
 
-把 弹窗显示的  aaa 改成 bbb  
+把 弹窗显示的  aaa 改成 bbb
 
 这里 直接 hook **com.wangtietou.no_root.MainActivity** 的 **aaa** 方法
 
 改下返回值就可以了
 
-hook.js  代码如下
+hook.js   代码如下
 
 ```
 var str_name_class = "com.wangtietou.no_root.MainActivity";
@@ -288,7 +269,7 @@ Java.perform(function()
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/iaZmLGkOncrIOytnicwdymn8nict7UicT89Tys1icBmyMlQIiaOG86gmhq3EGticvPAcnIZYicRaBFjgrZvMeEPXyGeCjQ/640?wx_fmt=png)
 
-bingo, 成功在没有 root 的手机上用 frida 进行了 hook  
+bingo, 成功在没有 root 的手机上用 frida 进行了 hook
 
 6
 
@@ -312,7 +293,7 @@ bingo, 成功在没有 root 的手机上用 frida 进行了 hook
 
 以上。
 
-王某某   2021.0903 于十平米出租屋。  
+王某某   2021.0903 于十平米出租屋。
 
 关于作者：
 
@@ -320,11 +301,9 @@ bingo, 成功在没有 root 的手机上用 frida 进行了 hook
 
 最近忙着找女票，忙着在 b 站当扑街 up 主。
 
-b 站 / 公众号 :  移动安全王铁头  
+b 站 / 公众号  :  移动安全王铁头
 
-希望和大佬们一起学习，一起成长  
-
-  
+希望和大佬们一起学习，一起成长
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/D1XGIISrRhKQksamIGXRxFbSQuNUWamJYEUwU8KjhNprqa8STuc02vIUak808dBS7Fiao4hg6FS876bicD3uJPgQ/640?wx_fmt=png)
 
