@@ -14,10 +14,7 @@
 
 [![](https://blog.seeflower.dev/images/1.png)](https://blog.seeflower.dev/images/1.png)
 
-[TOC]
-
-一、基础知识
-------
+## 一、基础知识
 
 ### 1. 获取 SO 基地址
 
@@ -54,9 +51,9 @@ System.out.println("baseAddr:"+yourModule.base);
 public interface Memory extends IO, Loader, StackMemory {
 
     long STACK_BASE = 0xc0000000L;
-    int STACK_SIZE_OF_PAGE = 256; 
+    int STACK_SIZE_OF_PAGE = 256;
 
-    
+
     long MMAP_BASE = 0x40000000L;
 
     UnidbgPointer allocateStack(int size);
@@ -109,8 +106,8 @@ int address = (int) (module.base + offset);
 
 Unidbg 在 Android 上支持的 Hook，可以分为两大类
 
-*   Unidbg 内置的第三方 Hook 框架，包括 xHook/Whale/HookZz
-*   Unicorn Hook 以及 Unidbg 基于它封装的 Console Debugger
+- Unidbg 内置的第三方 Hook 框架，包括 xHook/Whale/HookZz
+- Unicorn Hook 以及 Unidbg 基于它封装的 Console Debugger
 
 **第一类是 Unidbg 支持并内置的第三方 Hook 框架，有 Dobby(前身 HookZz)/Whale 这样的 Inline Hook 框架，也有 xHook 这样的 PLT Hook 框架。有小伙伴可能困惑 Unidbg 是否能支持 Frida？我个人观点是目前阶段不现实，Frida 比 Dobby 或者 xHook 都复杂的多，Unidbg 目前还跑不通，除此之外，Dobby + Whale + xHook 也绝对够用了，没有非 Frida 不可的需求。**
 
@@ -131,7 +128,7 @@ _Dynarmic 引擎使用_
 ```
 private static AndroidEmulator createARMEmulator() {
     return AndroidEmulatorBuilder.for32Bit()
-            
+
             .addBackendFactory(new DynarmicFactory(true))
             .build();
 }
@@ -152,9 +149,9 @@ private static AndroidEmulator createARMEmulator() {
 
 我个人认为有三点优势
 
-*   HookZz 或者 xHook 等方案，都可以基于其 Hook 实现原理进行检测，但 Unicorn 原生 Hook 不容易被检测。
-*   Unicorn Hook 没有局限，其他方案局限性较大。比如 Inline Hook 方案不能 Hook 短函数，或者两个相邻的地址；PLT Hook 不能 Hook Sub_xxx 子函数。
-*   第三方 inline Hook 框架和原生 Hook 方案同时使用时会摩擦出 BUG 的火花，事实上，单使用 Unicorn 的某些 Hook 功能都有 BUG。所以说，统一用原生 Hook 会少一些 BUG，少一些麻烦。
+- HookZz 或者 xHook 等方案，都可以基于其 Hook 实现原理进行检测，但 Unicorn 原生 Hook 不容易被检测。
+- Unicorn Hook 没有局限，其他方案局限性较大。比如 Inline Hook 方案不能 Hook 短函数，或者两个相邻的地址；PLT Hook 不能 Hook Sub_xxx 子函数。
+- 第三方 inline Hook 框架和原生 Hook 方案同时使用时会摩擦出 BUG 的火花，事实上，单使用 Unicorn 的某些 Hook 功能都有 BUG。所以说，统一用原生 Hook 会少一些 BUG，少一些麻烦。
 
 总结如下
 
@@ -209,25 +206,25 @@ public class hookInUnidbg {
 
     hookInUnidbg() {
 
-        
+
         emulator = AndroidEmulatorBuilder.for32Bit().build();
 
-        
+
         final Memory memory = emulator.getMemory();
-        
+
         memory.setLibraryResolver(new AndroidResolver(23));
-        
+
         vm = emulator.createDalvikVM(new File("unidbg-android/src/test/resources/tutorial/hookinunidbg.apk"));
 
 
 
 
-        
+
         DalvikModule dm = vm.loadLibrary("hookinunidbg", true);
-        
+
         module = dm.getModule();
 
-        
+
         dm.callJNI_OnLoad(emulator);
     }
 
@@ -253,8 +250,7 @@ public class hookInUnidbg {
 
 运行时有一些日志输出，为正常逻辑。
 
-二、Hook 函数
----------
+## 二、Hook 函数
 
 demo hookInunidbg 中运行了数个函数，在本节中关注其中运行的 base64_encode 函数。
 
@@ -266,12 +262,12 @@ base64_encode(const unsigned char *in, unsigned int inlen, char *out);
 
 参数解释如下
 
-> char *out：一块 buffer 的首地址，用来存放转码后的内容。
-> 
-> char *in：原字符串的首地址，指向原字符串内容。
-> 
+> char \*out：一块 buffer 的首地址，用来存放转码后的内容。
+>
+> char \*in：原字符串的首地址，指向原字符串内容。
+>
 > int inlen：原字符串长度。
-> 
+>
 > 返回值：正常情况下返回转换后字符串的实际长度。
 
 本节的任务就是打印 base64 前的内容，以及编码后的内容。
@@ -280,14 +276,14 @@ base64_encode(const unsigned char *in, unsigned int inlen, char *out);
 
 ```
 function main(){
-    
+
     var base_addr = Module.findBaseAddress("libhookinunidbg.so");
 
     if (base_addr){
         var func_addr = Module.findExportByName("libhookinunidbg.so", "base64_encode");
         console.log("hook base64_encode function")
         Interceptor.attach(func_addr,{
-            
+
             onEnter: function (args) {
                 console.log("\n input:")
                 this.buffer = args[2];
@@ -295,7 +291,7 @@ function main(){
                 console.log(hexdump(args[0],{length: length.toUInt32()}))
                 console.log("\n")
             },
-            
+
             onLeave: function () {
                 console.log(" output:")
                 console.log(this.buffer.readCString());
@@ -321,9 +317,9 @@ emulator.attach().addBreakPoint(module.findSymbolByName("base64_encode").getAddr
 
 需要重申和强调几个概念
 
-*   运行到对应地址时触发断点，类似于 GDB 调试或者 IDA 调试，时机为**目标指令执行前**。
-*   断点不具有函数的种种概念，需要从 ARM 汇编指令的角度去理解函数。
-*   Console Debugger 用于辅助算法分析，快速分析、确认某个函数的功能。在 Unicorn 引擎下才可以用。
+- 运行到对应地址时触发断点，类似于 GDB 调试或者 IDA 调试，时机为**目标指令执行前**。
+- 断点不具有函数的种种概念，需要从 ARM 汇编指令的角度去理解函数。
+- Console Debugger 用于辅助算法分析，快速分析、确认某个函数的功能。在 Unicorn 引擎下才可以用。
 
 针对第二条做补充
 
@@ -337,8 +333,8 @@ emulator.attach().addBreakPoint(module.findSymbolByName("base64_encode").getAddr
 
 Unidbg 在数据展示上，相较于 Frida Hexdump，有一些不同，体现在两方面
 
-*   Frida hexdump 时，左侧基地址从当前地址开始，而 Unidbg 从 0 开始。
-*   Unidbg 给出了所打印数据块的 md5 值，方便对比两块数据块内容是否一致，而且 Unidbg 展示数据的 Hex String，方便在大量日志中搜索。
+- Frida hexdump 时，左侧基地址从当前地址开始，而 Unidbg 从 0 开始。
+- Unidbg 给出了所打印数据块的 md5 值，方便对比两块数据块内容是否一致，而且 Unidbg 展示数据的 Hex String，方便在大量日志中搜索。
 
 Console Debugger 支持许多调试、分析的命令，全部展示如下
 
@@ -405,12 +401,12 @@ size: 5
 
 整体逻辑如下
 
-*   在目标函数的地址处下断点
-*   运行到断点处，进入 Console Debugger 交互调试
-*   mxx 系列查看参数
-*   blr 在函数返回处下断点
-*   c 使程序继续运行，到返回值处断下
-*   查看此时的 buffer
+- 在目标函数的地址处下断点
+- 运行到断点处，进入 Console Debugger 交互调试
+- mxx 系列查看参数
+- blr 在函数返回处下断点
+- c 使程序继续运行，到返回值处断下
+- 查看此时的 buffer
 
 需要注意的是，在 onLeave 中 mr2 是胡闹。R2 只在程序入口处表示参数 3，在函数运算的过程中，R2 作为通用寄存器被用于存储、运算，它已经不是指向 buffer 的地址了。在 Frida 中，我们在 OnEnter 里将 args[2] 即 R2 的值保存在 this.buffer 中，OnLeave 中再取出来打印。而在 Console Debugger 交互调试中，办法更简单粗暴——鼠标往上拉一下，看看原来 r2 的值是什么，发现是 0x401d2000，然后 m0x401d2000。
 
@@ -427,7 +423,7 @@ public void HookByConsoleDebugger(){
             Pointer buffer = context.getPointerArg(2);
 
             Inspector.inspect(input.getByteArray(0, length), "base64 input");
-            
+
             emulator.attach().addBreakPoint(context.getLRPointer().peer, new BreakPointCallback() {
                 @Override
                 public boolean onHit(Emulator<?> emulator, long address) {
@@ -470,7 +466,7 @@ public void HookByXhook(){
             System.out.println("base64 result:"+buffer.getString(0));
         }
     }, true);
-    
+
     xHook.refresh();
 }
 
@@ -482,8 +478,8 @@ xHook 是爱奇艺开源的 Android PLT hook 框架，优点是挺稳定好用�
 
 ```
 public void HookByHookZz(){
-    IHookZz hookZz = HookZz.getInstance(emulator); 
-    hookZz.enable_arm_arm64_b_branch(); 
+    IHookZz hookZz = HookZz.getInstance(emulator);
+    hookZz.enable_arm_arm64_b_branch();
     hookZz.wrap(module.findSymbolByName("base64_encode"), new WrapCallback<HookZzArm32RegisterContext>() {
         @Override
         public void preCall(Emulator<?> emulator, HookZzArm32RegisterContext context, HookEntryInfo info) {
@@ -594,8 +590,7 @@ public void HookByUnicorn(){
 
 ```
 
-三、Replace 参数和返回值
-----------------
+## 三、Replace 参数和返回值
 
 ### 1. 替换参数
 
@@ -605,7 +600,7 @@ public void HookByUnicorn(){
 
 ```
 function main(){
-    
+
     var base_addr = Module.findBaseAddress("libhookinunidbg.so");
 
     if (base_addr){
@@ -619,7 +614,7 @@ function main(){
                 args[1] = ptr(fakeinput.length);
                 this.buffer = args[2];
             },
-            
+
             onLeave: function () {
                 console.log(" output:")
                 console.log(this.buffer.readCString());
@@ -638,14 +633,14 @@ setImmediate(main);
 
 快速打击、快速验证的 Console Debugger 如何实现这一目标？
 
-①下断点，运行代码后进入 debugger
+① 下断点，运行代码后进入 debugger
 
 ```
 emulator.attach().addBreakPoint(module.findSymbolByName("base64_encode").getAddress());
 
 ```
 
-②通过命令修改参数 1 和 2
+② 通过命令修改参数 1 和 2
 
 ```
 wx0x40002403 68656c6c6f20776f726c64
@@ -680,15 +675,15 @@ public void ReplaceArgByConsoleDebugger(){
             RegisterContext context = emulator.getContext();
             String fakeInput = "hello world";
             int length = fakeInput.length();
-            
+
             emulator.getBackend().reg_write(ArmConst.UC_ARM_REG_R1, length);
             MemoryBlock fakeInputBlock = emulator.getMemory().malloc(length, true);
             fakeInputBlock.getPointer().write(fakeInput.getBytes(StandardCharsets.UTF_8));
-            
+
             emulator.getBackend().reg_write(ArmConst.UC_ARM_REG_R0, fakeInputBlock.getPointer().peer);
 
             Pointer buffer = context.getPointerArg(2);
-            
+
             emulator.attach().addBreakPoint(context.getLRPointer().peer, new BreakPointCallback() {
                 @Override
                 public boolean onHit(Emulator<?> emulator, long address) {
@@ -718,11 +713,11 @@ public void ReplaceArgByXhook(){
         public HookStatus onCall(Emulator<?> emulator, HookContext context, long originFunction) {
             String fakeInput = "hello world";
             int length = fakeInput.length();
-            
+
             emulator.getBackend().reg_write(ArmConst.UC_ARM_REG_R1, length);
             MemoryBlock fakeInputBlock = emulator.getMemory().malloc(length, true);
             fakeInputBlock.getPointer().write(fakeInput.getBytes(StandardCharsets.UTF_8));
-            
+
             emulator.getBackend().reg_write(ArmConst.UC_ARM_REG_R0, fakeInputBlock.getPointer().peer);
 
             Pointer buffer = context.getPointerArg(2);
@@ -735,7 +730,7 @@ public void ReplaceArgByXhook(){
             System.out.println("base64 result:"+buffer.getString(0));
         }
     }, true);
-    
+
     xHook.refresh();
 }
 
@@ -745,8 +740,8 @@ public void ReplaceArgByXhook(){
 
 ```
 public void ReplaceArgByHookZz(){
-    IHookZz hookZz = HookZz.getInstance(emulator); 
-    hookZz.enable_arm_arm64_b_branch(); 
+    IHookZz hookZz = HookZz.getInstance(emulator);
+    hookZz.enable_arm_arm64_b_branch();
     hookZz.wrap(module.findSymbolByName("base64_encode"), new WrapCallback<HookZzArm32RegisterContext>() {
         @Override
         public void preCall(Emulator<?> emulator, HookZzArm32RegisterContext context, HookEntryInfo info) {
@@ -801,7 +796,7 @@ extern "C" int verifyApkSign(){
 
 ```
 function main(){
-    
+
     var base_addr = Module.findBaseAddress("libhookinunidbg.so");
 
     if (base_addr){
@@ -811,7 +806,7 @@ function main(){
             onEnter: function (args) {
 
             },
-            
+
             onLeave: function (retval) {
                 retval.replace(0);
             }
@@ -833,7 +828,7 @@ public void ReplaceRetByConsoleDebugger(){
         @Override
         public boolean onHit(Emulator<?> emulator, long address) {
             RegisterContext context = emulator.getContext();
-            
+
             emulator.attach().addBreakPoint(context.getLRPointer().peer, new BreakPointCallback() {
                 @Override
                 public boolean onHit(Emulator<?> emulator, long address) {
@@ -850,8 +845,7 @@ public void ReplaceRetByConsoleDebugger(){
 
 我们的 Hook 生效了，但 verifyApkSign 函数里的 log 还是打印出来了。在一些情况中，我们想改掉函数原本的执行行为，而不是仅仅打印一些信息或者替换入参和返回值。即需要彻底的函数替换——替换原有函数，使用自己的函数。
 
-四、替换函数
-------
+## 四、替换函数
 
 ### 1.Frida
 
@@ -884,8 +878,8 @@ public void ReplaceFuncByHookZz(){
 
 xHook 的版本很清晰易懂，我们做了两件事
 
-*   R0 赋值为 0
-*   LR 赋值给 PC，这意味着函数一行不执行就返回了，又因为 R0 赋值 0 所以返回值为 0。
+- R0 赋值为 0
+- LR 赋值给 PC，这意味着函数一行不执行就返回了，又因为 R0 赋值 0 所以返回值为 0。
 
 ### 3.Console Debugger
 
@@ -907,8 +901,7 @@ public void ReplaceFuncByConsoleDebugger(){
 
 非常清晰易懂。
 
-五、Call 函数
----------
+## 五、Call 函数
 
 分析具体算法时，常需要对其进行主动调用，进行更灵活和细致的分析
 
@@ -918,15 +911,14 @@ public void ReplaceFuncByConsoleDebugger(){
 
 ### 2.Unidbg
 
-六、Patch 与内存检索
--------------
+## 六、Patch 与内存检索
 
 ### 1.Patch
 
 Patch 就是直接对二进制文件进行修改，Patch 本质上只有两种形式
 
-*   patch 二进制文件
-*   在内存里 patch
+- patch 二进制文件
+- 在内存里 patch
 
 Patch 的应用场景很多，在一些场景比 Hook 更好用，这就是需要介绍它的原因。Patch 二进制文件的形式是大多数人所熟悉的，在 IDA 中使用 KeyPatch 打补丁的体验很友好。但这里我们关注的是内存 Patch。
 
@@ -940,46 +932,46 @@ Patch 的应用场景很多，在一些场景比 Hook 更好用，这就是需�
 
 #### ⅠFrida
 
-①方法一
+① 方法一
 
 ```
-var str_name_so = "libhookinunidbg.so";    
-var n_addr_func_offset = 0x8CA;         
+var str_name_so = "libhookinunidbg.so";
+var n_addr_func_offset = 0x8CA;
 
 var n_addr_so = Module.findBaseAddress(str_name_so);
 var n_addr_assemble = n_addr_so.add(n_addr_func_offset);
 
-Memory.protect(n_addr_assemble, 4, 'rwx'); 
+Memory.protect(n_addr_assemble, 4, 'rwx');
 n_addr_assemble.writeByteArray([0x00, 0x20, 0x00, 0xBF]);
 
 ```
 
 但这并不是最佳实践，因为相较于 Unidbg，Frida 操作在真实 Android 系统上，存在两个问题
 
-*   是否存在多线程操纵目标地址处的内存？是否有冲突
-*   arm 的缓存刷新机制
+- 是否存在多线程操纵目标地址处的内存？是否有冲突
+- arm 的缓存刷新机制
 
 所以 Frida 提供了更安全可靠的系列 API 来修改内存中的字节
 
-②方法二
+② 方法二
 
 ```
-var str_name_so = "libhookinunidbg.so";    
-var n_addr_func_offset = 0x8CA;         
+var str_name_so = "libhookinunidbg.so";
+var n_addr_func_offset = 0x8CA;
 
 var n_addr_so = Module.findBaseAddress(str_name_so);
 var n_addr_assemble = n_addr_so.add(n_addr_func_offset);
 
 
 Memory.patchCode(n_addr_assemble, 4, function () {
-    
+
     var cw = new ThumbWriter(n_addr_assemble);
-    
-    
+
+
     cw.putInstruction(0x2000)
-    
+
     cw.putInstruction(0xBF00);
-    cw.flush(); 
+    cw.flush();
     console.log(hexdump(n_addr_assemble))
 });
 
@@ -989,18 +981,18 @@ Memory.patchCode(n_addr_assemble, 4, function () {
 
 Unidbg 在修改内存上，既可以传机器码，也可以传汇编指令
 
-①方法一
+① 方法一
 
 ```
 public void Patch1(){
-    
-    int patchCode = 0xBF002000; 
+
+    int patchCode = 0xBF002000;
     emulator.getMemory().pointer(module.base + 0x8CA).setInt(0,patchCode);
 }
 
 ```
 
-②方法二
+② 方法二
 
 ```
 public void Patch2(){
@@ -1010,7 +1002,7 @@ public void Patch2(){
 
 ```
 
-③方法三
+③ 方法三
 
 ```
 public void Patch3(){
@@ -1042,16 +1034,16 @@ function searchAndPatch() {
     if (matches.length !== 0)
     {
         var n_addr_assemble = matches[0].address.add(10);
-        
+
         Memory.patchCode(n_addr_assemble, 4, function () {
-            
+
             var cw = new ThumbWriter(n_addr_assemble);
-            
-            
+
+
             cw.putInstruction(0x2000)
-            
+
             cw.putInstruction(0xBF00);
-            cw.flush(); 
+            cw.flush();
             console.log(hexdump(n_addr_assemble))
         });
     }
@@ -1097,8 +1089,7 @@ private Collection<Pointer> searchMemory(long start, long end, byte[] data) {
 
 _值得一提的是，本节的内容也可用 [LIEF](https://github.com/lief-project/LIEF) Patch 二进制文件实现。_
 
-七、Hook 时机过晚问题
--------------
+## 七、Hook 时机过晚问题
 
 上文中，Hook 代码都位于 **SO 加载后， 执行 JNI_OnLoad 之前**，和如下 Frida 代码同等时机。
 
@@ -1116,7 +1107,7 @@ if (android_dlopen_ext != null) {
         onLeave: function (retval) {
             if (this.hook) {
                 this.hook = false;
-                
+
             }
         }
     });
@@ -1190,31 +1181,31 @@ public class hookInUnidbg {
 
     hookInUnidbg() {
 
-        
+
         emulator = AndroidEmulatorBuilder.for32Bit().build();
 
-        
+
         final Memory memory = emulator.getMemory();
-        
+
         memory.setLibraryResolver(new AndroidResolver(23));
-        
+
         vm = emulator.createDalvikVM(new File("unidbg-android/src/test/resources/tutorial/hookinunidbg.apk"));
 
-        
+
         DalvikModule dmLibc = vm.loadLibrary(new File("unidbg-android/src/main/resources/android/sdk23/lib/libc.so"), true);
         moduleLibc = dmLibc.getModule();
 
-        
-        hookStrcmpByUnicorn();
-        
-        
 
-        
+        hookStrcmpByUnicorn();
+
+
+
+
         DalvikModule dm = vm.loadLibrary("hookinunidbg", true);
-        
+
         module = dm.getModule();
 
-        
+
         dm.callJNI_OnLoad(emulator);
     }
 
@@ -1255,8 +1246,8 @@ public class hookInUnidbg {
     }
 
     public void hookStrcmpByHookZz(){
-        IHookZz hookZz = HookZz.getInstance(emulator); 
-        hookZz.enable_arm_arm64_b_branch(); 
+        IHookZz hookZz = HookZz.getInstance(emulator);
+        hookZz.enable_arm_arm64_b_branch();
         hookZz.wrap(moduleLibc.findSymbolByName("strcmp"), new WrapCallback<HookZzArm32RegisterContext>() {
             String arg1;
             @Override
@@ -1311,24 +1302,24 @@ public class hookInUnidbg {
 
     hookInUnidbg() {
 
-        
+
         emulator = AndroidEmulatorBuilder.for32Bit().build();
 
-        
+
         final Memory memory = emulator.getMemory();
-        
+
         memory.setLibraryResolver(new AndroidResolver(23));
-        
+
         vm = emulator.createDalvikVM(new File("unidbg-android/src/test/resources/tutorial/hookinunidbg.apk"));
 
         emulator.attach().addBreakPoint(0x40000000 + 0x978);
 
-        
+
         DalvikModule dm = vm.loadLibrary("hookinunidbg", true);
-        
+
         module = dm.getModule();
 
-        
+
         dm.callJNI_OnLoad(emulator);
     }
 
@@ -1345,7 +1336,7 @@ public class hookInUnidbg {
         hookInUnidbg mydemo = new hookInUnidbg();
         mydemo.call();
     }
-    
+
 }
 
 ```
@@ -1374,12 +1365,12 @@ public class MyModuleListener implements ModuleListener {
 
     @Override
     public void onLoaded(Emulator<?> emulator, Module module) {
-        
+
         if(module.name.equals("libc.so")){
              hook = HookZz.getInstance(emulator);
         }
 
-        
+
         if(module.name.equals("libhookinunidbg.so")){
             hook.instrument(module.base + 0x978 + 1, new InstrumentCallback<RegisterContext>() {
                 @Override
@@ -1412,26 +1403,26 @@ public class hookInUnidbg{
 
     hookInUnidbg() {
 
-        
+
         emulator = AndroidEmulatorBuilder.for32Bit().build();
 
-        
+
         final Memory memory = emulator.getMemory();
 
-        
+
         memory.addModuleListener(new MyModuleListener());
 
-        
+
         memory.setLibraryResolver(new AndroidResolver(23));
-        
+
         vm = emulator.createDalvikVM(new File("unidbg-android/src/test/resources/tutorial/hookinunidbg.apk"));
 
-        
+
         DalvikModule dm = vm.loadLibrary("hookinunidbg", true);
-        
+
         Module module = dm.getModule();
 
-        
+
         dm.callJNI_OnLoad(emulator);
     }
 
@@ -1455,8 +1446,7 @@ public class hookInUnidbg{
 
 _每种方法都有对应使用场景，按需使用。除此之外也可以修改 Unidbg 源码，在 callInitFunction 函数前添加自己的逻辑。_
 
-八、条件断点
-------
+## 八、条件断点
 
 在算法分析时，条件断点可以减少干扰信息。以 strcmp 为例，整个进程的所有模块都可能调用 strcmp 函数。
 
@@ -1470,7 +1460,7 @@ Interceptor.attach(
         onEnter: function(args) {
             var moduleName = Process.getModuleByAddress(this.returnAddress).name;
             console.log("strcmp arg1:"+args[0].readCString())
-            
+
             console.log("call from :"+moduleName)
         },
         onLeave: function(ret) {
@@ -1587,21 +1577,19 @@ emulator.attach().addBreakPoint(module, 0xA04);
 
 一定要掌握这些知识，并做到灵活变通。在实战中，诸如 “A hook 生效后再打印 B 函数的输出 “是很常见的，否则每个函数都打印几百行看的人眼都迷糊。
 
-九、系统调用拦截——以时间为例
----------------
+## 九、系统调用拦截——以时间为例
 
 这里说的系统调用拦截，并不是要对系统调用进行 Hook，比如 [frida - syscall - intercceptor](https://github.com/AeonLucid/frida-syscall-interceptor) 这样，系统调用全部是 Unidbg 自己实现的，日志一开就能看，显然也没有 Hook 的必要。Unidbg 的**系统调用拦截**是为了替换系统调用，修改 Unidbg 中系统调用的实现。
 
 有两个问题需要解释
 
-*   为什么要修改系统调用？
-    
-    Unidbg 中部分系统调用没实现或者没实现好，以及有时候想要固定其输出，比如获取时间的系统调用，这些需求需要我们修复或修改 Unidbg 中系统调用的实现。
-    
-*   为什么不直接修改 Unidbg 源码
-    
-    1 是灵活性较差，2 是我们的实现或修改并不是完美的，直接改 Unidbg 源码是对运行环境的污染，影响其他项目。
-    
+- 为什么要修改系统调用？
+
+  Unidbg 中部分系统调用没实现或者没实现好，以及有时候想要固定其输出，比如获取时间的系统调用，这些需求需要我们修复或修改 Unidbg 中系统调用的实现。
+
+- 为什么不直接修改 Unidbg 源码
+
+  1 是灵活性较差，2 是我们的实现或修改并不是完美的，直接改 Unidbg 源码是对运行环境的污染，影响其他项目。
 
 在分析算法时，输入不变的前提下，如果输出在不停变化，会干扰算法分析，这种情况的一大来源是时间戳参与了运算。在 Frida 中，为了控制这种干扰因素，常常会 Hook libc 的 gettimeodfay 这个时间获取函数。
 
@@ -1617,7 +1605,7 @@ if (time != null) {
 
         },
         onLeave: function (retval) {
-            
+
             retval.replace(100);
         }
     })
@@ -1631,7 +1619,7 @@ _hook gettimeofday_
 function hook_gettimeofday() {
     var addr_gettimeofday = Module.findExportByName(null, "gettimeofday");
     var gettimeofday = new NativeFunction(addr_gettimeofday, "int", ["pointer", "pointer"]);
-    
+
     Interceptor.replace(addr_gettimeofday, new NativeCallback(function (ptr_tz, ptr_tzp) {
 
         var result = gettimeofday(ptr_tz, ptr_tzp);
@@ -1679,11 +1667,11 @@ public class TimeSyscallHandler extends ARM32SyscallHandler {
     protected boolean handleUnknownSyscall(Emulator emulator, int NR) {
         switch (NR) {
             case 78:
-                
+
                 mygettimeofday(emulator);
                 return true;
             case 263:
-                
+
                 myclock_gettime(emulator);
                 return true;
 
@@ -1783,13 +1771,12 @@ emulator = builder.build();
 
 ```
 
-十、Hook 检测
----------
+## 十、Hook 检测
 
 Anti Unidbg 的方法浩如烟海，但事实上几乎没有主动 Anti Unidbg 的样本，有两方面原因
 
-*   Unidbg 自身的多个重大弱点没有解决，比如多线程和信号机制尚未实现。
-*   Unidbg 普及率和推广度还不高。
+- Unidbg 自身的多个重大弱点没有解决，比如多线程和信号机制尚未实现。
+- Unidbg 普及率和推广度还不高。
 
 所以本节专注于 Hook 检测。
 
@@ -1801,8 +1788,8 @@ Anti Unidbg 的方法浩如烟海，但事实上几乎没有主动 Anti Unidbg �
 
 以我熟悉的 inline Hook 检测为例，inline Hook 需要修改 Hook 处的前几个字节，跳转到自己的地方实现逻辑，最后再跳转回来。那么就有两类思路实现检测，首先开辟一个检测线程，对关键函数做如下二选一循环操作
 
-*   函数开头前几个字节是否被篡改
-*   函数体是否完整未被修改，常使用 crc32 校验，为什么不用 md5 或其他哈希函数？因为 crc32 极快，性能影响小，碰撞率又在可接受的范围内
+- 函数开头前几个字节是否被篡改
+- 函数体是否完整未被修改，常使用 crc32 校验，为什么不用 md5 或其他哈希函数？因为 crc32 极快，性能影响小，碰撞率又在可接受的范围内
 
 相关项目：[check_fish_inline_hook](https://github.com/liaogang/check_fish_inline_hook)
 
@@ -1816,8 +1803,7 @@ Unicorn Hook 似乎不可检测，但 Unicorn 也是可检测的。在星球的 
 
 除此之外，Unicorn 下断点调试或者做指令追踪时，必然会导致函数运行时间超出常理，基于运行时间的反调试策略也可行。
 
-十一、Unidbg Trace 四件套
--------------------
+## 十一、Unidbg Trace 四件套
 
 基于 Frida 存在许多 trace 方案，比如用于 trace JNI 函数的 [JNItrace](https://github.com/chame1eon/jnitrace)，用于 trace Java 调用的 [ZenTrace](https://github.com/hluwa/ZenTracer)、[r0tracer](https://github.com/r0ysue/r0tracer)，又或者是官方的多功能 trace 工具 [frida-trace](https://frida.re/docs/frida-trace/)，用于指令级 trace 的 [Frida Stalker](https://frida.re/docs/stalker/)，又或者是 trace SO 中所有函数的 [trace_natives](https://github.com/Pr0214/trace_natives) ，以及 Linux 上著名的 [strace](https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/strace.html) 或者 基于 Frida 的 [frida-syscall-interceptor](https://github.com/AeonLucid/frida-syscall-interceptor)，用于 trace 系统调用。
 
@@ -1827,8 +1813,8 @@ Unicorn Hook 似乎不可检测，但 Unicorn 也是可检测的。在星球的 
 
 令追踪包括两部分
 
-*   记录每条指令的执行，打印地址、机器码、汇编等信息
-*   打印每条指令相关的寄存器值
+- 记录每条指令的执行，打印地址、机器码、汇编等信息
+- 打印每条指令相关的寄存器值
 
 Unidbg 基于 Unicorn CodeHook 封装了指令追踪，方法和效果如下
 
@@ -1857,9 +1843,9 @@ Unidbg 的指令追踪，在第一部分的工作做得很好，采用 模块名
 
 Unidbg 中可以做到这一点吗？不妨看一下 Frida trace_natives 脚本，其中有三个关注点。
 
-*   如何获得一个 SO 的全部函数列表，就像 IDA 一样
-*   如何 Hook 函数
-*   如何获得调用层级关系，形成树结构
+- 如何获得一个 SO 的全部函数列表，就像 IDA 一样
+- 如何 Hook 函数
+- 如何获得调用层级关系，形成树结构
 
 关于问题 1，trace_natives 怎么解决的？直接编写 IDA 脚本获取 IDA 的函数列表
 
@@ -1879,8 +1865,8 @@ def getFunctionList():
 
 脚本获取了函数以及对应函数名列表，同时通过 minLength 过滤较短的函数，至少包含 10 条汇编指令的函数才会被计入。这么做有两个原因
 
-*   过短的函数可能导致 Frida Hook 失败（inline hook 原理所致）
-*   过短的函数可能是工具函数，调用次数多，但价值不大，让调用图变得臃肿不堪
+- 过短的函数可能导致 Frida Hook 失败（inline hook 原理所致）
+- 过短的函数可能是工具函数，调用次数多，但价值不大，让调用图变得臃肿不堪
 
 完整的 IDA 插件 getFunctions 代码如下
 
@@ -1961,14 +1947,14 @@ Interceptor.attach(Module.getExportByName(null, 'read'), {
     console.log('Depth    : ' + this.depth);
     console.log('Errornr  : ' + this.err);
 
-    
+
     this.fd = args[0].toInt32();
     this.buf = args[1];
     this.count = args[2].toInt32();
   },
   onLeave(result) {
     console.log('----------')
-    
+
     const numBytes = result.toInt32();
     if (numBytes > 0) {
       console.log(hexdump(this.buf, { length: numBytes, ansi: true }));
@@ -2007,7 +1993,7 @@ public final int depth(){
 ```
 PrintStream traceStream = null;
 try {
-    
+
     String traceFile = "unidbg-android/src/test/resources/app/traceFunctions.txt";
     traceStream = new PrintStream(new FileOutputStream(traceFile), true);
 } catch (FileNotFoundException e) {
@@ -2059,19 +2045,17 @@ emulator.getBackend().hook_add_new(new BlockHook() {
 
 Findcrypt 是老牌经典工具，Unidbg 版的 Findcrypt 是要做啥？解决什么痛点？有三个主要原因
 
-*   Findcrypt 处理不了加壳 SO
-*   Findcrypt 中说存在某种加密，但 SO 中并不一定用，我们的目标函数更不一定用。
-*   从 Findcrypt 提示的常数不一定能找到对应函数，静态交叉分析有局限
+- Findcrypt 处理不了加壳 SO
+- Findcrypt 中说存在某种加密，但 SO 中并不一定用，我们的目标函数更不一定用。
+- 从 Findcrypt 提示的常数不一定能找到对应函数，静态交叉分析有局限
 
 // TODO
 
-十二、固定随机数
---------
+## 十二、固定随机数
 
 // TODO
 
-十三、杂项
------
+## 十三、杂项
 
 无需 Hook，Unidbg 中通过其他方式实现
 
