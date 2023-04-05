@@ -1,7 +1,7 @@
 > 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [bbs.nightteam.cn](https://bbs.nightteam.cn/forum.php?mod=viewthread&tid=1496&highlight=ast) ![](https://bbs.nightteam.cn/uc_server/avatar.php?uid=1616&size=middle)Nanda  
-> 声明：本文内容仅供学习交流，严禁用于商业用途，请于 24 小时内删除。  
-> 今天让我们玩一点有意思的东西，使用 **ast** 解决某 v5 加密的 js 代码。  
-> 作为一个爬虫爱好者，可能你并不会使用 ast 处理混淆文件，但肯定是听过这个名字的，对吧？而且被传的神乎其神，又是编译原理，又是词法语法分析的。但实际上，底层的东西都已经有大佬封装好了，并不需要从头造轮子，而且 ast 对逆向工作中是真的很有效果！所以，最近我也是研究学习了一下，本次我就使用 babel 这一工具，为大家揭开 ast 的神秘面纱。  
+> 声明：本文内容仅供学习交流，严禁用于商业用途，请于 24 小时内删除。
+> 今天让我们玩一点有意思的东西，使用 **ast** 解决某 v5 加密的 js 代码。
+> 作为一个爬虫爱好者，可能你并不会使用 ast 处理混淆文件，但肯定是听过这个名字的，对吧？而且被传的神乎其神，又是编译原理，又是词法语法分析的。但实际上，底层的东西都已经有大佬封装好了，并不需要从头造轮子，而且 ast 对逆向工作中是真的很有效果！所以，最近我也是研究学习了一下，本次我就使用 babel 这一工具，为大家揭开 ast 的神秘面纱。
 > 既然是第一部曲，主要是让大家初步了解 ast，所以我们选择一个常规难度就好了，加密配置如下图：  
 > ![](https://bbs.nightteam.cn/forum.php?mod=attachment&aid=Mjk0fDA3YjBlYjVkfDE2NDY0MDcyNjh8MjIyMnwxNDk2&noupdate=yes)
 
@@ -14,9 +14,9 @@
 先上前后代码对比吧，还原前：  
 /\*  
  *  加密工具已经升级了一个版本，目前为  sojson.v5 ，主要加强了算法，以及防破解【绝对不可逆】配置，耶稣也无法 100% 还原，我说的。;  
- *  已经打算把这个工具基础功能一直免费下去。还希望支持我。  
- *  另外  sojson.v5  已经强制加入校验，注释可以去掉，但是  sojson.v5  不能去掉（如果你开通了 VIP，可以手动去掉），其他都没有任何绑定。  
- *  誓死不会加入任何后门，sojson JS  加密的使命就是为了保护你们的 Javascript 。  
+ *  已经打算把这个工具基础功能一直免费下去。还希望支持我。
+ *  另外  sojson.v5  已经强制加入校验，注释可以去掉，但是  sojson.v5  不能去掉（如果你开通了 VIP，可以手动去掉），其他都没有任何绑定。
+ *  誓死不会加入任何后门，sojson JS  加密的使命就是为了保护你们的 Javascript 。
  *  警告：如果您恶意去掉  sojson.v5  那么我们将不会保护您的 JavaScript 代码。请遵守规则  
  *  新版本: https://www.jsjiami.com/  支持批量加密，支持大文件加密，拥有更多加密。 */  
 ;var encode_version = 'sojson.v5'  
@@ -135,13 +135,12 @@ var a = {}
 /\* *  加密工具已经升级了一个版本，目前为  sojson.v5 ，主要加强了算法，以及防破解【绝对不可逆】配置，耶稣也无法 100% 还原，我说的。;   
 *  已经打算把这个工具基础功能一直免费下去。还希望支持我。   
 *  另外  sojson.v5  已经强制加入校验，注释可以去掉，但是  sojson.v5  不能去掉（如果你开通了 VIP，可以手动去掉），其他都没有任何绑定。   
-*  誓死不会加入任何后门，sojson JS  加密的使命就是为了保护你们的 Javascript 。  
+*  誓死不会加入任何后门，sojson JS  加密的使命就是为了保护你们的 Javascript 。
  *  警告：如果您恶意去掉  sojson.v5  那么我们将不会保护您的 JavaScript 代码。请遵守规则    
  *  新版本: https://www.jsjiami.com/  支持批量加密，支持大文件加密，拥有更多加密。   
  \*/
 
-  
- var a = {},  
+var a = {},  
     b = {};
 
 (function () {  
@@ -173,11 +172,11 @@ if (!(typeof _0x4c3590 !== "undefined" && _0x4c3590 === "sojson.v5")) {
 
 ;  
 encode_version = 'sojson.v5';  
-是不是感觉效果很显著，那就认真看看本文是怎么实现的吧，哈哈。  
+是不是感觉效果很显著，那就认真看看本文是怎么实现的吧，哈哈。
 下面我来介绍下还原流程  
 0，你肯定是要了解 ast 的概念和 babel 这一工具的具体使用的，我推荐几个链接，多读几遍肯定大有收获：  
-a>[https://github.com/yacan8/blog/blob/master/posts/JavaScript%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91AST.md](https://github.com/yacan8/blog/blob/master/posts/JavaScript%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91AST.md)：这是基础，多翻几遍，最好背过，才能更得心应手的使用 babel。  
-b>[https://astexplorer.net/](https://astexplorer.net/) :  可视化的显示 ast 结构，开发时必不可少。  
+a>[https://github.com/yacan8/blog/blob/master/posts/JavaScript%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91AST.md](https://github.com/yacan8/blog/blob/master/posts/JavaScript%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91AST.md)：这是基础，多翻几遍，最好背过，才能更得心应手的使用 babel。
+b>[https://astexplorer.net/](https://astexplorer.net/) :  可视化的显示 ast 结构，开发时必不可少。
 1，分析结构  
 ![](https://bbs.nightteam.cn/forum.php?mod=attachment&aid=MjkxfDA2MmQyOWVhfDE2NDY0MDcyNjh8MjIyMnwxNDk2&noupdate=yes)
 
@@ -196,7 +195,7 @@ b>[https://astexplorer.net/](https://astexplorer.net/) :  可视化的显示 as
 
 2020-4-30 01:43 上传
 
-2，结构已经清楚了，那我们就先用\_0x4d94 方法把加密替换一下吧。  
+2，结构已经清楚了，那我们就先用\_0x4d94 方法把加密替换一下吧。
 ![](https://bbs.nightteam.cn/forum.php?mod=attachment&aid=Mjk1fDc4NDgzNmEyfDE2NDY0MDcyNjh8MjIyMnwxNDk2&noupdate=yes)
 
 **image.png** _(83.59 KB, 下载次数: 0)_
@@ -220,8 +219,8 @@ const {decryptStr, decryptStrFnName} = require('./module');
 //  使用 parse 将 js 转为 ast 语法树  
 const ast = parser.parse(jsStr);
 
-//  使用 traverse 遍历语法树，因为方法的调用为 CallExpression 类型，所以我们只对 type 为 CallExpression 的节点进行处理。  
-//  类型的查看方式看代码后面的图。  
+//  使用 traverse 遍历语法树，因为方法的调用为 CallExpression 类型，所以我们只对 type 为 CallExpression 的节点进行处理。
+//  类型的查看方式看代码后面的图。
 traverse(ast,{  
     CallExpression:funToStr  
 })
@@ -233,8 +232,7 @@ if(curNode.callee.name === decryptStrFnName && curNode.arguments.length ===
     {  
         var strC = decryptStr(curNode.arguments[0].value, curNode.arguments[1].value);
 
-  
-        // 将匹配到的位置   的   方法调用   使用 replaceWith 方法   替换为字符串。  
+// 将匹配到的位置   的   方法调用   使用 replaceWith 方法   替换为字符串。
         path.replaceWith(t.stringLiteral(strC))
 
 }  
@@ -249,7 +247,7 @@ if(curNode.callee.name === decryptStrFnName && curNode.arguments.length ===
 2020-4-30 01:43 上传
 
 3, 进行到此，第一部分的代码已经完全无用了，我们把 ast 再转回 js 代码看一下效果:  
-使用 generator 将 ast 语法树转为 js 代码。  
+使用 generator 将 ast 语法树转为 js 代码。
 let {code} = generator(ast);
 
 console.log(code);  
@@ -301,8 +299,7 @@ var objName = node.id.name;
         {  
         //  对方法属性的遍历
 
-  
-            var retStmt = prop.value.body.body[0];
+var retStmt = prop.value.body.body[0];
 
 //  该 path 的最近父节点               
             var fnPath = path.getFunctionParent();  
@@ -311,8 +308,7 @@ var objName = node.id.name;
                     if (!t.isMemberExpression(\_path.node.callee))  
                         return;
 
-  
-                    //  判断是否符合条件  
+//  判断是否符合条件  
                     var _node = _path.node.callee;  
                     if (!t.isIdentifier(\_node.object) || _node.object.name !== objName)  
                         return;  
@@ -360,19 +356,18 @@ var args = _path.node.arguments;
 
 });
 
-//  遍历过的对象无用了，直接删除。  
+//  遍历过的对象无用了，直接删除。
     path.remove();  
 }  
 ok，经过上面的处理，那些对象也被干掉了，让我们将 ast 语法树转为 js 代码，看一下现在 js 代码的样子  
 /\*  
  *  加密工具已经升级了一个版本，目前为  sojson.v5 ，主要加强了算法，以及防破解【绝对不可逆】配置，耶稣也无法 100% 还原，我说的。;  
- *  已经打算把这个工具基础功能一直免费下去。还希望支持我。  
- *  另外  sojson.v5  已经强制加入校验，注释可以去掉，但是  sojson.v5  不能去掉（如果你开通了 VIP，可以手动去掉），其他都没有任何绑定。  
- *  誓死不会加入任何后门，sojson JS  加密的使命就是为了保护你们的 Javascript 。  
+ *  已经打算把这个工具基础功能一直免费下去。还希望支持我。
+ *  另外  sojson.v5  已经强制加入校验，注释可以去掉，但是  sojson.v5  不能去掉（如果你开通了 VIP，可以手动去掉），其他都没有任何绑定。
+ *  誓死不会加入任何后门，sojson JS  加密的使命就是为了保护你们的 Javascript 。
  *  警告：如果您恶意去掉  sojson.v5  那么我们将不会保护您的 JavaScript 代码。请遵守规则  
  *  新版本: https://www.jsjiami.com/  支持批量加密，支持大文件加密，拥有更多加密。 \*/
 
-  
 var a = {},  
     b = {};  
 (function (\_0x117d09, _0x110647) {  
@@ -408,8 +403,7 @@ traverse(ast,{
 function convParam(path) {  
     var node = path.node;
 
-  
-    //  判断是否是我们想修改的节点  
+//  判断是否是我们想修改的节点  
     if (!t.isCallExpression(node.expression))  
         return;
 
@@ -431,13 +425,12 @@ path.traverse({
                 if (!t.isIdentifier(\_node.object) || _node.object.name !== paramName)  
                     return;
 
-  
-                //  有对实参的引用则   将形参的名字改为实参的名字  
+//  有对实参的引用则   将形参的名字改为实参的名字  
                 _node.object.name = argumentName;  
             }  
         });  
     }  
-    //  删除实参和形参的列表。  
+    //  删除实参和形参的列表。
     node.expression.arguments = [];  
     node.expression.callee.params = [];  
 }  
@@ -475,7 +468,7 @@ if (!(typeof _0x4c3590 !== "undefined" && _0x4c3590 === "sojson.v5")) {
 ;  
 encode_version = 'sojson.v5';  
 简单明了，这要是再看不懂就说不过去了吧!  
-结尾：至此，对该加密的还原就告一段落了，可以看到还原后的代码完全足够让我们愉快的 debug 了。第一部曲就讲这些了, 至于反控制流平坦化、作用域管理等等使用 babel 也可以轻易的解决，二部曲我可能会分享到这些。至于第二部曲是写该加密的 绝对不可逆配置 呢，还是写 jsfuck 的还原呢，我还没想好，各位也可以留言提建议。。没什么意外的话，应该会在 5.1 假期写完分享出来。源码放在下面了，回复后再看哦，省的我感觉像打单机，哈哈。  
+结尾：至此，对该加密的还原就告一段落了，可以看到还原后的代码完全足够让我们愉快的 debug 了。第一部曲就讲这些了, 至于反控制流平坦化、作用域管理等等使用 babel 也可以轻易的解决，二部曲我可能会分享到这些。至于第二部曲是写该加密的 绝对不可逆配置 呢，还是写 jsfuck 的还原呢，我还没想好，各位也可以留言提建议。。没什么意外的话，应该会在 5.1 假期写完分享出来。源码放在下面了，回复后再看哦，省的我感觉像打单机，哈哈。
 各位拜拜~  
 [ttreply]  
 [https://github.com/chencchen/webcrawler/tree/master/%E4%BD%BF%E7%94%A8ast%E5%AF%B9%E6%9F%90v5%E5%8A%A0%E5%AF%86%E8%BF%9B%E8%A1%8C%E8%BF%98%E5%8E%9F](https://github.com/chencchen/webcrawler/tree/master/%E4%BD%BF%E7%94%A8ast%E5%AF%B9%E6%9F%90v5%E5%8A%A0%E5%AF%86%E8%BF%9B%E8%A1%8C%E8%BF%98%E5%8E%9F)  

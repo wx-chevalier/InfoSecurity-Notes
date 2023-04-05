@@ -2,34 +2,27 @@
 
 > [原创] 分享一个 Android 通用 svc 跟踪以及 hook 方案——Frida-Seccomp
 
-[](#一个android通用svc跟踪以及hook方案——frida-seccomp)一个 Android 通用 svc 跟踪以及 hook 方案——Frida-Seccomp
-=========================================================================================
+# [](#一个android通用svc跟踪以及hook方案——frida-seccomp)一个 Android 通用 svc 跟踪以及 hook 方案——Frida-Seccomp
 
-[](#效果：)效果：
-===========
+# [](#效果：)效果：
 
-对 openat 进行跟踪
--------------
+## 对 openat 进行跟踪
 
 ![](https://bbs.pediy.com/upload/attach/202203/903162_55EERQXHHTXD4FW.jpg)
 
-对 recvfrom 进行跟踪
----------------
+## 对 recvfrom 进行跟踪
 
 ![](https://bbs.pediy.com/upload/attach/202203/903162_AE84XGKCDB8RBY6.jpg)  
 **在这里感谢珍惜大佬介绍的 seccomp 机制，推荐一波珍惜大佬的课程能学到很多有趣的骚操作。**
 
-什么是 seccomp
-===========
+# 什么是 seccomp
 
 [seccomp 沙箱机制介绍文章](http://pollux.cc/2019/09/22/seccomp%E6%B2%99%E7%AE%B1%E6%9C%BA%E5%88%B6%20&%202019ByteCTF%20VIP/#%E9%80%9A%E8%BF%87%E4%BD%BF%E7%94%A8%E8%AF%A5%E5%BA%93%E7%9A%84%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0%E7%A6%81%E7%94%A8execve%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8)  
 seccomp 是 Linux 内核提供的一种应用程序沙箱机制，主要通过限制进程的系统调用来完成部分沙箱隔离功能。seccomp-bpf 是 seccomp 的一个扩展，它可以通过配置来允许应用程序调用其他的系统调用。
 
-如何和 frida 结合
-============
+# 如何和 frida 结合
 
-基本原理
-----
+## 基本原理
 
 ```
 这是一个bpf规则：
@@ -45,8 +38,7 @@ struct sock_filter filter[] = {
 
 seccomp 的具体用法可以参考「**什么是 seccomp**」中的 seccomp 介绍文章。当返回规则设置为「SECCOMP_RET_TRAP」，目标系统调用时 seccomp 会产生一个 SIGSYS 系统信号并软中断，这时就可以通过捕获这个 SIGSYS 信号获得 svc 调用和打印具体参数。
 
-如何脚本化安装 seccomp 规则呢
--------------------
+## 如何脚本化安装 seccomp 规则呢
 
 这里使用 Frida 的 API「CModule」，CModule 提供强大的动态编译功能可以让你在 JS 中写 C，  
 **frida 文档中的示例**
@@ -58,13 +50,12 @@ const cm = new CModule(`
 }
 `);
 const hello = new NativeFunction(cm.hello, 'void', []);
-hello(); 
+hello();
 ```
 
-如何捕获异常
-------
+## 如何捕获异常
 
-使用 Frida 的 API「**Process.setExceptionHandler**」即可捕获异常并在自己写的回调中进行数据处理。  
+使用 Frida 的 API「**Process.setExceptionHandler**」即可捕获异常并在自己写的回调中进行数据处理。
 数据处理的逻辑解释写在注释里啦。
 
 ```
@@ -105,14 +96,13 @@ hello();
 
 ```
 
-还有什么坑
------
+## 还有什么坑
 
 ### 1.syscall 调用 resume
 
 #### 问题描述
 
-根据 Frida 文档介绍「**setExceptionHandler**」捕获异常后只需要让回调返回 true 就会 resume 原本的线程，但是其只是跳过了 svc 指令继续执行，实际上并不会执行 svc，这时候如果不执行 syscall 轻则导致 APP 数据异常，重则导致 APP 直接崩溃。所以在异常的回调中需要手动调用了 syscall 并赋值给 x0。  
+根据 Frida 文档介绍「**setExceptionHandler**」捕获异常后只需要让回调返回 true 就会 resume 原本的线程，但是其只是跳过了 svc 指令继续执行，实际上并不会执行 svc，这时候如果不执行 syscall 轻则导致 APP 数据异常，重则导致 APP 直接崩溃。所以在异常的回调中需要手动调用了 syscall 并赋值给 x0。
 但这时候会发生个新的问题，因为在主线程开启 seccomp 后，主线程和其后创建出来的线程都会被 seccomp 规则约束，在异常处理函数直接调用 syscall 同样会被 seccomp 约束再次抛出异常，就形成了” 死锁 “了。
 
 #### 如何解决
@@ -127,7 +117,7 @@ hello();
 
 #### 如何解决
 
-手动实现堆栈回溯，原理是 Arm64 中每个函数都会在函数头部位置对 x29、x30 寄存器存入栈中，所以可以对 x29 不断读取往上回溯，最后得到完整的堆栈信息。  
+手动实现堆栈回溯，原理是 Arm64 中每个函数都会在函数头部位置对 x29、x30 寄存器存入栈中，所以可以对 x29 不断读取往上回溯，最后得到完整的堆栈信息。
 **实现**
 
 ```
@@ -167,21 +157,18 @@ function stacktrace(pc, fp, sp) {
 
 #### 如何解决
 
-直接改用 syscall 线程使用「**__android_print_log**」打印信息
+直接改用 syscall 线程使用「**\_\_android_print_log**」打印信息
 
-还可以实现什么
-=======
+# 还可以实现什么
 
 在调用线程 syscall 前后可以更改传参、返回值、地址等更改，达到 HOOK 的效果
 
-GITHUB
-======
+# GITHUB
 
 **求 star**  
 [https://github.com/Abbbbbi/Frida-Seccomp](https://github.com/Abbbbbi/Frida-Seccomp)
 
-如何使用
-====
+# 如何使用
 
 ```
 pip3 install frida
@@ -190,7 +177,7 @@ python3 multi_frida_seccomp.py
 ```
 
 log 信息可以在 logcat 过滤 “seccomp” 查看  
-同时也自动保存到了「包名_pid_时间戳」文件夹内（支持多进程）  
+同时也自动保存到了「包名*pid*时间戳」文件夹内（支持多进程）  
 ![](https://bbs.pediy.com/upload/attach/202203/903162_DSYWMSBGQMMVBJ8.png)
 
 [【公告】看雪团队招聘安全工程师，将兴趣和工作融合在一起！看雪 20 年安全圈的口碑，助你快速成长！](https://job.kanxue.com/position-read-1104.htm)

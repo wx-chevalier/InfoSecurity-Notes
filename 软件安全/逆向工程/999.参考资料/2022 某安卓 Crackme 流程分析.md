@@ -6,7 +6,7 @@ jadx 打开 apk
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaOPzToMvcJRyrkHtOIsXuYgXmZTZWAgNdlaiahy1x8wXer6wADfL6AKA/640?wx_fmt=png)
 
-锁定函数  
+锁定函数
 
 ```
 public native boolean checkSn(String str);
@@ -72,7 +72,7 @@ public class uniStart extends AbstractJni implements IOResolver {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiayziaD8HLnnOBsAqQq6A4BdiaJdF1kSe1F4ic9Q7QpP7fXWefsXqbP6nqg/640?wx_fmt=png)
 
-拿到函数地址：0x6f74  
+拿到函数地址：0x6f74
 
 lib52pojie.so 静态分析该地址处的函数，开发过程使用了内联汇编，静态基本上得不到什么有效信息
 
@@ -128,7 +128,7 @@ public class uniStart extends AbstractJni implements IOResolver {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaWGxayu8oexgSKu2qNVKtc8icjB2VErpfUy8GQV90RJyZiceeA3KwXxicg/640?wx_fmt=png)
 
-在 trace.log 中搜索 cmp 指令  
+在 trace.log 中搜索 cmp 指令
 
 ```
 [lib52pojie.so] [0x06fd8] [ 1f 40 00 71 ] 0x40006fd8: cmp w0, #0x10 >>>   w0=0x5//w0=0x5
@@ -141,7 +141,7 @@ public class uniStart extends AbstractJni implements IOResolver {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaMMs7ncO5nnO2uYZs0qmblXY5icwZG5jCwvPzUMsm3iaeJWszRS21JXMQ/640?wx_fmt=png)
 
-39000 + 行，trace 应该是正常了，当然这个入参函数返回的结果肯定是 false，根据题目要求，传入参数，经过计算得到值，那么这个值一定会与内存中某个值做异同判断，再根据判断的结果返回到 java 中的 boolean 中，那么就还是从 trace 日志中的 cmp 指令下手，全局搜索 cmp 关键字从后往前找，  
+39000 + 行，trace 应该是正常了，当然这个入参函数返回的结果肯定是 false，根据题目要求，传入参数，经过计算得到值，那么这个值一定会与内存中某个值做异同判断，再根据判断的结果返回到 java 中的 boolean 中，那么就还是从 trace 日志中的 cmp 指令下手，全局搜索 cmp 关键字从后往前找，
 
 ```
 [lib52pojie.so] [0x07848] [ 1f 00 00 71 ] 0x40007848: cmp w0, #0 >>>   w0=0xffffffa2//w0=0xffffffa2
@@ -178,7 +178,7 @@ public void debugger1() {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiadOic5FdjmicxZMpkzTOkNP5PzydIn4hKStufyMubKan6iaLJjJOFT7KbQ/640?wx_fmt=png)
 
-最终结果返回 true，那么此处位置则可以暂时认为是最终判断的位置，记录此处地址：0x7848  
+最终结果返回 true，那么此处位置则可以暂时认为是最终判断的位置，记录此处地址：0x7848
 
 以该地址为起始点，往上查找 w0 或者 x0 第一次出现的位置
 
@@ -207,7 +207,7 @@ public void debugger1() {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaxz5WmMOcncGEBiabLGmeGAxNdJ5ibPfVickvUK0ibqmQfUbcW0sS78UwYQ/640?wx_fmt=png)
 
-得到两个 32 字节长度的 hex，初步判断这里可能就是最终需要做判断的两个值，通过修改入参发现，x0 在内存中的值动态变化，x1 在内存中的值是固定不变的，记录下这个地方的值  
+得到两个 32 字节长度的 hex，初步判断这里可能就是最终需要做判断的两个值，通过修改入参发现，x0 在内存中的值动态变化，x1 在内存中的值是固定不变的，记录下这个地方的值
 
 ```
 maybe encrypt result: 56ec3d4c526764d7949fe1f201d9fe45ce3601c8d282129884d8bf985034450e
@@ -236,11 +236,11 @@ maybe check result: 6e6649305baf80c49b1b063c0500c80346ccfd42b3063ae7312b52a21cd3
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWialqHq60zutKOpjica4Dkr6Ps7kKO6iaTZorYaT568NWU8kLJZPxGWBbXw/640?wx_fmt=png)
 
-固定 w9 取值为 0x7a3a389c，与 x8 相加得到 0x400369f0 地址，在此处获取该地址的内存值如下  
+固定 w9 取值为 0x7a3a389c，与 x8 相加得到 0x400369f0 地址，在此处获取该地址的内存值如下
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiamSpyxu3o7E5tk0oQOwqrNmPtuGkujgI7W44jibaibscj0sMTLWdvkQSg/640?wx_fmt=png)
 
-可得上述 x1 的值是固定写死在内存中的，这个结论极大地加深了该值作为 check result 的可能性，此时记录该内存值  
+可得上述 x1 的值是固定写死在内存中的，这个结论极大地加深了该值作为 check result 的可能性，此时记录该内存值
 
 回过头，我们再看下 encrypt result 的 set 过程
 
@@ -263,23 +263,23 @@ public void debugger1() {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaoHfvw2CtHrOX4jGxmmK7iahLe58DxPcsk3IXuQ5VYc1OzN5mNlU1lVw/640?wx_fmt=png)
 
-debugger 调试 0xcc1c 地址  
+debugger 调试 0xcc1c 地址
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiatgH73aDaiazxAjDbFCvl6xibia860t2A3MGWsE0hQJSpicdKp32JJCd1lw/640?wx_fmt=png)
 
-此时 0x40398058 地址处还未写入值，可能的 encrypt result 和入参明文都在 x1 寄存器处，trace.log 中向上查找 0xbffff480 的写入位置  
+此时 0x40398058 地址处还未写入值，可能的 encrypt result 和入参明文都在 x1 寄存器处，trace.log 中向上查找 0xbffff480 的写入位置
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiakKz6YDO2lLHzIs9PpXZ8JEcV3ysB2cibav5q14tSc8D4yz73yH3kVnw/640?wx_fmt=png)
 
-一共 166 条结果，往上翻找  
+一共 166 条结果，往上翻找
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWia7K3nW4WUBQtUASFKO3c9ibRtLNZ6gx4f60UBXgpnibQL6FDX6Lmzmcbg/640?wx_fmt=png)
 
-24000 行左右在大量的往 0xbffff480 地址处存储数据，跳至目标处  
+24000 行左右在大量的往 0xbffff480 地址处存储数据，跳至目标处
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaIJvHGibT0SI9yjvicnGqtbAd2d8fhHFAZyXiaXA6SQ5QO5PDp8a2KAC4w/640?wx_fmt=png)
 
-分别向 0xbffff480 的 0x0~0xf 偏移处写入 16 个字节的数据，将写入数据的最低位 hex 取出  
+分别向 0xbffff480 的 0x0~0xf 偏移处写入 16 个字节的数据，将写入数据的最低位 hex 取出
 
 ```
 strb w9, [x14] >>>   w9=0xa511f056x14=0xbffff480//w9=0xa511f056                 0x56
@@ -316,7 +316,7 @@ strb w8, [x14, #0xf] >>>   w8=0x1fed945x14=0xbffff480//w8=0x1fed945         0x45
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaJfgbqr0ibrabnJibOcd7gf1E6TfB9nIfTiaS3hbmjSAicmdW851IL7D0oQ/640?wx_fmt=png)
 
-0x8ff4 地址处 x8+0x20=0xbffff1d8+0x20=0xbffff1f8  
+0x8ff4 地址处 x8+0x20=0xbffff1d8+0x20=0xbffff1f8
 
 0x90f4 地址处 x15+0x118=0xbffffe0e+0x118=0xbffff1f8
 
@@ -333,24 +333,24 @@ strb w8, [x14, #0xf] >>>   w8=0x1fed945x14=0xbffff480//w8=0x1fed945         0x45
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiazIwG3DATcLs4ZATthMSIXb8mwTZze0cwvwhicNWgFlWjFrgroBiaF36g/640?wx_fmt=png)
 
-从第一处引用位置往回推  
+从第一处引用位置往回推
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaFEIw9wRVrnTEXMGTCvrJWjeg3CsUtzvBu5jwr9AEUIvY4h1LcIicqpw/640?wx_fmt=png)
 
-第一轮运算 ret 之后想 x30 返回地址为 0x8fec，因此可以判断跳转指令 b 的地址为 0x8fec-0x4=0x8fe8，向上查找 0x8fe8 地址  
+第一轮运算 ret 之后想 x30 返回地址为 0x8fec，因此可以判断跳转指令 b 的地址为 0x8fec-0x4=0x8fe8，向上查找 0x8fe8 地址
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWianVnkCuqictTdKaPiawzvwpbXXz8rFSfKenp0AsJqL3pmlU6T5cygTMdA/640?wx_fmt=png)
 
-因此每轮运算即为 0x8fe8~0x8fec 之间的大概 300 多行指令，上图中框出来的则为首轮运算的参数，通过对地址 0x8fd4 全局搜索，查看前 32 轮运算的所有入参  
+因此每轮运算即为 0x8fe8~0x8fec 之间的大概 300 多行指令，上图中框出来的则为首轮运算的参数，通过对地址 0x8fd4 全局搜索，查看前 32 轮运算的所有入参
 
 第一次：
 
 ```
 # 入参
-[lib52pojie.so] [0x08fd4] [ e1 03 15 aa ] 0x40008fd4: mov x1, x21 >>>   x1=0x8d71d734x21=0x37561947//x1=0x37561947    
-[lib52pojie.so] [0x08fd8] [ e2 03 16 aa ] 0x40008fd8: mov x2, x22 >>>   x2=0x48x22=0x20155a74//x2=0x20155a74        
-[lib52pojie.so] [0x08fdc] [ e3 03 17 aa ] 0x40008fdc: mov x3, x23 >>>   x3=0x10x23=0x99813f01//x3=0x99813f01        
-[lib52pojie.so] [0x08fe0] [ e4 03 18 aa ] 0x40008fe0: mov x4, x24 >>>   x4=0x40x24=0x81b236f5//x4=0x81b236f5        
+[lib52pojie.so] [0x08fd4] [ e1 03 15 aa ] 0x40008fd4: mov x1, x21 >>>   x1=0x8d71d734x21=0x37561947//x1=0x37561947
+[lib52pojie.so] [0x08fd8] [ e2 03 16 aa ] 0x40008fd8: mov x2, x22 >>>   x2=0x48x22=0x20155a74//x2=0x20155a74
+[lib52pojie.so] [0x08fdc] [ e3 03 17 aa ] 0x40008fdc: mov x3, x23 >>>   x3=0x10x23=0x99813f01//x3=0x99813f01
+[lib52pojie.so] [0x08fe0] [ e4 03 18 aa ] 0x40008fe0: mov x4, x24 >>>   x4=0x40x24=0x81b236f5//x4=0x81b236f5
 [lib52pojie.so] [0x08fe4] [ e5 03 19 aa ] 0x40008fe4: mov x5, x25 >>>   x5=0x20x25=0x3c3b90e65e1f82//x5=0x3c3b90e65e1f82
 # 返回值
 [lib52pojie.so] [0x0acc4] [ 00 00 13 ca ] 0x4000acc4: eor x0, x0, x19 >>>   x0=0xb69f0624f6464bx0=0xb69f0624f6464bx19=0x37561947//x0=0xb69f0613a05f0c
@@ -397,7 +397,7 @@ strb w8, [x14, #0xf] >>>   w8=0x1fed945x14=0xbffff480//w8=0x1fed945         0x45
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaK59Fia0Ruhj5NQoIghzV9zGc9djPEibkfMH6h2R12hcaWzHic3b4BFEYA/640?wx_fmt=png)
 
-如此我们只需要知道第一轮传入的参数，就能拿到经过 32 轮运算之后的结果了  
+如此我们只需要知道第一轮传入的参数，就能拿到经过 32 轮运算之后的结果了
 
 第一轮入参如下
 
@@ -435,13 +435,13 @@ strb w8, [x14, #0xf] >>>   w8=0x1fed945x14=0xbffff480//w8=0x1fed945         0x45
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiadLQDA0eDTJ7t2NLia5fOrMkFiaK8B1xPHnrEwPgSl9yaP2wWDDJj42pg/640?wx_fmt=png)
 
-前 16 个结果的 w9 为入参`52pojieairadaira`对应的 hex，指令执行结束 w8 对应的结果为【'0x37', '0x19', '0x56', '0x47', '0x20', '0x5a', '0x15', '0x74', '0x99', '0x3f', '0x81', '0x1', '0x81', '0x36', '0xb2', '0xf5'】，与上述我们需求的第一轮运算入参的所有 16 个字节匹配  
+前 16 个结果的 w9 为入参`52pojieairadaira`对应的 hex，指令执行结束 w8 对应的结果为【'0x37', '0x19', '0x56', '0x47', '0x20', '0x5a', '0x15', '0x74', '0x99', '0x3f', '0x81', '0x1', '0x81', '0x36', '0xb2', '0xf5'】，与上述我们需求的第一轮运算入参的所有 16 个字节匹配
 
 再看匹配到的后 16 个结果中，w9 的 hex 组装为【0x0, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10】，w8 的参数组装为 0x56,0xec,0x3d,0x4c,0x52,0x67,0x64,0xd7,0x94,0x9f,0xe1,0xf2,0x1,0xd9,0xfe,0x45，正好对应前 32 轮的计算结果 56ec3d4c526764d7949fe1f201d9fe45
 
 因此整个流程大概是
 
-①入参 hex 异或 xor_key_table（【0x2, 0x2b, 0x26, 0x28, 0x4a, 0x33, 0x70, 0x15, 0xf0, 0x4d, 0xe0, 0x65, 0xe0, 0x5f, 0xc0, 0x94】），对应索引异或得到【0x37,0x19,0x56,0x47,0x20,0x5a,0x15,0x74,0x99,0x3f,0x81,0x01,0x81,0x36,0xb2,0xf5】
+① 入参 hex 异或 xor_key_table（【0x2, 0x2b, 0x26, 0x28, 0x4a, 0x33, 0x70, 0x15, 0xf0, 0x4d, 0xe0, 0x65, 0xe0, 0x5f, 0xc0, 0x94】），对应索引异或得到【0x37,0x19,0x56,0x47,0x20,0x5a,0x15,0x74,0x99,0x3f,0x81,0x01,0x81,0x36,0xb2,0xf5】
 
 ```
 # 52pojieairadaira
@@ -454,7 +454,7 @@ for i in range(len(hex_param)):
 
 ```
 
-②将上述异或之后得到的 hex 移位拼接成【0x37561947，0x20155a74，0x99813f01，0x81b236f5】
+② 将上述异或之后得到的 hex 移位拼接成【0x37561947，0x20155a74，0x99813f01，0x81b236f5】
 
 ```
 params = []
@@ -464,7 +464,7 @@ for i in range(0, len(real_param), 4):
 
 ```
 
-③经过 32 轮运算（汇编转 c/python，无捷径）
+③ 经过 32 轮运算（汇编转 c/python，无捷径）
 
 ```
 hex_list = [0xd6, 0x90, 0xe9, 0xfe, 0xcc, 0xe1, 0x3d, 0xb7, 0x16, 0xb6, 0x14, 0xc2, 0x28, 0xfb, 0x2c, 0x05, 0x2b, 0x67,
@@ -569,7 +569,7 @@ for i in range(32):
 
 ```
 
-④将运算结果取低位移位运算（0x9100）
+④ 将运算结果取低位移位运算（0x9100）
 
 ```
 encrypt_hex = [0] * 16
@@ -624,7 +624,7 @@ print(",".join([hex(i) for i in encrypt_hex]))
 
 以上前 32 轮运算结束，0xbffff480 处的前 16 个字节也已得到
 
-⑤将上述结果【0x56,0xec,0x3d,0x4c,0x52,0x67,0x64,0xd7,0x94,0x9f,0xe1,0xf2,0x1,0xd9,0xfe,0x45】作为新的异或 table 与【0x00,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10】对应位置异或
+⑤ 将上述结果【0x56,0xec,0x3d,0x4c,0x52,0x67,0x64,0xd7,0x94,0x9f,0xe1,0xf2,0x1,0xd9,0xfe,0x45】作为新的异或 table 与【0x00,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10】对应位置异或
 
 ```
 hex_param_01 = [0x0, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10]
@@ -636,11 +636,11 @@ for i in range(len(hex_param_01)):
 
 ```
 
-重复上述②③④步，得到第 64 轮结束后的 16 字节为【0xce,0x36,0x1,0xc8,0xd2,0x82,0x12,0x98,0x84,0xd8,0xbf,0x98,0x50,0x34,0x45,0xe】，正好对应 0xbffff480 处的后 16 字节
+重复上述 ②③④ 步，得到第 64 轮结束后的 16 字节为【0xce,0x36,0x1,0xc8,0xd2,0x82,0x12,0x98,0x84,0xd8,0xbf,0x98,0x50,0x34,0x45,0xe】，正好对应 0xbffff480 处的后 16 字节
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaGruPMP1ibRRaF5yfUULNSIcKYbiaJjmqqbUj2thZkmaV0CbZ4yo7rmWA/640?wx_fmt=png)
 
-至此，整个加密流程则已经完整分析结束，得到最终生成的结果：56ec3d4c526764d7949fe1f201d9fe45ce3601c8d282129884d8bf985034450e  
+至此，整个加密流程则已经完整分析结束，得到最终生成的结果：56ec3d4c526764d7949fe1f201d9fe45ce3601c8d282129884d8bf985034450e
 
 根据题目要求，我们需要传入明文让这个最终的结果等于：6e6649305baf80c49b1b063c0500c80346ccfd42b3063ae7312b52a21cd334d8，这样才能拿到正确的 flag 并最终让函数执行结果返回 true
 
@@ -752,7 +752,7 @@ def encrypt(*args):
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaOYt1yfZmEenzrrdzLagmBfiabmpJVO0freX89sHLatnZOKyGs5IuibZQ/640?wx_fmt=png)
 
-是能够匹配上最后一轮传入的第一个参数，另外根据图中还能得到的另一个信息就是下部分计算的后 16 字节结果是能够 encrypt 最后一轮拿到的（同上述第四步），如下规则  
+是能够匹配上最后一轮传入的第一个参数，另外根据图中还能得到的另一个信息就是下部分计算的后 16 字节结果是能够 encrypt 最后一轮拿到的（同上述第四步），如下规则
 
 ```
 0xe8c7201c34d3d8 & 0xffffffff -> 0x1c34d3d8 -> 0x1c,0xd3,0x34,0xd8 -> 12-15字节
@@ -947,7 +947,7 @@ flag: [WwW.52P0Ji3.cN]
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/YY4a1FLD4yiaRqhUn1B4oa6IGz5wP2HWiaVS68ztV6fcuWcF3xD4Eic7Y1OrgV1Jr70ia81KcoIre7pp1kcTiag9gKA/640?wx_fmt=png)
 
-写在最后，许久没更新文章了，本篇篇幅较多，连贯性可能不够，感兴趣的小伙伴可自行根据文章流程尝试获取 flag，后台回复 "查查" 获取资源包（本篇文章的 md 文档，观感较好，.py，.java 及 trace 文件等）。  
+写在最后，许久没更新文章了，本篇篇幅较多，连贯性可能不够，感兴趣的小伙伴可自行根据文章流程尝试获取 flag，后台回复 "查查" 获取资源包（本篇文章的 md 文档，观感较好，.py，.java 及 trace 文件等）。
 
 最后的最后
 

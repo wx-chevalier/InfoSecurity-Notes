@@ -2,14 +2,12 @@
 
 > 建了一个知识星球：天问之路如果想学习二进制安全，或者和我交流，欢迎来这里找我 w Frida 环境 https://github.com/frida/frida pyenvpython 全版本随机切换，这里提供......
 
-[](#建了一个知识星球：天问之路 "建了一个知识星球：天问之路")建了一个知识星球：天问之路
------------------------------------------------
+## [](#建了一个知识星球：天问之路 "建了一个知识星球：天问之路")建了一个知识星球：天问之路
 
 如果想学习二进制安全，或者和我交流，欢迎来这里找我 w  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2021-06-22-034815.jpg)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2021-06-22-034815.jpg)
 
-[](#Frida环境 "Frida环境")Frida 环境
-------------------------------
+## [](#Frida环境 "Frida环境")Frida 环境
 
 [https://github.com/frida/frida](https://github.com/frida/frida)
 
@@ -114,16 +112,16 @@ chmod +x fs
 ### [](#frida开发环境搭建 "frida开发环境搭建")frida 开发环境搭建
 
 1.  安装
-    
+
     ```
     git clone https://github.com/oleavr/frida-agent-example.git
     cd frida-agent-example/
     npm install
     ```
-    
+
 2.  使用 vscode 打开此工程，在 agent 文件夹下编写 js，会有智能提示。
 3.  `npm run watch`会监控代码修改自动编译生成 js 文件
-4.  python 脚本或者 cli 加载_agent.js  
+4.  python 脚本或者 cli 加载\_agent.js  
     `frida -U -f com.example.android --no-pause -l _agent.js`
 
 下面是测试脚本
@@ -158,8 +156,7 @@ input() #等待输入
 
 解释一下，这个脚本就是先通过`frida.get_device_manager().add_remote_device`来找到 device, 然后 spawn 方式启动 settings，然后 attach 到上面，并执行 frida 脚本。
 
-[](#FRIDA基础 "FRIDA基础")FRIDA 基础
-------------------------------
+## [](#FRIDA基础 "FRIDA基础")FRIDA 基础
 
 ### [](#frida查看当前存在的进程 "frida查看当前存在的进程")frida 查看当前存在的进程
 
@@ -270,7 +267,7 @@ original call : str:LoWeRcAsE Me!!!!!!!!!
 12-21 04:46:49.875 9594-9594/myapplication.example.com.frida_demo D/sakura.string: sakura
 ```
 
-### [](#frida寻找instance，主动调用。 "frida寻找instance，主动调用。")frida 寻找 instance，主动调用。
+### [](#frida寻找instance，主动调用。"frida寻找instance，主动调用。")frida 寻找 instance，主动调用。
 
 ```
 function main() {
@@ -346,7 +343,7 @@ script.exports.callfun()
 ```
 
 ```
-sakura@sakuradeMacBook-Pro:~/gitsource/frida-agent-example/agent$ python frida_demo_rpc_loader.py 
+sakura@sakuradeMacBook-Pro:~/gitsource/frida-agent-example/agent$ python frida_demo_rpc_loader.py
 begin
 find instance :myapplication.example.com.frida_demo.MainActivity@1d4b09d
 result of fun(string):sakura
@@ -440,7 +437,7 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
-先分析问题，我的最终目标是让 message_tv.setText 可以” 发送”username 为 admin 的 base64 字符串。  
+先分析问题，我的最终目标是让 message_tv.setText 可以” 发送”username 为 admin 的 base64 字符串。
 那肯定是 hook TextView.setText 这个函数。
 
 ```
@@ -498,8 +495,8 @@ input()
 ```
 
 ```
-sakura@sakuradeMacBook-Pro:~/gitsource/frida-agent-example/agent$ python frida_demo_rpc_loader2.py 
-Script loaded successfully 
+sakura@sakuradeMacBook-Pro:~/gitsource/frida-agent-example/agent$ python frida_demo_rpc_loader2.py
+Script loaded successfully
 {'type': 'send', 'payload': 'Sending to the server :c2FrdXJhOjEyMzQ1Ng==\n'}
 None
 Sending to the server :c2FrdXJhOjEyMzQ1Ng==
@@ -516,40 +513,33 @@ string_to_recv: b'YWRtaW46MTIzNDU2Jw=='
 
 ### [](#API-List "API List")API List
 
-*   `Java.choose(className: string, callbacks: Java.ChooseCallbacks): void`  
-    通过扫描 Java VM 的堆来枚举 className 类的 live instance。
-    
-*   `Java.use(className: string): Java.Wrapper<{}>`  
-    动态为 className 生成 JavaScript Wrapper，可以通过调用`$new()`来调用构造函数来实例化对象。  
-    在实例上调用`$dispose()`以对其进行显式清理，或者等待 JavaScript 对象被 gc。
-    
-*   `Java.perform(fn: () => void): void`  
-    Function to run while attached to the VM.  
-    Ensures that the current thread is attached to the VM and calls fn. (This isn’t necessary in callbacks from Java.)  
-    Will defer calling fn if the app’s class loader is not available yet. Use Java.performNow() if access to the app’s classes is not needed.
-    
-*   `send(message: any, data?: ArrayBuffer | number[]): void`  
-    任何 JSON 可序列化的值。  
-    将 JSON 序列化后的 message 发送到您的基于 Frida 的应用程序，并包含 (可选) 一些原始二进制数据。  
-    The latter is useful if you e.g. dumped some memory using NativePointer#readByteArray().
-    
-*   `recv(callback: MessageCallback): MessageRecvOperation`  
-    Requests callback to be called on the next message received from your Frida-based application.  
-    This will only give you one message, so you need to call recv() again to receive the next one.
-    
-*   `wait(): void`  
-    堵塞，直到 message 已经 receive 并且 callback 已经执行完毕并返回
-    
+- `Java.choose(className: string, callbacks: Java.ChooseCallbacks): void`  
+  通过扫描 Java VM 的堆来枚举 className 类的 live instance。
+- `Java.use(className: string): Java.Wrapper<{}>`  
+  动态为 className 生成 JavaScript Wrapper，可以通过调用`$new()`来调用构造函数来实例化对象。
+  在实例上调用`$dispose()`以对其进行显式清理，或者等待 JavaScript 对象被 gc。
+- `Java.perform(fn: () => void): void`  
+  Function to run while attached to the VM.  
+  Ensures that the current thread is attached to the VM and calls fn. (This isn’t necessary in callbacks from Java.)  
+  Will defer calling fn if the app’s class loader is not available yet. Use Java.performNow() if access to the app’s classes is not needed.
+- `send(message: any, data?: ArrayBuffer | number[]): void`  
+  任何 JSON 可序列化的值。
+  将 JSON 序列化后的 message 发送到您的基于 Frida 的应用程序，并包含 (可选) 一些原始二进制数据。
+  The latter is useful if you e.g. dumped some memory using NativePointer#readByteArray().
+- `recv(callback: MessageCallback): MessageRecvOperation`  
+  Requests callback to be called on the next message received from your Frida-based application.  
+  This will only give you one message, so you need to call recv() again to receive the next one.
+- `wait(): void`  
+  堵塞，直到 message 已经 receive 并且 callback 已经执行完毕并返回
 
-[](#Frida动静态结合分析 "Frida动静态结合分析")Frida 动静态结合分析
----------------------------------------------
+## [](#Frida动静态结合分析 "Frida动静态结合分析")Frida 动静态结合分析
 
 ### [](#Objection "Objection")Objection
 
-*   参考这篇文章  
-    [实用 FRIDA 进阶：内存漫游、hook anywhere、抓包](https://www.anquanke.com/post/id/197657)
-*   objection  
-    [https://pypi.org/project/objection/](https://pypi.org/project/objection/)
+- 参考这篇文章  
+  [实用 FRIDA 进阶：内存漫游、hook anywhere、抓包](https://www.anquanke.com/post/id/197657)
+- objection  
+  [https://pypi.org/project/objection/](https://pypi.org/project/objection/)
 
 #### [](#objection启动并注入内存 "objection启动并注入内存")objection 启动并注入内存
 
@@ -608,12 +598,12 @@ function  SSL_select_next_proto                                  0x7c8ff06a74
 
 ##### [](#dump内存空间 "dump内存空间")dump 内存空间
 
-*   `memory dump all 文件名`
-*   `memory dump from_base 起始地址 字节数 文件名`
-    
-    ##### [](#搜索内存空间 "搜索内存空间")搜索内存空间
-    
-    `Usage: memory search "<pattern eg: 41 41 41 ?? 41>" (--string) (--offsets-only)`
+- `memory dump all 文件名`
+- `memory dump from_base 起始地址 字节数 文件名`
+
+  ##### [](#搜索内存空间 "搜索内存空间")搜索内存空间
+
+  `Usage: memory search "<pattern eg: 41 41 41 ?? 41>" (--string) (--offsets-only)`
 
 #### [](#objection-android "objection android")objection android
 
@@ -652,7 +642,7 @@ com.android.settings.bluetooth.BluetoothPairingService
 
 ##### [](#列出内存中所有的类-android-hooking-list-classes "列出内存中所有的类 android hooking list classes")列出内存中所有的类 `android hooking list classes`
 
-##### [](#在内存中所有已加载的类中搜索包含特定关键词的类。-android-hooking-search-classes-display "在内存中所有已加载的类中搜索包含特定关键词的类。 android hooking search classes display")在内存中所有已加载的类中搜索包含特定关键词的类。 `android hooking search classes display`
+##### [](#在内存中所有已加载的类中搜索包含特定关键词的类。-android-hooking-search-classes-display "在内存中所有已加载的类中搜索包含特定关键词的类。android hooking search classes display")在内存中所有已加载的类中搜索包含特定关键词的类。`android hooking search classes display`
 
 ```
 com.android.settings on (google: 8.1.0) [usb] # android hooking search classes display
@@ -689,46 +679,45 @@ android.app.ActionBar.setDisplayHomeAsUpEnabled
 
 ##### [](#hook类的方法（hook类里的所有方法-具体某个方法） "hook类的方法（hook类里的所有方法/具体某个方法）")hook 类的方法（hook 类里的所有方法 / 具体某个方法）
 
-*   `android hooking watch class 类名`  
-    这样就可以 hook 这个类里面的所有方法，每次调用都会被 log 出来。
-*   `android hooking watch class 类名 --dump-args --dump-backtrace --dump-return`  
-    在上面的基础上，额外 dump 参数，栈回溯，返回值
-    
-    ```
-    android hooking watch class xxx.MainActivity --dump-args --dump-backtrace --dump-return
-    ```
-    
-*   `android hooking watch class_method 方法名`
-    
-    ```
-    //可以直接hook到所有重载
-    android hooking watch class_method xxx.MainActivity.fun --dump-args --dump-backtrace --dump-return
-    ```
-    
-    #### [](#grep-trick和文件保存 "grep trick和文件保存")grep trick 和文件保存
-    
-    objection log 默认是不能用 grep 过滤的，但是可以通过`objection run xxx | grep yyy的`方式，从终端通过管道来过滤。  
-    用法如下
-    
-    ```
-    sakura@sakuradeMacBook-Pro:~$ objection -g com.android.settings run memory list modules | grep libc
-    Warning: Output is not to a terminal (fd=1).
-    libcutils.so                                     0x7a94a1c000  81920 (80.0 KiB)      /system/lib64/libcutils.so
-    libc++.so                                        0x7a9114e000  983040 (960.0 KiB)    /system/lib64/libc++.so
-    libc.so                                          0x7a9249d000  892928 (872.0 KiB)    /system/lib64/libc.so
-    libcrypto.so                                     0x7a92283000  1155072 (1.1 MiB)     /system/lib64/libcrypto.so
-    ```
-    
-    有的命令后面可以通过`--json logfile`来直接保存结果到文件里。  
-    有的可以通过查看`.objection`文件里的输出 log 来查看结果。
-    
-    ```
-    sakura@sakuradeMacBook-Pro:~/.objection$ cat *log | grep -i display
-    android.hardware.display.DisplayManager
-    android.hardware.display.DisplayManager$DisplayListener
-    android.hardware.display.DisplayManagerGlobal
-    ```
-    
+- `android hooking watch class 类名`  
+  这样就可以 hook 这个类里面的所有方法，每次调用都会被 log 出来。
+- `android hooking watch class 类名 --dump-args --dump-backtrace --dump-return`  
+  在上面的基础上，额外 dump 参数，栈回溯，返回值
+
+  ```
+  android hooking watch class xxx.MainActivity --dump-args --dump-backtrace --dump-return
+  ```
+
+- `android hooking watch class_method 方法名`
+
+  ```
+  //可以直接hook到所有重载
+  android hooking watch class_method xxx.MainActivity.fun --dump-args --dump-backtrace --dump-return
+  ```
+
+  #### [](#grep-trick和文件保存 "grep trick和文件保存")grep trick 和文件保存
+
+  objection log 默认是不能用 grep 过滤的，但是可以通过`objection run xxx | grep yyy的`方式，从终端通过管道来过滤。
+  用法如下
+
+  ```
+  sakura@sakuradeMacBook-Pro:~$ objection -g com.android.settings run memory list modules | grep libc
+  Warning: Output is not to a terminal (fd=1).
+  libcutils.so                                     0x7a94a1c000  81920 (80.0 KiB)      /system/lib64/libcutils.so
+  libc++.so                                        0x7a9114e000  983040 (960.0 KiB)    /system/lib64/libc++.so
+  libc.so                                          0x7a9249d000  892928 (872.0 KiB)    /system/lib64/libc.so
+  libcrypto.so                                     0x7a92283000  1155072 (1.1 MiB)     /system/lib64/libcrypto.so
+  ```
+
+  有的命令后面可以通过`--json logfile`来直接保存结果到文件里。
+  有的可以通过查看`.objection`文件里的输出 log 来查看结果。
+
+  ```
+  sakura@sakuradeMacBook-Pro:~/.objection$ cat *log | grep -i display
+  android.hardware.display.DisplayManager
+  android.hardware.display.DisplayManager$DisplayListener
+  android.hardware.display.DisplayManagerGlobal
+  ```
 
 ### [](#案例学习 "案例学习")案例学习
 
@@ -871,13 +860,13 @@ Job ID         Hooks  Type
 ```
 
 找到参数`ae56f99`  
-剩下的就是用这个密码去打开加密的 db。  
+剩下的就是用这个密码去打开加密的 db。
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-27-125824.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-27-125824.png)  
 然后 base64 解密一下就好了。
 
-还有一种策略是主动调用, 基于数据流的主动调用分析是非常有意思的。  
-即自己去调用 a 函数以触发 getWritableDatabase 的数据库解密。  
-先寻找 a 所在类的实例，然后 hook getWritableDatabase，最终主动调用 a。  
+还有一种策略是主动调用, 基于数据流的主动调用分析是非常有意思的。
+即自己去调用 a 函数以触发 getWritableDatabase 的数据库解密。
+先寻找 a 所在类的实例，然后 hook getWritableDatabase，最终主动调用 a。
 这里幸运的是 a 没有什么奇奇怪怪的参数需要我们传入，主动调用这种策略在循环注册等地方可能就会有需求 8.
 
 ```
@@ -900,7 +889,7 @@ Handle    Class                                               toString()
 
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-27-132438.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-27-132438.png)
 
-因为直接找`Unfortunately,note the right PIN :(`找不到，可能是把字符串藏在什么资源文件里了。  
+因为直接找`Unfortunately,note the right PIN :(`找不到，可能是把字符串藏在什么资源文件里了。
 review 代码之后找到校验的核心函数，逻辑就是将 input 编码一下之后和密码比较，这肯定是什么不可逆的加密。
 
 ```
@@ -965,15 +954,14 @@ yes: 9083
 
 这里注意 parseInt
 
-[](#Frida-hook基础-一 "Frida hook基础(一)")Frida hook 基础 (一)
-------------------------------------------------------
+## [](#Frida-hook基础-一 "Frida hook基础(一)")Frida hook 基础 (一)
 
-*   调用静态函数和调用非静态函数
-*   设置 (同名) 成员变量
-*   内部类，枚举类的函数并 hook，trace 原型 1
-*   查找接口，hook 动态加载 dex
-*   枚举 class，trace 原型 2
-*   objection 不能切换 classloader
+- 调用静态函数和调用非静态函数
+- 设置 (同名) 成员变量
+- 内部类，枚举类的函数并 hook，trace 原型 1
+- 查找接口，hook 动态加载 dex
+- 枚举 class，trace 原型 2
+- objection 不能切换 classloader
 
 ### [](#Frida-hook-打印参数、返回值-设置返回值-主动调用 "Frida hook : 打印参数、返回值/设置返回值/主动调用")Frida hook : 打印参数、返回值 / 设置返回值 / 主动调用
 
@@ -1007,7 +995,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 ```
 
-`LoginActivity.a(obj, obj).equals(obj2)`分析之后可得 obj2 来自 password，由从 username 得来的 obj，经过 a 函数运算之后得到一个值，这两个值相等则登录成功。  
+`LoginActivity.a(obj, obj).equals(obj2)`分析之后可得 obj2 来自 password，由从 username 得来的 obj，经过 a 函数运算之后得到一个值，这两个值相等则登录成功。
 所以这里关键是 hook a 函数的参数，最简脚本如下。
 
 ```
@@ -1167,9 +1155,9 @@ function ch1() {
 
 总结:
 
-*   静态函数直接 use class 然后调用方法，非静态函数需要先 choose 实例然后调用
-*   设置成员变量的值，写法是`xx.value = yy`，其他方面和函数一样。
-*   如果有一个成员变量和成员函数的名字相同，则在其前面加一个`_`，如`_xx.value = yy`
+- 静态函数直接 use class 然后调用方法，非静态函数需要先 choose 实例然后调用
+- 设置成员变量的值，写法是`xx.value = yy`，其他方面和函数一样。
+- 如果有一个成员变量和成员函数的名字相同，则在其前面加一个`_`，如`_xx.value = yy`
 
 然后是第二关
 
@@ -1270,7 +1258,7 @@ function ch3() {
         console.log("start")
         var FridaActivity3 = Java.use("com.example.androiddemo.Activity.FridaActivity3")
         FridaActivity3.static_bool_var.value = true
-        
+
         Java.choose("com.example.androiddemo.Activity.FridaActivity3", {
             onMatch: function (instance) {
                 instance.bool_var.value = true
@@ -1290,8 +1278,8 @@ function ch3() {
 
 总结:
 
-*   对于内部类，通过`类名$内部类名`去 use 或者 choose
-*   对 use 得到的 clazz 应用反射，如`clazz.class.getDeclaredMethods()`可以得到类里面声明的所有方法，即可以枚举类里面的所有函数。
+- 对于内部类，通过`类名$内部类名`去 use 或者 choose
+- 对 use 得到的 clazz 应用反射，如`clazz.class.getDeclaredMethods()`可以得到类里面声明的所有方法，即可以枚举类里面的所有函数。
 
 接下来是第四关
 
@@ -1387,9 +1375,9 @@ public static boolean com.example.androiddemo.Activity.FridaActivity4$InnerClass
 
 总结:
 
-*   通过`enumerateClassLoaders`来枚举加载进内存的 classloader，再`loader.findClass(xxx)`寻找是否包括我们想要的 interface 的实现类，最后通过`Java.classFactory.loader = loader`来切换 classloader，从而加载该实现类。
+- 通过`enumerateClassLoaders`来枚举加载进内存的 classloader，再`loader.findClass(xxx)`寻找是否包括我们想要的 interface 的实现类，最后通过`Java.classFactory.loader = loader`来切换 classloader，从而加载该实现类。
 
-第五关比较有趣，它的 check 函数是动态加载进来的。  
+第五关比较有趣，它的 check 函数是动态加载进来的。
 java 里有 interface 的概念，是指一系列抽象的接口，需要类来实现。
 
 ```
@@ -1437,8 +1425,8 @@ public class FridaActivity5 extends BaseFridaActivity {
 }
 ```
 
-这里有个 loaddex 其实就是先从资源文件加载 classloader 到内存里，再 loadClass DynamicCheck，创建出一个实例，最终调用这个实例的 check。  
-所以现在我们就要先枚举 class loader，找到能实例化我们要的 class 的那个 class loader，然后把它设置成 Java 的默认 class factory 的 loader。  
+这里有个 loaddex 其实就是先从资源文件加载 classloader 到内存里，再 loadClass DynamicCheck，创建出一个实例，最终调用这个实例的 check。
+所以现在我们就要先枚举 class loader，找到能实例化我们要的 class 的那个 class loader，然后把它设置成 Java 的默认 class factory 的 loader。
 现在就可以用这个 class loader 来使用`.use`去 import 一个给定的类。
 
 ```
@@ -1560,14 +1548,13 @@ function more() {
 }
 ```
 
-[](#Frida-hook基础（二 "Frida hook基础（二)")Frida hook 基础（二)
------------------------------------------------------
+## [](#Frida-hook基础（二 "Frida hook基础（二)")Frida hook 基础（二)
 
-*   spawn/attach
-*   各种主动调用
-*   hook 函数和 hook 构造函数
-*   调用栈 / 简单脚本
-*   动态加载自己的 dex
+- spawn/attach
+- 各种主动调用
+- hook 函数和 hook 构造函数
+- 调用栈 / 简单脚本
+- 动态加载自己的 dex
 
 题目下载地址:  
 [https://github.com/tlamb96/kgb_messenger](https://github.com/tlamb96/kgb_messenger)
@@ -1596,9 +1583,9 @@ firda 的 - f 参数代表 span 启动
 }
 ```
 
-这个题目比较简单，但是因为这个 check 是在`onCreate`里，所以 app 刚启动就自动检查，所以这里需要用 spawn 的方式去启动 frida 脚本 hook，而不是 attach。  
-这里有两个检查，一个是检查 property 的值，一个是检查 str 的值。  
-分别从`System.getProperty`和`System.getenv`里获取，hook 住这两个函数就行。  
+这个题目比较简单，但是因为这个 check 是在`onCreate`里，所以 app 刚启动就自动检查，所以这里需要用 spawn 的方式去启动 frida 脚本 hook，而不是 attach。
+这里有两个检查，一个是检查 property 的值，一个是检查 str 的值。
+分别从`System.getProperty`和`System.getenv`里获取，hook 住这两个函数就行。
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-29-092212.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-29-092212.png)  
 这里要注意从资源文件里找到`User`的值。
 
@@ -1788,7 +1775,7 @@ public void onSendMessage(View view) {
 }
 ```
 
-新的一关是一个聊天框，分析一下代码可知，obj 是我们输入的内容，输入完了之后，加到一个`this.o`的 ArrayList 里。  
+新的一关是一个聊天框，分析一下代码可知，obj 是我们输入的内容，输入完了之后，加到一个`this.o`的 ArrayList 里。
 关键的 if 判断就是`if (a(obj.toString()).equals(this.p))`和`if (b(obj.toString()).equals(this.r))`，所有 hook a 和 b 函数，让它们的返回值等于下面的字符串即可。
 
 ```
@@ -1798,13 +1785,13 @@ private String r = "\u0000dslp}oQ\u0000 dks$|M\u0000h +AYQg\u0000P*!M$gQ\u0000";
 private String s;
 ```
 
-但实际上这题比我想象中的还要麻烦，这题的逻辑上是如果通过了 a 和 b 这两个函数的计算，等于对应的值之后，会把用来计算的 obj 的值赋值给 q 和 s，然后根据这个 q 和 s 来计算出最终的 flag。  
+但实际上这题比我想象中的还要麻烦，这题的逻辑上是如果通过了 a 和 b 这两个函数的计算，等于对应的值之后，会把用来计算的 obj 的值赋值给 q 和 s，然后根据这个 q 和 s 来计算出最终的 flag。
 所以如果不逆向算法，通过 hook 的方式通过了 a 和 b 的计算，obj 的值还是错误的，也计算不出正确的 flag。
 
-这样就逆向一下算法好了，先自己写一个 apk，用 java 去实现注册机。  
+这样就逆向一下算法好了，先自己写一个 apk，用 java 去实现注册机。
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-004653.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-004653.png)  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-004915.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-004915.png)  
-可以直接把 class 文件转成 dex，不复述，我比较懒，所以我直接解压 apk 找到`classes.dex`，并 push 到手机上。  
+可以直接把 class 文件转成 dex，不复述，我比较懒，所以我直接解压 apk 找到`classes.dex`，并 push 到手机上。
 然后用 frida 加载这个 dex，并调用里面的方法。
 
 ```
@@ -1817,59 +1804,58 @@ decode_P:Boris, give me the password
 r_to_hex:0064736c707d6f510020646b73247c4d0068202b4159516700502a214d24675100
 ```
 
-[](#Frida打印与参数构造 "Frida打印与参数构造")Frida 打印与参数构造
----------------------------------------------
+## [](#Frida打印与参数构造 "Frida打印与参数构造")Frida 打印与参数构造
 
-*   数组 /(字符串) 对象数组 / gson/Java.array
-*   对象 / 多态、强转 Java.cast / 接口 Java.register
-*   泛型、List、Map、Set、迭代打印
-*   non-ascii 、 child-gating、rpc 上传到 PC 上打印
-    
-    ### [](#char-Object-Object "char[]/[Object Object]")char[]/[Object Object]
-    
-    ```
-    Log.d("SimpleArray", "onCreate: SImpleArray");
-    char arr[][] = new char[4][]; // 创建一个4行的二维数组
-    arr[0] = new char[] { '春', '眠', '不', '觉', '晓' }; // 为每一行赋值
-    arr[1] = new char[] { '处', '处', '闻', '啼', '鸟' };
-    arr[2] = new char[] { '夜', '来', '风', '雨', '声' };
-    arr[3] = new char[] { '花', '落', '知', '多', '少' };
-    Log.d("SimpleArray", "-----横版-----");
-    for (int i = 0; i < 4; i++) { // 循环4行
-        Log.d("SimpleArraysToString", Arrays.toString(arr[i]));
-        Log.d("SimpleStringBytes", Arrays.toString (Arrays.toString (arr[i]).getBytes()));
-        for (int j = 0; j < 5; j++) { // 循环5列
-            Log.d("SimpleArray", Character.toString(arr[i][j])); // 输出数组中的元素
-        }
-        if (i % 2 == 0) {
-            Log.d("SimpleArray", ",");// 如果是一、三句，输出逗号
-        } else {
-            Log.d("SimpleArray", "。");// 如果是二、四句，输出句号
-        }
-    }
-    ```
-    
-    ```
-    Java.openClassFile("/data/local/tmp/r0gson.dex").load();
-    const gson = Java.use('com.r0ysue.gson.Gson');
-    
-    Java.use("java.lang.Character").toString.overload('char').implementation = function(char){
-        var result = this.toString(char);
-        console.log("char,result",char,result);
-        return result;
-    }
-    
-    Java.use("java.util.Arrays").toString.overload('[C').implementation = function(charArray){
-        var result = this.toString(charArray);
-        console.log("charArray,result:",charArray,result)
-        console.log("charArray Object Object:",gson.$new().toJson(charArray));
-        return result;
-    }
-    ```
-    
-    这里的`[C`是 JNI 函数签名  
-    [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-033242.jpg)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-033242.jpg)  
-    [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-033633.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-033633.png)
+- 数组 /(字符串) 对象数组 / gson/Java.array
+- 对象 / 多态、强转 Java.cast / 接口 Java.register
+- 泛型、List、Map、Set、迭代打印
+- non-ascii 、 child-gating、rpc 上传到 PC 上打印
+
+  ### [](#char-Object-Object "char[]/[Object Object]")char[]/[Object Object]
+
+  ```
+  Log.d("SimpleArray", "onCreate: SImpleArray");
+  char arr[][] = new char[4][]; // 创建一个4行的二维数组
+  arr[0] = new char[] { '春', '眠', '不', '觉', '晓' }; // 为每一行赋值
+  arr[1] = new char[] { '处', '处', '闻', '啼', '鸟' };
+  arr[2] = new char[] { '夜', '来', '风', '雨', '声' };
+  arr[3] = new char[] { '花', '落', '知', '多', '少' };
+  Log.d("SimpleArray", "-----横版-----");
+  for (int i = 0; i < 4; i++) { // 循环4行
+      Log.d("SimpleArraysToString", Arrays.toString(arr[i]));
+      Log.d("SimpleStringBytes", Arrays.toString (Arrays.toString (arr[i]).getBytes()));
+      for (int j = 0; j < 5; j++) { // 循环5列
+          Log.d("SimpleArray", Character.toString(arr[i][j])); // 输出数组中的元素
+      }
+      if (i % 2 == 0) {
+          Log.d("SimpleArray", ",");// 如果是一、三句，输出逗号
+      } else {
+          Log.d("SimpleArray", "。");// 如果是二、四句，输出句号
+      }
+  }
+  ```
+
+  ```
+  Java.openClassFile("/data/local/tmp/r0gson.dex").load();
+  const gson = Java.use('com.r0ysue.gson.Gson');
+
+  Java.use("java.lang.Character").toString.overload('char').implementation = function(char){
+      var result = this.toString(char);
+      console.log("char,result",char,result);
+      return result;
+  }
+
+  Java.use("java.util.Arrays").toString.overload('[C').implementation = function(charArray){
+      var result = this.toString(charArray);
+      console.log("charArray,result:",charArray,result)
+      console.log("charArray Object Object:",gson.$new().toJson(charArray));
+      return result;
+  }
+  ```
+
+  这里的`[C`是 JNI 函数签名  
+  [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-033242.jpg)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-033242.jpg)  
+  [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-033633.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-06-30-033633.png)
 
 ### [](#byte "byte[]")byte[]
 
@@ -1920,7 +1906,7 @@ Java.use("java.util.Arrays").toString.overload('[C').implementation = function(c
 
 ### [](#类的多态：转型-Java-cast "类的多态：转型/Java.cast")类的多态：转型 / Java.cast
 
-可以通过`getClass().getName().toString()`来查看当前实例的类型。  
+可以通过`getClass().getName().toString()`来查看当前实例的类型。
 找到一个 instance，通过`Java.cast`来强制转换对象的类型。
 
 ```
@@ -2007,7 +1993,7 @@ Java.perform(function(){
                 }
             }
         });
-        console.log("beer.bubble:",beer.$new().flow())      
+        console.log("beer.bubble:",beer.$new().flow())
     })
 }
 ```
@@ -2018,7 +2004,7 @@ Java.perform(function(){
 
 ### [](#hook-enum "hook enum")hook enum
 
-关于 java 枚举，从这篇文章了解。  
+关于 java 枚举，从这篇文章了解。
 [https://www.cnblogs.com/jingmoxukong/p/6098351.html](https://www.cnblogs.com/jingmoxukong/p/6098351.html)
 
 ```
@@ -2049,7 +2035,7 @@ Java.perform(function(){
         Java.choose("com.r0ysue.a0526printout.Signal",{
             onMatch:function(instance){
                 console.log("instance.name:",instance.name());
-                console.log("instance.getDeclaringClass:",instance.getDeclaringClass());                
+                console.log("instance.getDeclaringClass:",instance.getDeclaringClass());
             },onComplete:function(){
                 console.log("search completed!")
             }
@@ -2095,13 +2081,11 @@ Java.perform(function(){
     }
 ```
 
-[](#Frida-native-hook-NDK开发入门 "Frida native hook : NDK开发入门")Frida native hook : NDK 开发入门
-----------------------------------------------------------------------------------------
+## [](#Frida-native-hook-NDK开发入门 "Frida native hook : NDK开发入门")Frida native hook : NDK 开发入门
 
 [https://www.jianshu.com/p/87ce6f565d37](https://www.jianshu.com/p/87ce6f565d37)
 
-[](#Frida-native-hook-JNIEnv和反射 "Frida native hook : JNIEnv和反射")Frida native hook : JNIEnv 和反射
-----------------------------------------------------------------------------------------------
+## [](#Frida-native-hook-JNIEnv和反射 "Frida native hook : JNIEnv和反射")Frida native hook : JNIEnv 和反射
 
 ### [](#以jni字符串来掌握基本的JNIEnv用法 "以jni字符串来掌握基本的JNIEnv用法")以 jni 字符串来掌握基本的 JNIEnv 用法
 
@@ -2135,13 +2119,13 @@ Java_myapplication_example_com_ndk_1demo_MainActivity_stringWithJNI(JNIEnv *env,
 
 [Java 高级特性——反射](https://www.jianshu.com/p/9be58ee20dee)
 
-*   查找调用各种 API 接口、JNI、frida/xposed 原理的一部分
-*   反射基本 API
-*   反射修改访问控制、修改属性值
-*   JNI so 调用反射进入 java 世界
-*   xposed/Frida hook 原理
+- 查找调用各种 API 接口、JNI、frida/xposed 原理的一部分
+- 反射基本 API
+- 反射修改访问控制、修改属性值
+- JNI so 调用反射进入 java 世界
+- xposed/Frida hook 原理
 
-这里其实有一个伏笔，就是为什么我们要 trace artmethod，hook artmethod 是因为有些 so 混淆得非常厉害，然后也就很难静态分析看出 so 里面调用了哪些 java 函数，也不是通过类似 JNI 的 GetMethodID 这样来调用的。  
+这里其实有一个伏笔，就是为什么我们要 trace artmethod，hook artmethod 是因为有些 so 混淆得非常厉害，然后也就很难静态分析看出 so 里面调用了哪些 java 函数，也不是通过类似 JNI 的 GetMethodID 这样来调用的。
 而是通过类似 findclass 这种方法先得到类，然后再反射调用 app 里面的某个 java 函数。
 
 所以去 hook 它执行的位置，每一个 java 函数对于 Android 源码而言都是一个 artmethod 结构体，然后 hook 拿到 artmethod 实例以后调用类函数，打印这个函数的名称。
@@ -2293,22 +2277,20 @@ public class Test {
 `memory list modules`  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-01-065833.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-01-065833.png)
 
-[](#Frida反调试 "Frida反调试")Frida 反调试
----------------------------------
+## [](#Frida反调试 "Frida反调试")Frida 反调试
 
-这一节的主要内容就是关于反调试的原理和如何破解反调试，重要内容还是看文章理解即可。  
+这一节的主要内容就是关于反调试的原理和如何破解反调试，重要内容还是看文章理解即可。
 因为我并不需要做反调试相关的工作，所以部分内容略过。
 
-*   Frida 反调试与反反调试基本思路  
-    （Java 层 API、Native 层 API、Syscall)
-    *   [AntiFrida](https://github.com/qtfreet00/AntiFrida)
-    *   [frida-detection-demo](https://github.com/b-mueller/frida-detection-demo)
-    *   [多种特征检测 Frida](https://bbs.pediy.com/thread-217482.htm)
-    *   [来自高维的对抗 - 逆向 TinyTool 自制](https://yq.aliyun.com/articles/71120)
-    *   [Unicorn 在 Android 的应用](https://bbs.pediy.com/thread-253868.htm)
+- Frida 反调试与反反调试基本思路  
+  （Java 层 API、Native 层 API、Syscall)
+  - [AntiFrida](https://github.com/qtfreet00/AntiFrida)
+  - [frida-detection-demo](https://github.com/b-mueller/frida-detection-demo)
+  - [多种特征检测 Frida](https://bbs.pediy.com/thread-217482.htm)
+  - [来自高维的对抗 - 逆向 TinyTool 自制](https://yq.aliyun.com/articles/71120)
+  - [Unicorn 在 Android 的应用](https://bbs.pediy.com/thread-253868.htm)
 
-[](#Frida-native-hook-符号hook-JNI、art-amp-libc "Frida native hook : 符号hook JNI、art&libc")Frida native hook : 符号 hook JNI、art&libc
---------------------------------------------------------------------------------------------------------------------------------
+## [](#Frida-native-hook-符号hook-JNI、art-amp-libc "Frida native hook : 符号hook JNI、art&libc")Frida native hook : 符号 hook JNI、art&libc
 
 ### [](#Native函数的Java-Hook及主动调用 "Native函数的Java Hook及主动调用")Native 函数的 Java Hook 及主动调用
 
@@ -2339,12 +2321,12 @@ Caching 'Exports'... ok
 导入成功  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-01-104113.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-01-104113.png)
 
-现在就能识别_JNIEnv 了，如图  
+现在就能识别\_JNIEnv 了，如图  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-01-104131.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-01-104131.png)
 
 ### [](#JNI函数符号hook "JNI函数符号hook")JNI 函数符号 hook
 
-先查看一下导出了哪些函数。  
+先查看一下导出了哪些函数。
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-01-102552.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-01-102552.png)
 
 ```
@@ -2376,14 +2358,14 @@ Java_myapplication_example_com_ndk_1demo_MainActivity_stringWithJNI(JNIEnv *env,
 
 这里有几个需要的 API。
 
-*   首先是找到是否 so 被加载，通过`Process.enumerateModules()`, 这个 API 可以枚举被加载到内存的 modules。
-*   然后通过`Module.findBaseAddress(module name)`来查找要 hook 的函数所在的 so 的基地址，如果找不到就返回 null。
-*   然后可以通过`findExportByName(moduleName: string, exportName: string): NativePointer`来查找导出函数的绝对地址。如果不知道 moduleName 是什么，可以传入一个 null 进入，但是会花费一些时间遍历所有的 module。如果找不到就返回 null。
-*   找到地址之后，就可以拦截 function/instruction 的执行。通过`Interceptor.attach`。使用方法见下代码。
-*   另外为了将 jstring 的值打印出来，可以使用 jenv 的函数 getStringUtfChars，就像正常的写 native 程序一样。  
-    `Java.vm.getEnv().getStringUtfChars(args[2], null).readCString()`
+- 首先是找到是否 so 被加载，通过`Process.enumerateModules()`, 这个 API 可以枚举被加载到内存的 modules。
+- 然后通过`Module.findBaseAddress(module name)`来查找要 hook 的函数所在的 so 的基地址，如果找不到就返回 null。
+- 然后可以通过`findExportByName(moduleName: string, exportName: string): NativePointer`来查找导出函数的绝对地址。如果不知道 moduleName 是什么，可以传入一个 null 进入，但是会花费一些时间遍历所有的 module。如果找不到就返回 null。
+- 找到地址之后，就可以拦截 function/instruction 的执行。通过`Interceptor.attach`。使用方法见下代码。
+- 另外为了将 jstring 的值打印出来，可以使用 jenv 的函数 getStringUtfChars，就像正常的写 native 程序一样。
+  `Java.vm.getEnv().getStringUtfChars(args[2], null).readCString()`
 
-这里我是循环调用的 string_with_jni，如果不循环调用，那就要主动调用一下这个函数，或者 hook dlopen。  
+这里我是循环调用的 string_with_jni，如果不循环调用，那就要主动调用一下这个函数，或者 hook dlopen。
 hook dlopen 的方法在[这个代码](https://github.com/lasting-yang/frida_dump/blob/master/dump_dex.js)可以参考。
 
 ```
@@ -2393,7 +2375,7 @@ function hook_native() {
     console.log("libnative_addr is: " + libnative_addr)
 
     if (libnative_addr) {
-        var string_with_jni_addr = Module.findExportByName("libnative-lib.so", 
+        var string_with_jni_addr = Module.findExportByName("libnative-lib.so",
         "Java_myapplication_example_com_ndk_1demo_MainActivity_stringWithJNI")
         console.log("string_with_jni_addr is: " + string_with_jni_addr)
     }
@@ -2445,7 +2427,7 @@ function hook_art(){
             onEnter: function (args) {
                 console.log("addr_GetStringUTFChars OnEnter args[0],args[1]",args[0],args[1]);
                 //console.log(hexdump(args[0].readPointer()));
-                //console.log(Java.vm.tryGetEnv().getStringUtfChars(args[0]).readCString()); 
+                //console.log(Java.vm.tryGetEnv().getStringUtfChars(args[0]).readCString());
             }, onLeave: function (retval) {
                 console.log("addr_GetStringUTFChars OnLeave",ptr(retval).readCString());
             }
@@ -2456,49 +2438,47 @@ function hook_art(){
 
 ### [](#JNI函数参数、返回值打印和替换 "JNI函数参数、返回值打印和替换")JNI 函数参数、返回值打印和替换
 
-*   libc 函数符号 hook
-*   libc 函数参数、返回值打印和替换  
-    hook libc 的也和上面的完全一样，也不赘述了。  
-    所以看到这里，究其本质就是找到导出符号和它所在的 so 基地址了。
-    
-    ```
-    function hook_libc(){
-        var pthread_create_addr = null;
-        var symbols = Process.findModuleByName("libc.so").enumerateSymbols();
-        for(var i = 0;i<symbols.length;i++){
-            var symbol = symbols[i].name;
-        
-            if(symbol.indexOf("pthread_create")>=0){
-                //console.log(symbols[i].name);
-                //console.log(symbols[i].address);
-                pthread_create_addr = symbols[i].address;
-            }
-        
-        }
-        console.log("pthread_create_addr,",pthread_create_addr);
-        Interceptor.attach(pthread_create_addr,{
-            onEnter:function(args){
-                console.log("pthread_create_addr args[0],args[1],args[2],args[3]:",args[0],args[1],args[2],args[3]);
-    
-            },onLeave:function(retval){
-                console.log("retval is:",retval)
-            }
-        })
-    }
-    ```
-    
+- libc 函数符号 hook
+- libc 函数参数、返回值打印和替换  
+  hook libc 的也和上面的完全一样，也不赘述了。
+  所以看到这里，究其本质就是找到导出符号和它所在的 so 基地址了。
 
-[](#Frida-native-hook-JNI-Onload-动态注册-inline-hook-native层调用栈打印 "Frida native hook : JNI_Onload/动态注册/inline_hook/native层调用栈打印")Frida native hook : JNI_Onload / 动态注册 / inline_hook/native 层调用栈打印
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  ```
+  function hook_libc(){
+      var pthread_create_addr = null;
+      var symbols = Process.findModuleByName("libc.so").enumerateSymbols();
+      for(var i = 0;i<symbols.length;i++){
+          var symbol = symbols[i].name;
+
+          if(symbol.indexOf("pthread_create")>=0){
+              //console.log(symbols[i].name);
+              //console.log(symbols[i].address);
+              pthread_create_addr = symbols[i].address;
+          }
+
+      }
+      console.log("pthread_create_addr,",pthread_create_addr);
+      Interceptor.attach(pthread_create_addr,{
+          onEnter:function(args){
+              console.log("pthread_create_addr args[0],args[1],args[2],args[3]:",args[0],args[1],args[2],args[3]);
+
+          },onLeave:function(retval){
+              console.log("retval is:",retval)
+          }
+      })
+  }
+  ```
+
+## [](#Frida-native-hook-JNI-Onload-动态注册-inline-hook-native层调用栈打印 "Frida native hook : JNI_Onload/动态注册/inline_hook/native层调用栈打印")Frida native hook : JNI_Onload / 动态注册 / inline_hook/native 层调用栈打印
 
 [https://github.com/android/ndk-samples](https://github.com/android/ndk-samples)
 
 ### [](#JNI-Onload-动态注册原理 "JNI_Onload/动态注册原理")JNI_Onload / 动态注册原理
 
-*   JNI_Onload / 动态注册 / Frida hook RegisterNative
-    *   [JNI 与动态注册](https://zhuanlan.kanxue.com/article-4482.htm)
-    *   [native 方法的动态注册](https://eternalsakura13.com/2018/02/08/jni2/)
-    *   [Frida hook art](https://github.com/lasting-yang/frida_hook_libart)
+- JNI_Onload / 动态注册 / Frida hook RegisterNative
+  - [JNI 与动态注册](https://zhuanlan.kanxue.com/article-4482.htm)
+  - [native 方法的动态注册](https://eternalsakura13.com/2018/02/08/jni2/)
+  - [Frida hook art](https://github.com/lasting-yang/frida_hook_libart)
 
 详细的内容参见我写的文章，这里只给出栗子。
 
@@ -2536,9 +2516,9 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
 ### [](#Frida-hook-RegisterNative "Frida hook RegisterNative")Frida hook RegisterNative
 
-使用下面这个脚本来打印出 RegisterNatives 的参数，这里需要注意的是使用了 enumerateSymbolsSync, 它是 enumerateSymbols 的同步版本。  
-另外和我们之前通过`Java.vm.tryGetEnv().getStringUtfChars`来调用 env 里的方法不同。  
-这里则是通过将之前找到的 getStringUtfChars 函数地址和参数信息封装起来，直接调用，具体的原理我没有深入分析，先记住用法。  
+使用下面这个脚本来打印出 RegisterNatives 的参数，这里需要注意的是使用了 enumerateSymbolsSync, 它是 enumerateSymbols 的同步版本。
+另外和我们之前通过`Java.vm.tryGetEnv().getStringUtfChars`来调用 env 里的方法不同。
+这里则是通过将之前找到的 getStringUtfChars 函数地址和参数信息封装起来，直接调用，具体的原理我没有深入分析，先记住用法。
 原理其实是一样的，都是**根据符号找到地址，然后 hook 符号地址，然后打印参数**。
 
 ```
@@ -2619,7 +2599,7 @@ function hook_libart() {
                 console.log("[RegisterNatives] method_count:", args[3]);
                 var env = args[0];
                 var java_class = args[1];
-                
+
                 var funcAllocObject = new NativeFunction(addrAllocObject, "pointer", ["pointer", "pointer"]);
                 var funcGetMethodID = new NativeFunction(addrGetMethodID, "pointer", ["pointer", "pointer", "pointer", "pointer"]);
                 var funcCallObjectMethod = new NativeFunction(addrCallObjectMethod, "pointer", ["pointer", "pointer", "pointer"]);
@@ -2829,7 +2809,7 @@ function inline_hook() {
                     console.log("addr_775C OnEnter :", this.returnAddress, name);
                 },
                 onLeave: function (retval) {
-                     console.log("retval is :", retval) 
+                     console.log("retval is :", retval)
                 }
             })
         })
@@ -2839,7 +2819,7 @@ setImmediate(inline_hook())
 ```
 
 ```
-Attaching...                                                            
+Attaching...
 libnative_lib_addr: 0x79fabe0000
 addr_775C: 0x79fabe775c
 TypeError: cannot read property 'apply' of undefined
@@ -2851,20 +2831,19 @@ addr_775C OnEnter : 0x79fabe7758 sakura
 
 到这里已经可以总结一下我目前的学习了，需要补充一些 frida api 的学习，比如 NativePointr 里居然有个 readCString，这些 API 是需要再看看的。
 
-[](#Frida-native-hook-Frida-hook-native-app实战 "Frida native hook : Frida hook native app实战")Frida native hook : Frida hook native app 实战
-----------------------------------------------------------------------------------------------------------------------------------------
+## [](#Frida-native-hook-Frida-hook-native-app实战 "Frida native hook : Frida hook native app实战")Frida native hook : Frida hook native app 实战
 
-*   破解 Frida 全端口检测的 native 层反调试
-    *   hook libc 的 pthread_create 函数
-*   破解 TracePid 的 native 反调试
-    *   target: [https://gtoad.github.io/2017/06/25/Android-Anti-Debug/](https://gtoad.github.io/2017/06/25/Android-Anti-Debug/)
-    *   solve : hook libc 的 fgets 函数
-*   native 层修改参数、返回值
-*   静态分析`JNI_Onload`
-*   动态 trace 主动注册 & IDA 溯源
-*   动态 trace JNI、libc 函数 & IDA 溯源
-*   native 层主动调用、打调用栈
-*   主动调用 libc 读写文件
+- 破解 Frida 全端口检测的 native 层反调试
+  - hook libc 的 pthread_create 函数
+- 破解 TracePid 的 native 反调试
+  - target: [https://gtoad.github.io/2017/06/25/Android-Anti-Debug/](https://gtoad.github.io/2017/06/25/Android-Anti-Debug/)
+  - solve : hook libc 的 fgets 函数
+- native 层修改参数、返回值
+- 静态分析`JNI_Onload`
+- 动态 trace 主动注册 & IDA 溯源
+- 动态 trace JNI、libc 函数 & IDA 溯源
+- native 层主动调用、打调用栈
+- 主动调用 libc 读写文件
 
 看下 logcat
 
@@ -2889,7 +2868,7 @@ sakura@sakuradeMacBook-Pro:~/gitsource/frida-agent-example/agent$ frida -U --no-
 [RegisterNatives] java_class: com.gdufs.xman.MyApp name: work sig: ()V fnPtr: 0xd4ddf4cd module_name: libmyjni.so module_base: 0xd4dde000 offset: 0x14cd
 ```
 
-结合一下看，只要 initSN 检查到`/sdcard/reg.dat`里是`EoPAoY62@ElRD`，应该就会给 m 设置成 1。  
+结合一下看，只要 initSN 检查到`/sdcard/reg.dat`里是`EoPAoY62@ElRD`，应该就会给 m 设置成 1。
 只要 m 的值是 1，就能走到 work() 函数的逻辑。
 
 参考 [frida 的 file api](https://frida.re/docs/javascript-api/#file)
@@ -2907,21 +2886,20 @@ setImmediate(main())
 这样我们继续看 work 的逻辑  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-120940.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-120940.png)
 
-v2 是从 getValue 得到的，看上去就是 m 字段的值，此时应该是 1，一会 hook 一下看看。  
+v2 是从 getValue 得到的，看上去就是 m 字段的值，此时应该是 1，一会 hook 一下看看。
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-121012.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-121012.png)
 
 ```
 [NewStringUTF] bytes:输入即是flag,格式为xman{……}！
 ```
 
-callWork 里又调用了 work 函数，死循环了。  
+callWork 里又调用了 work 函数，死循环了。
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-120907.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-120907.png)
 
-那看来看去最后还是回到了 initSN，那其实我们看的顺序似乎错了。  
+那看来看去最后还是回到了 initSN，那其实我们看的顺序似乎错了。
 理一下逻辑，n2 执行完保存到文件，然后 n1 check 一下，所以最后还是要逆 n2 的算法，pass。
 
-[](#Frida-trace四件套 "Frida trace四件套")Frida trace 四件套
----------------------------------------------------
+## [](#Frida-trace四件套 "Frida trace四件套")Frida trace 四件套
 
 ### [](#jni-trace-trace-jni "jni trace : trace jni")jni trace : trace jni
 
@@ -2943,85 +2921,84 @@ Successfully installed hexdump-3.3 jnitrace-3.0.8
 usage: `jnitrace [options] -l libname target`  
 默认应该是 spawn 运行的，
 
-*   `-m`来指定是`spawn`还是`attach`
-*   `-b`指定是`fuzzy`还是`accurate`
-*   `-i <regex>`指定一个正则表达式来过滤出方法名，例如`-i Get -i RegisterNatives`就会只打印出名字里包含 Get 或者 RegisterNatives 的 JNI methods。
-*   `-e <regex>`和`-i`相反，同样通过正则表达式来过滤，但这次会将指定的内容忽略掉。
-*   `-I <string>`trace 导出的方法，jnitrace 认为导出的函数应该是从 Java 端能够直接调用的函数，所以可以包括使用 RegisterNatives 来注册的函数，例如`-I stringFromJNI -I nativeMethod([B)V`，就包括导出名里有 stringFromJNI，以及使用 RegisterNames 来注册，并带有 nativeMethod([B)V 签名的函数。
-*   `-o path/output.json`，导出输出到文件里。
-*   `-p path/to/script.js`，用于在加载 jnitrace 脚本之前将指定路径的 Frida 脚本加载到目标进程中，这可以用于在 jnitrace 启动之前对抗反调试。
-*   `-a path/to/script.js`，用于在加载 jnitrace 脚本之后将指定路径的 Frida 脚本加载到目标进程中
-*   `--ignore-env`，不打印所有的 JNIEnv 函数
-*   `--ignore-vm`，不打印所有的 JavaVM 函数
-    
-    ```
-    sakura@sakuradeMacBook-Pro:~/Desktop/lab/alpha/tools/android/frida_learn/0620/0620/xman/resources/lib/armeabi-v7a$ jnitrace -l libmyjni.so com.gdufs.xman
-    Tracing. Press any key to quit...
-    Traced library "libmyjni.so" loaded from path "/data/app/com.gdufs.xman-X0HkzLhbptSc0tjGZ3yQ2g==/lib/arm".
-    
-               /* TID 28890 */
-        355 ms [+] JavaVM->GetEnv
-        355 ms |- JavaVM*          : 0xefe99140
-        355 ms |- void**           : 0xda13e028
-        355 ms |:     0xeff312a0
-        355 ms |- jint             : 65542
-        355 ms |= jint             : 0
-    
-        355 ms ------------------------Backtrace------------------------
-        355 ms |-> 0xda13a51b: JNI_OnLoad+0x12 (libmyjni.so:0xda139000)
-    
-    
-               /* TID 28890 */
-        529 ms [+] JNIEnv->FindClass
-        529 ms |- JNIEnv*          : 0xeff312a0
-        529 ms |- char*            : 0xda13bdef
-        529 ms |:     com/gdufs/xman/MyApp
-        529 ms |= jclass           : 0x81    { com/gdufs/xman/MyApp }
-    
-        529 ms ------------------------Backtrace------------------------
-        529 ms |-> 0xda13a539: JNI_OnLoad+0x30 (libmyjni.so:0xda139000)
-    
-    
-               /* TID 28890 */
-        584 ms [+] JNIEnv->RegisterNatives
-        584 ms |- JNIEnv*          : 0xeff312a0
-        584 ms |- jclass           : 0x81    { com/gdufs/xman/MyApp }
-        584 ms |- JNINativeMethod* : 0xda13e004
-        584 ms |:     0xda13a3b1 - initSN()V
-        584 ms |:     0xda13a1f9 - saveSN(Ljava/lang/String;)V
-        584 ms |:     0xda13a4cd - work()V
-        584 ms |- jint             : 3
-        584 ms |= jint             : 0
-    
-        584 ms ------------------------Backtrace------------------------
-        584 ms |-> 0xda13a553: JNI_OnLoad+0x4a (libmyjni.so:0xda139000)
-    
-    
-               /* TID 28890 */
-        638 ms [+] JNIEnv->FindClass
-        638 ms |- JNIEnv*          : 0xeff312a0
-        638 ms |- char*            : 0xda13bdef
-        638 ms |:     com/gdufs/xman/MyApp
-        638 ms |= jclass           : 0x71    { com/gdufs/xman/MyApp }
-    
-        638 ms -----------------------Backtrace-----------------------
-        638 ms |-> 0xda13a377: setValue+0x12 (libmyjni.so:0xda139000)
-    
-    
-               /* TID 28890 */
-        688 ms [+] JNIEnv->GetStaticFieldID
-        688 ms |- JNIEnv*          : 0xeff312a0
-        688 ms |- jclass           : 0x71    { com/gdufs/xman/MyApp }
-        688 ms |- char*            : 0xda13be04
-        688 ms |:     m
-        688 ms |- char*            : 0xda13be06
-        688 ms |:     I
-        688 ms |= jfieldID         : 0xf1165004    { m:I }
-    
-        688 ms -----------------------Backtrace-----------------------
-        688 ms |-> 0xda13a38d: setValue+0x28 (libmyjni.so:0xda139000)
-    ```
-    
+- `-m`来指定是`spawn`还是`attach`
+- `-b`指定是`fuzzy`还是`accurate`
+- `-i <regex>`指定一个正则表达式来过滤出方法名，例如`-i Get -i RegisterNatives`就会只打印出名字里包含 Get 或者 RegisterNatives 的 JNI methods。
+- `-e <regex>`和`-i`相反，同样通过正则表达式来过滤，但这次会将指定的内容忽略掉。
+- `-I <string>`trace 导出的方法，jnitrace 认为导出的函数应该是从 Java 端能够直接调用的函数，所以可以包括使用 RegisterNatives 来注册的函数，例如`-I stringFromJNI -I nativeMethod([B)V`，就包括导出名里有 stringFromJNI，以及使用 RegisterNames 来注册，并带有 nativeMethod([B)V 签名的函数。
+- `-o path/output.json`，导出输出到文件里。
+- `-p path/to/script.js`，用于在加载 jnitrace 脚本之前将指定路径的 Frida 脚本加载到目标进程中，这可以用于在 jnitrace 启动之前对抗反调试。
+- `-a path/to/script.js`，用于在加载 jnitrace 脚本之后将指定路径的 Frida 脚本加载到目标进程中
+- `--ignore-env`，不打印所有的 JNIEnv 函数
+- `--ignore-vm`，不打印所有的 JavaVM 函数
+
+  ```
+  sakura@sakuradeMacBook-Pro:~/Desktop/lab/alpha/tools/android/frida_learn/0620/0620/xman/resources/lib/armeabi-v7a$ jnitrace -l libmyjni.so com.gdufs.xman
+  Tracing. Press any key to quit...
+  Traced library "libmyjni.so" loaded from path "/data/app/com.gdufs.xman-X0HkzLhbptSc0tjGZ3yQ2g==/lib/arm".
+
+             /* TID 28890 */
+      355 ms [+] JavaVM->GetEnv
+      355 ms |- JavaVM*          : 0xefe99140
+      355 ms |- void**           : 0xda13e028
+      355 ms |:     0xeff312a0
+      355 ms |- jint             : 65542
+      355 ms |= jint             : 0
+
+      355 ms ------------------------Backtrace------------------------
+      355 ms |-> 0xda13a51b: JNI_OnLoad+0x12 (libmyjni.so:0xda139000)
+
+
+             /* TID 28890 */
+      529 ms [+] JNIEnv->FindClass
+      529 ms |- JNIEnv*          : 0xeff312a0
+      529 ms |- char*            : 0xda13bdef
+      529 ms |:     com/gdufs/xman/MyApp
+      529 ms |= jclass           : 0x81    { com/gdufs/xman/MyApp }
+
+      529 ms ------------------------Backtrace------------------------
+      529 ms |-> 0xda13a539: JNI_OnLoad+0x30 (libmyjni.so:0xda139000)
+
+
+             /* TID 28890 */
+      584 ms [+] JNIEnv->RegisterNatives
+      584 ms |- JNIEnv*          : 0xeff312a0
+      584 ms |- jclass           : 0x81    { com/gdufs/xman/MyApp }
+      584 ms |- JNINativeMethod* : 0xda13e004
+      584 ms |:     0xda13a3b1 - initSN()V
+      584 ms |:     0xda13a1f9 - saveSN(Ljava/lang/String;)V
+      584 ms |:     0xda13a4cd - work()V
+      584 ms |- jint             : 3
+      584 ms |= jint             : 0
+
+      584 ms ------------------------Backtrace------------------------
+      584 ms |-> 0xda13a553: JNI_OnLoad+0x4a (libmyjni.so:0xda139000)
+
+
+             /* TID 28890 */
+      638 ms [+] JNIEnv->FindClass
+      638 ms |- JNIEnv*          : 0xeff312a0
+      638 ms |- char*            : 0xda13bdef
+      638 ms |:     com/gdufs/xman/MyApp
+      638 ms |= jclass           : 0x71    { com/gdufs/xman/MyApp }
+
+      638 ms -----------------------Backtrace-----------------------
+      638 ms |-> 0xda13a377: setValue+0x12 (libmyjni.so:0xda139000)
+
+
+             /* TID 28890 */
+      688 ms [+] JNIEnv->GetStaticFieldID
+      688 ms |- JNIEnv*          : 0xeff312a0
+      688 ms |- jclass           : 0x71    { com/gdufs/xman/MyApp }
+      688 ms |- char*            : 0xda13be04
+      688 ms |:     m
+      688 ms |- char*            : 0xda13be06
+      688 ms |:     I
+      688 ms |= jfieldID         : 0xf1165004    { m:I }
+
+      688 ms -----------------------Backtrace-----------------------
+      688 ms |-> 0xda13a38d: setValue+0x28 (libmyjni.so:0xda139000)
+  ```
 
 ### [](#strace-trace-syscall "strace : trace syscall")strace : trace syscall
 
@@ -3044,7 +3021,7 @@ frida-trace -U -i "strcmp" -f com.gdufs.xman
   5635 ms  strcmp(s1="et-EE", s2="es-US")
 ```
 
-*   art trace: [hook artmethod](https://github.com/lasting-yang/frida_hook_libart/blob/master/hook_artmethod.js)
+- art trace: [hook artmethod](https://github.com/lasting-yang/frida_hook_libart/blob/master/hook_artmethod.js)
 
 ### [](#hook-artmethod-trace-java函数调用 "hook_artmethod : trace java函数调用")hook_artmethod : trace java 函数调用
 
@@ -3054,16 +3031,15 @@ frida-trace -U -i "strcmp" -f com.gdufs.xman
 
 [改 aosp 源码 trace 信息](https://bbs.pediy.com/thread-255653-1.htm)
 
-[](#Frida-native-hook-init-array开发和自动化逆向 "Frida native hook : init_array开发和自动化逆向")Frida native hook : init_array 开发和自动化逆向
--------------------------------------------------------------------------------------------------------------------------
+## [](#Frida-native-hook-init-array开发和自动化逆向 "Frida native hook : init_array开发和自动化逆向")Frida native hook : init_array 开发和自动化逆向
 
 ### [](#init-array原理 "init_array原理")init_array 原理
 
 常见的保护都会在 init_array 里面做，关于其原理，主要阅读以下文章即可。
 
-*   [IDA 调试 android so 的. init_array 数组](https://www.cnblogs.com/bingghost/p/6297325.html)
-*   [Android NDK 中. init 段和. init_array 段函数的定义方式](https://www.dllhook.com/post/213.html)
-*   [Linker 学习笔记](https://wooyun.js.org/drops/Android%20Linker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html)
+- [IDA 调试 android so 的. init_array 数组](https://www.cnblogs.com/bingghost/p/6297325.html)
+- [Android NDK 中. init 段和. init_array 段函数的定义方式](https://www.dllhook.com/post/213.html)
+- [Linker 学习笔记](https://wooyun.js.org/drops/Android%20Linker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html)
 
 ### [](#IDA静态分析init-array "IDA静态分析init_array")IDA 静态分析 init_array
 
@@ -3084,57 +3060,50 @@ __attribute__((__constructor__)) static void sakura_init() {
 ```
 
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-161438.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-161438.png)  
-IDA 快捷键`shift+F7`找到 segment，然后就可以找到`.init_array`段，然后就可以找到里面保存的函数地址。  
+IDA 快捷键`shift+F7`找到 segment，然后就可以找到`.init_array`段，然后就可以找到里面保存的函数地址。
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-161519.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-161519.png)  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-161601.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-161601.png)  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-161613.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-02-161613.png)
 
 ### [](#IDA动态调试so "IDA动态调试so")IDA 动态调试 so
 
-*   打开要调试的 apk，找到入口
-    
-    ```
-    sakura@sakuradeMacBook-Pro:~/.gradle/caches$ adb shell dumpsys activity top | grep TASK
-    TASK com.android.systemui id=29 userId=0
-    TASK null id=26 userId=0
-    TASK com.example.ndk_demo id=161 userId=0
-    ```
-    
-*   启动 apk, 并让设备将处于一个 Waiting For Debugger 的状态  
-    `adb shell am start -D -n com.example.ndk_demo/.MainActivity`
-    
-*   执行 android_server64
-    
-    ```
-    sailfish:/data/local/tmp # ./android_server64
-    IDA Android 64-bit remote debug server(ST) v1.22. Hex-Rays (c) 2004-2017
-    Listening on 0.0.0.0:23946...
-    ```
-    
-*   新开一个窗口使用 forward 程序进行端口转发：`adb forward tcp:23946 tcp:23946`
-    
+- 打开要调试的 apk，找到入口
+
+  ```
+  sakura@sakuradeMacBook-Pro:~/.gradle/caches$ adb shell dumpsys activity top | grep TASK
+  TASK com.android.systemui id=29 userId=0
+  TASK null id=26 userId=0
+  TASK com.example.ndk_demo id=161 userId=0
+  ```
+
+- 启动 apk, 并让设备将处于一个 Waiting For Debugger 的状态  
+  `adb shell am start -D -n com.example.ndk_demo/.MainActivity`
+- 执行 android_server64
+
+  ```
+  sailfish:/data/local/tmp # ./android_server64
+  IDA Android 64-bit remote debug server(ST) v1.22. Hex-Rays (c) 2004-2017
+  Listening on 0.0.0.0:23946...
+  ```
+
+- 新开一个窗口使用 forward 程序进行端口转发：`adb forward tcp:23946 tcp:23946`
 
 `adb forward tcp:<本地机器的网络端口号> tcp:<模拟器或是真机的网络端口号>`  
 例: adb [-d|-e|-s ] forward tcp:6100 tcp:7100 表示把本机的 6100 端口号与模拟器的 7100 端口建立起相关，当模拟器或真机向自己的 7100 端口发送了数据，那们我们可以在本机的 6100 端口读取其发送的内容，这是一个很关键的命令，以后我们使用 jdb 调试 apk 之前，就要用它先把目标进程和本地端口建立起关联
 
-*   打开 IDA，选择菜单 Debugger -> Attach -> Remote ARM Linux/Android debugger
-    
-*   打开 IDA，选择菜单 Debugger -> Process options, 填好，然后选择进程去 attach。  
-    [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-03-082029.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-03-082029.png)
-    
-*   查看待调试的进程`adb jdwp`
-    
-    ```
-    sakura@sakuradeMacBook-Pro:~$ adb jdwp
-    10436
-    ```
-    
-*   转发端口`adb forward tcp:8700 jdwp:10436`，将该进程的调试端口和本机的 8700 绑定。
-    
-*   jdb 连接调试端口，从而让程序继续运行 `jdb -connect com.sun.jdi.SocketAttach:hostname=127.0.0.1,port=8700`
-    
-*   找到断点并断下。
-    
+- 打开 IDA，选择菜单 Debugger -> Attach -> Remote ARM Linux/Android debugger
+- 打开 IDA，选择菜单 Debugger -> Process options, 填好，然后选择进程去 attach。
+  [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-03-082029.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-03-082029.png)
+- 查看待调试的进程`adb jdwp`
+
+  ```
+  sakura@sakuradeMacBook-Pro:~$ adb jdwp
+  10436
+  ```
+
+- 转发端口`adb forward tcp:8700 jdwp:10436`，将该进程的调试端口和本机的 8700 绑定。
+- jdb 连接调试端口，从而让程序继续运行 `jdb -connect com.sun.jdi.SocketAttach:hostname=127.0.0.1,port=8700`
+- 找到断点并断下。
 
 打开 module  
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-03-095937.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-03-095937.png)  
@@ -3297,7 +3266,7 @@ function hooklinker() {
 setImmediate(hooklinker)
 ```
 
-我调试了一下 linker64，因为没有导出 call_function 的地址，所以不能直接 hook 符号名，而是要根据偏移去 hook，以后再说。  
+我调试了一下 linker64，因为没有导出 call_function 的地址，所以不能直接 hook 符号名，而是要根据偏移去 hook，以后再说。
 其实要看`init_array`，直接 shift+F7 去 segment 里面找`.init_array`段就可以了，这里主要是为了反反调试，因为可能反调试会加在 init_array 里，hook call_function 就可以让它不加载反调试程序。
 
 ### [](#native层未导出函数主动调用（任意符号和地址） "native层未导出函数主动调用（任意符号和地址）")native 层未导出函数主动调用（任意符号和地址）
@@ -3348,20 +3317,18 @@ sakura_add1 result is : 233
 sakura_add2 result is : 233
 ```
 
-[](#C-C-hook "C/C++ hook")C/C++ hook
-------------------------------------
+## [](#C-C-hook "C/C++ hook")C/C++ hook
 
 //todo
 
 ### [](#Native-JNI层参数打印和主动调用参数构造 "Native/JNI层参数打印和主动调用参数构造")Native/JNI 层参数打印和主动调用参数构造
 
-jni 的基本类型要通过调用 jni 相关的 api 转化成 c++ 对象，才能打印和调用。  
+jni 的基本类型要通过调用 jni 相关的 api 转化成 c++ 对象，才能打印和调用。
 jni 主动调用的时候，参数构造有两种方式，一种是`Java.vm.getenv`，另一种是 hook 获取 env 之后来调用 jni 相关的 api 构造参数。
 
 ### [](#C-C-编成so并引入Frida调用其中的函数 "C/C++编成so并引入Frida调用其中的函数")C/C++ 编成 so 并引入 Frida 调用其中的函数
 
-[](#致谢 "致谢")致谢
---------------
+## [](#致谢 "致谢")致谢
 
-本篇文章学到的内容来自且完全来自 r0ysue 的知识星球，推荐一下。  
+本篇文章学到的内容来自且完全来自 r0ysue 的知识星球，推荐一下。
 [![](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-07-061015.png)](https://sakura-1252236262.cos.ap-beijing.myqcloud.com/2020-07-07-061015.png)
