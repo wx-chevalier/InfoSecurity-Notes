@@ -35,7 +35,7 @@
 
 当系统连接到网络并向其他计算机提供服务(有意地或无意地)时，事情会变得更为棘手。在那种情况下，数据可能不只是来自系统管理员，因为客户机程序要使用所提供的服务，而系统漏洞可能会让入侵者控制 计算机。这就是为什么安全是从开始计划直到拆除系统的整个系统生命周期中最基本的问题。
 
-![mindmap](https://i.postimg.cc/kMvwVFmf/Info-Security-Pen-Test.png)
+![mindmap](https://assets.ng-tech.icu/item/20230418154054.png)
 
 > 本书的精排目录导航版请参考 [https://ng-tech.icu/books/InfoSecurity-Series](https://ng-tech.icu/books/InfoSecurity-Series)。
 
