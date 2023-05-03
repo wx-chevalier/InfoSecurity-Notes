@@ -7,7 +7,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/wx-chevalier/InfoSecurity-Series">
+  <a href="https://github.com/wx-chevalier/InfoSecurity-Notes">
     <img src="https://s2.ax1x.com/2020/02/02/1YM1JK.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -16,14 +16,14 @@
   <p align="center">
     信息安全与渗透测试
     <br />
-    <a href="https://github.com/wx-chevalier/InfoSecurity-Series"><strong>在线阅读 >> </strong></a>
+    <a href="https://github.com/wx-chevalier/InfoSecurity-Notes"><strong>在线阅读 >> </strong></a>
     <br />
     <br />
-    <a href="https://github.com/wx-chevalier/InfoSecurity-Series">速览手册</a>
+    <a href="https://github.com/wx-chevalier/InfoSecurity-Notes">速览手册</a>
     ·
-    <a href="https://github.com/wx-chevalier/InfoSecurity-Series/issues">InfoSecurity-Seriesrt Bug</a>
+    <a href="https://github.com/wx-chevalier/InfoSecurity-Notes/issues">InfoSecurity-Notesrt Bug</a>
     ·
-    <a href="https://github.com/wx-chevalier/InfoSecurity-Series/issues">参考资料</a>
+    <a href="https://github.com/wx-chevalier/InfoSecurity-Notes/issues">参考资料</a>
   </p>
 </p>
 
@@ -37,7 +37,7 @@
 
 ![mindmap](https://assets.ng-tech.icu/item/20230418154054.png)
 
-> 本书的精排目录导航版请参考 [https://ng-tech.icu/books/InfoSecurity-Series](https://ng-tech.icu/books/InfoSecurity-Series)。
+> 本书的精排目录导航版请参考 [https://ng-tech.icu/books/InfoSecurity-Notes](https://ng-tech.icu/books/InfoSecurity-Notes)。
 
 ## 数据安全与系统安全
 
@@ -84,13 +84,13 @@ Contributions are what make the open source community such an amazing place to b
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/wx-chevalier/InfoSecurity-Series.svg?style=flat-square
-[contributors-url]: https://github.com/wx-chevalier/InfoSecurity-Series/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/wx-chevalier/InfoSecurity-Series.svg?style=flat-square
-[forks-url]: https://github.com/wx-chevalier/InfoSecurity-Series/network/members
-[stars-shield]: https://img.shields.io/github/stars/wx-chevalier/InfoSecurity-Series.svg?style=flat-square
-[stars-url]: https://github.com/wx-chevalier/InfoSecurity-Series/stargazers
-[issues-shield]: https://img.shields.io/github/issues/wx-chevalier/InfoSecurity-Series.svg?style=flat-square
-[issues-url]: https://github.com/wx-chevalier/InfoSecurity-Series/issues
-[license-shield]: https://img.shields.io/github/license/wx-chevalier/InfoSecurity-Series.svg?style=flat-square
-[license-url]: https://github.com/wx-chevalier/InfoSecurity-Series/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/wx-chevalier/InfoSecurity-Notes.svg?style=flat-square
+[contributors-url]: https://github.com/wx-chevalier/InfoSecurity-Notes/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/wx-chevalier/InfoSecurity-Notes.svg?style=flat-square
+[forks-url]: https://github.com/wx-chevalier/InfoSecurity-Notes/network/members
+[stars-shield]: https://img.shields.io/github/stars/wx-chevalier/InfoSecurity-Notes.svg?style=flat-square
+[stars-url]: https://github.com/wx-chevalier/InfoSecurity-Notes/stargazers
+[issues-shield]: https://img.shields.io/github/issues/wx-chevalier/InfoSecurity-Notes.svg?style=flat-square
+[issues-url]: https://github.com/wx-chevalier/InfoSecurity-Notes/issues
+[license-shield]: https://img.shields.io/github/license/wx-chevalier/InfoSecurity-Notes.svg?style=flat-square
+[license-url]: https://github.com/wx-chevalier/InfoSecurity-Notes/blob/master/LICENSE.txt
