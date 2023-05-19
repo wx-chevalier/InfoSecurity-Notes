@@ -23,11 +23,11 @@ aHR0cHM6Ly93d3cud2FuZG91amlhLmNvbS9hcHBzLzEyMzU5NjMvaGlzdG9yeV92MjQy
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6rWzGly01TibGEvCI3EPqwl4VeVcCialdU5m6nwonvmdISic0j1uba4o2rG5FKkaSNv2iaQ6D9slsibpQ/640?wx_fmt=png)![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6rWzGly01TibGEvCI3EPqwlg7h0DMIz64LK2wBCPZmDVdCRtbO6KkuMzWvtibibLBvqicwfdRhPAFgyg/640?wx_fmt=png)
 
-需要搞定的是签名和 body 加密;  
+需要搞定的是签名和 body 加密;
 
-X-TJH：签名;  
+X-TJH：签名;
 
-Kf64g3......：请求 body;  
+Kf64g3......：请求 body;
 
 **jadx 定位参数；**
 
@@ -67,7 +67,7 @@ function call_encrypt(){
 
 ```
 
-****frida-rpc** bodyEncrypt:**
+\***\*frida-rpc** bodyEncrypt:\*\*
 
 ```
 function call_bodyEncrypt(){
@@ -101,7 +101,7 @@ csdn:https://blog.csdn.net/qq_38851536
 
 ```
 
-首先先运行 JNI_OnLoad （如下代码第 40 行）  
+首先先运行  JNI_OnLoad （如下代码第 40 行）
 
 ```
 package com.test;
@@ -149,7 +149,7 @@ public class Test extends AbstractJni {
 
 ```
 
-运行发现报错;  
+运行发现报错;
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH51SmQ6OU118e9dtylhEopsObF0ZmKXxYsjPEKesqVYrMezBCibib4J0zx6vbZDBGemZnhUcFGEQe3w/640?wx_fmt=png)
 
@@ -161,7 +161,7 @@ public class Test extends AbstractJni {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH51SmQ6OU118e9dtylhEopskAlH4tNbxhyROdU8IhFzwlYiajIv7Ugf1p3iatQAlalfO0CJEG8MyEmQ/640?wx_fmt=png)
 
-也可以在我们的 Test 类中补，因为 Test 类继承了 AbstractJNI（上面的 26 行）;
+也可以在我们的 Test  类中补，因为 Test 类继承了 AbstractJNI（上面的 26 行）;
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH51SmQ6OU118e9dtylhEopsov3w9z5QgkYFnYjdUD4zqYCedJLyYBooiaxyFxowwQjPDYDO2AYgXPA/640?wx_fmt=png)
 
@@ -191,9 +191,9 @@ public class Test extends AbstractJni {
 
 看日志都知道它是在做签名校验咯；
 
-最后附上 JNI_OnLoad 能成功运行的完整代码；
+最后附上  JNI_OnLoad 能成功运行的完整代码；
 
-（友情提示：标红的类 ALT + 回车可以快速导入（不会有人不知道吧![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH51SmQ6OU118e9dtylhEopscqPSEb8nUyhupqiagFTbwe1Rvzialiagk8fVXbjcYgtmbLfMVtHsicIJyg/640?wx_fmt=png)））；  
+（友情提示：标红的类 ALT + 回车可以快速导入（不会有人不知道吧![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH51SmQ6OU118e9dtylhEopscqPSEb8nUyhupqiagFTbwe1Rvzialiagk8fVXbjcYgtmbLfMVtHsicIJyg/640?wx_fmt=png)））；
 
 ```
 package com.tujia;
@@ -283,7 +283,6 @@ public class Test extends AbstractJni {
 
 ```
 
-  
 然后我们来主动调用 encrypt 函数；
 
 之前呢，我都是这样调用的：
@@ -291,7 +290,7 @@ public class Test extends AbstractJni {
 ```
 public void call_encrypt() {
         DvmClass Native=vm.resolveClass("com/tujia/gundam/Gundam");
-        String methodSign = "encrypt(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJ)Ljava/lang/String;";        
+        String methodSign = "encrypt(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJ)Ljava/lang/String;";
         Object arg0 = vm.addLocalObject(new StringObject(vm, ""));
         String arg1_str = "Mozilla/5.0 (Linux; Android 8.1.0; OPPO R11st Build/OPM1.171019.011; wv)";
         Object arg1 = vm.addLocalObject(new StringObject(vm, arg1_str));
@@ -312,7 +311,7 @@ String methodSign = "encrypt(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Stri
 
 ```
 
-这个是 smali 的写法 (先用 apktool 反编译 apk, 然后在 smail 文件夹里根据类名找）  
+这个是 smali 的写法 (先用 apktool 反编译 apk, 然后在 smail 文件夹里根据类名找）
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH51SmQ6OU118e9dtylhEopsCPlTGY8JQq4ibicasewhGxERtact0gOSkADYtTUx35McLOJC4oKZ8zDg/640?wx_fmt=png)
 
@@ -347,13 +346,13 @@ public void call_encrypt() {
 
 ```
 
-22 行 0x36a9 是啥？
+22 行  0x36a9 是啥？
 
-是 encrypt 函数的在 so 文件中的偏移地址;
+是  encrypt 函数的在 so 文件中的偏移地址;
 
-哪里得到的？  
+哪里得到的？
 
-上面成功运行完 JNI_OnLoad，会显示动态注册的函数地址;  
+上面成功运行完  JNI_OnLoad，会显示动态注册的函数地址;
 
 ```
 RegisterNative(com/tujia/gundam/Gundam, encrypt(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJ)Ljava/lang/String;, RX@0x400036a9[libtujia_encrypt.so]0x36a9)
@@ -365,9 +364,9 @@ RegisterNative(com/tujia/gundam/Gundam, bodyEncrypt(Ljava/lang/String;JLjava/lan
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH51SmQ6OU118e9dtylhEops4ib0G7Epctgav9meAWKSPdJxjD2J4zFanKeOsP8JicNF7pN0bmNPa6FA/640?wx_fmt=png)
 
-ps：如果还有人用的是老版本的 unidbg（比如在写这篇以前的我）;  
+ps：如果还有人用的是老版本的 unidbg（比如在写这篇以前的我）;
 
-结果可能是下图的结果，应该是老版本第 6 个参数长整型参数有 bug，导致第六个参数是 0;  
+结果可能是下图的结果，应该是老版本第 6 个参数长整型参数有 bug，导致第六个参数是 0;
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH5kiaGuPzfFvDLZIutvMYQc9ctWl52uicvKCkxPQUS4Zd6HGRYzjymHzibB6DwrMSDqnMXHQqpVSFuwg/640?wx_fmt=png)
 
@@ -547,7 +546,7 @@ public class Test extends AbstractJni {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH7Gwg06nY3t8zv0Pz9icqpy3F74kVDHBesTjOWlJmbibvND4tdXAsxnvmRQgnPgWjpwYhQE22KJGuug/640?wx_fmt=png)
 
-静态分析一波;  
+静态分析一波;
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH7Gwg06nY3t8zv0Pz9icqpy3u79uLibZOrrqVVDSYfQfdaMBRorAmAEYicHgluA26pL9zxMWQxBYzSDg/640?wx_fmt=png)
 
@@ -555,6 +554,6 @@ public class Test extends AbstractJni {
 
 EncodeHTTP 函数好长, 我们从下往上看;
 
-欲知后事如何  
+欲知后事如何
 
 请看下回分解
