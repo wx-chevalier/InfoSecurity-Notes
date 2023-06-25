@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651266047&idx=1&sn=932ec5044b283d470b385c9a685dc940&chksm=8d315f90ba46d686a561f7deb39e4b5fa4b871fba992acf60b1db39587411960adf78c1b0d21&mpshare=1&scene=1&srcid=0310h4xceCx0N4owVhhkjB1Z&sharer_sharetime=1646881346407&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651266047&idx=1&sn=932ec5044b283d470b385c9a685dc940&chksm=8d315f90ba46d686a561f7deb39e4b5fa4b871fba992acf60b1db39587411960adf78c1b0d21&mpshare=1&scene=1&srcid=0310h4xceCx0N4owVhhkjB1Z&sharer_sharetime=1646881346407&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
 
 Official Account
 
@@ -8,12 +8,11 @@ Official Account
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/jqCHqBaKLl3otEQDnoxAQADQN6DsyiaGd3RW99kP9ia4yiauaWyNoHLx7XNqa4RIOmicSq7CBD7rg0fdXqwcyzblVA/640?wx_fmt=png)
 
-序言
---
+## 序言
 
 之前我就发过一篇文章，提了一嘴关于我理解的爬虫的本质
 
-[**面试官问我会不会 APP 抓包, 我..**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261597&idx=1&sn=67d62f684c19f5a5fa3c1fe2ed396f3c&chksm=8d314ef2ba46c7e42d036544b88afeb78dc06b91b11264ebe8aa060b05f5402f230f3159425a&scene=21#wechat_redirect)  
+[**面试官问我会不会 APP 抓包, 我..**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261597&idx=1&sn=67d62f684c19f5a5fa3c1fe2ed396f3c&chksm=8d314ef2ba46c7e42d036544b88afeb78dc06b91b11264ebe8aa060b05f5402f230f3159425a&scene=21#wechat_redirect)
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/jqCHqBaKLl3otEQDnoxAQADQN6DsyiaGdkusbkWWqBDRk3hWRJiaeDlsqIbHtjb15uMXJNClib6L0YjsqVPJ8lH2A/640?wx_fmt=png)
 
@@ -21,8 +20,7 @@ Official Account
 
 今天写的 Js 逆向之补环境，就可以理解是在 Js 环境下精进我们的 "骗术"
 
-正文
---
+## 正文
 
 大家在看文章之前应该都清楚，Node 环境和浏览器环境是完全不同的，平台有很多的检测点可以发现我们是在浏览器运行 Js 还是在 Node 环境下运行 Js
 
@@ -32,9 +30,9 @@ Official Account
 
 最基本的补环境是公众号早期的文章，例如下面的几篇文章
 
-[**实战案例浅析 JS 加密 - DES 与 Base64**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261622&idx=1&sn=bb1f04ec80c9aeec17ca5b47083b1094&chksm=8d314ed9ba46c7cf36913e31456ad5afcff5b28cc1bdc54e34836a658cb6ac1ccfa88750c856&scene=21#wechat_redirect)  
+[**实战案例浅析 JS 加密 - DES 与 Base64**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261622&idx=1&sn=bb1f04ec80c9aeec17ca5b47083b1094&chksm=8d314ed9ba46c7cf36913e31456ad5afcff5b28cc1bdc54e34836a658cb6ac1ccfa88750c856&scene=21#wechat_redirect)
 
-[**实战案例浅析 JS 加密 - RSA 与 XXTEA**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261627&idx=1&sn=1f58708b5e2dd7adb5f6f160b842d15e&chksm=8d314ed4ba46c7c255344847f7547f790a5ab8abf487d0810059ef8baa7350d7f9f47469a8ff&scene=21#wechat_redirect)  
+[**实战案例浅析 JS 加密 - RSA 与 XXTEA**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261627&idx=1&sn=1f58708b5e2dd7adb5f6f160b842d15e&chksm=8d314ed4ba46c7c255344847f7547f790a5ab8abf487d0810059ef8baa7350d7f9f47469a8ff&scene=21#wechat_redirect)
 
 这些个文章中大家经常遇到的是
 
@@ -60,13 +58,13 @@ window = global;
 
 除了`window`之外，我们经常还遇到类似下面这些文章中的情况
 
-[**JS 逆向 | 助力新手 , 两个 JS 逆向喂饭教程**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261831&idx=1&sn=ac2024651406cac642c606f7336abffc&chksm=8d314fe8ba46c6fe967ac2d320ca9a29df2b43e12707599b7c0196fab255bcfbd265db4aa727&scene=21#wechat_redirect)  
+[**JS 逆向 | 助力新手 , 两个 JS 逆向喂饭教程**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261831&idx=1&sn=ac2024651406cac642c606f7336abffc&chksm=8d314fe8ba46c6fe967ac2d320ca9a29df2b43e12707599b7c0196fab255bcfbd265db4aa727&scene=21#wechat_redirect)
 
-[**JS 逆向 | 助力新手 , 再来一套喂饭教程！**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261852&idx=1&sn=addc60b8639d89c0d3aba0077608810a&chksm=8d314ff3ba46c6e5caee83bf5688c75367deb602d826625074c4ad5457942935da036f5f86f8&scene=21#wechat_redirect)  
+[**JS 逆向 | 助力新手 , 再来一套喂饭教程！**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651261852&idx=1&sn=addc60b8639d89c0d3aba0077608810a&chksm=8d314ff3ba46c6e5caee83bf5688c75367deb602d826625074c4ad5457942935da036f5f86f8&scene=21#wechat_redirect)
 
-[**Python 爬虫进阶必备 | 某采购网站 cookie 加密分析（仿加速乐）**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651265241&idx=1&sn=10de82ee0ebe9b511b3ac44b39ed4436&chksm=8d315cb6ba46d5a0b86634c371cb4cf00dcb1ccff1e81e658e476d32f332c729164f334c80e9&scene=21#wechat_redirect)  
+[**Python 爬虫进阶必备 | 某采购网站 cookie 加密分析（仿加速乐）**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651265241&idx=1&sn=10de82ee0ebe9b511b3ac44b39ed4436&chksm=8d315cb6ba46d5a0b86634c371cb4cf00dcb1ccff1e81e658e476d32f332c729164f334c80e9&scene=21#wechat_redirect)
 
-[**Python 爬虫进阶必备 | 某常见 cookie 加密算法逻辑分析 （加速乐 - jsl）**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651265644&idx=1&sn=e6d272d5d2d61f0303cb745fc160c825&chksm=8d315e03ba46d715c47bd010324da6cf02537a79f265b7f3253bfb71211bb8997ec736a40637&scene=21#wechat_redirect)  
+[**Python 爬虫进阶必备 | 某常见 cookie 加密算法逻辑分析 （加速乐 - jsl）**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651265644&idx=1&sn=e6d272d5d2d61f0303cb745fc160c825&chksm=8d315e03ba46d715c47bd010324da6cf02537a79f265b7f3253bfb71211bb8997ec736a40637&scene=21#wechat_redirect)
 
 这些网站我们一般称之为`加速乐`，因为标志性的 cookie 参数是以`jsl`开头，而这种类型的加密一般操纵的是`document.cookie`这个参数
 
@@ -96,7 +94,7 @@ var document = {
 
 这里可以参考之前写的关于某乎的分析文章
 
-[**Python 爬虫进阶必备 | 某著名人均百万问答社区 header 参数加密逻辑分析**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651265603&idx=1&sn=2ff71d1d4b6c294812b2d6dba93cfc52&chksm=8d315e2cba46d73a32b5cb492d69c4968d7aeb28dbfed75a4e579273bbf1bf0e285a9f9b0499&scene=21#wechat_redirect)  
+[**Python 爬虫进阶必备 | 某著名人均百万问答社区 header 参数加密逻辑分析**](http://mp.weixin.qq.com/s?__biz=MzIwNDI1NjUxMg==&mid=2651265603&idx=1&sn=2ff71d1d4b6c294812b2d6dba93cfc52&chksm=8d315e2cba46d73a32b5cb492d69c4968d7aeb28dbfed75a4e579273bbf1bf0e285a9f9b0499&scene=21#wechat_redirect)
 
 这里`Header`中的`x-zse-96`的加密逻辑之前看过文章的，通过插桩调试应该可以看到下面这样的代码
 
@@ -107,7 +105,7 @@ var document = {
 官方定义是这样的
 
 > “
-> 
+>
 > **`Object.getOwnPropertyDescriptor()`** 方法返回指定对象上一个自有属性对应的属性描述符。（自有属性指的是直接赋予该对象的属性，不需要从原型链上进行查找的属性）
 
 通过描述有点晦涩，你可以这样理解，如果是自己构造的对象，例如
@@ -163,7 +161,7 @@ navigator = new Navigator();
 
 那么又回到上面的代码，这里用到的`prototype`又是个啥？
 
-### prototype 与 _ _ _proto_ _ _
+### prototype 与 \_ \_ _proto_ \_ \_
 
 首先先上一张图
 
@@ -171,15 +169,15 @@ navigator = new Navigator();
 
 是不是很懵逼，懵逼就对了，我们是搞爬虫的，知道个大概意思就行了。
 
-我们需要知道的是 prototype 与 _ _ _proto_ _ _ 咋对应起来就行了
+我们需要知道的是 prototype 与 \_ \_ _proto_ \_ \_ 咋对应起来就行了
 
 按照官方的说法
 
 > “
-> 
-> 在 JS 里，万物皆对象。方法（Function）是对象，方法的原型 (Function.prototype) 是对象。因此，它们都会具有对象共有的特点。即：对象具有属性_ _ _proto_ _ _，可称为隐式原型，一个对象的隐式原型指向构造该对象的构造函数的原型，这也保证了实例能够访问在构造函数原型中定义的属性和方法。
+>
+> 在 JS 里，万物皆对象。方法（Function）是对象，方法的原型 (Function.prototype) 是对象。因此，它们都会具有对象共有的特点。即：对象具有属性\_ \_ _proto_ \_ \_，可称为隐式原型，一个对象的隐式原型指向构造该对象的构造函数的原型，这也保证了实例能够访问在构造函数原型中定义的属性和方法。
 
-> 方法（Function）这个特殊的对象，除了和其他对象一样有上述_proto_属性之外，还有自己特有的属性——原型属性（prototype），这个属性是一个指针，指向一个对象，这个对象的用途就是包含所有实例共享的属性和方法（我们把这个对象叫做原型对象）。原型对象也有一个属性，叫做 constructor，这个属性包含了一个指针，指回原构造函数。
+> 方法（Function）这个特殊的对象，除了和其他对象一样有上述*proto*属性之外，还有自己特有的属性——原型属性（prototype），这个属性是一个指针，指向一个对象，这个对象的用途就是包含所有实例共享的属性和方法（我们把这个对象叫做原型对象）。原型对象也有一个属性，叫做 constructor，这个属性包含了一个指针，指回原构造函数。
 
 理解大概的意思（别被搞晕了）可以得出下面这行代码
 
@@ -224,8 +222,7 @@ var window1 = {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/jqCHqBaKLl3otEQDnoxAQADQN6DsyiaGdVMg7HOu8oia2AwGHGt8SmiayPmz2SOibxIuoK1eV32ysdhQbcBdOFkt7g/640?wx_fmt=png)
 
-总结
---
+## 总结
 
 这篇文章我的定义并不是关于补环境的总纲或者是总述，只能说是掀起了补环境神秘面纱的一角，希望大家多多交流，不断完善自己的环境框架，做到一键通杀~
 

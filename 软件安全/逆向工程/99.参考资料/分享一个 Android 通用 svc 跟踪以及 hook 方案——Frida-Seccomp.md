@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [bbs.pediy.com](https://bbs.pediy.com/thread-271815.htm)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [bbs.pediy.com](https://bbs.pediy.com/thread-271815.htm)
 
 > [原创] 分享一个 Android 通用 svc 跟踪以及 hook 方案——Frida-Seccomp
 
@@ -40,7 +40,7 @@ seccomp 的具体用法可以参考「**什么是 seccomp**」中的 seccomp 介
 
 ## 如何脚本化安装 seccomp 规则呢
 
-这里使用 Frida 的 API「CModule」，CModule 提供强大的动态编译功能可以让你在 JS 中写 C，  
+这里使用 Frida 的 API「CModule」，CModule 提供强大的动态编译功能可以让你在 JS 中写 C，
 **frida 文档中的示例**
 
 ```

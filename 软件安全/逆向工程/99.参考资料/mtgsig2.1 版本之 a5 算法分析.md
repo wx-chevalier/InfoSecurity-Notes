@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s/bfGvUyIN8aS4Y1KkOWwRpQ)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s/bfGvUyIN8aS4Y1KkOWwRpQ)
 
 **新年快乐~**
 
@@ -8,7 +8,7 @@
 
 简单说一下怎么定位 a5 的加密入口以及算法还原
 
-首先这里用的指令执行模拟框架还是 unidbg  
+首先这里用的指令执行模拟框架还是 unidbg
 
 补环境不再说了，直接放出完整调用代码
 
@@ -405,13 +405,13 @@ mtgsig = {
 
 ```
 
-上面是 undbg 调用出来的 mtgsig，会发现每次调用 a2, a4, a5, a7 都会不一样, 这样很难分析，所以我们第一件事先修改 undbg 中的时间获取函数，让函数返回固定值，看看有什么效果（并不是所有案例都可以）此图放错应修改 gettimeofday，可以在 src/main/java/com/github/unidbg/unix/UnixSyscallHandler.java 中修改
+上面是 undbg 调用出来的 mtgsig，会发现每次调用  a2, a4, a5, a7 都会不一样, 这样很难分析，所以我们第一件事先修改 undbg 中的时间获取函数，让函数返回固定值，看看有什么效果（并不是所有案例都可以）此图放错应修改 gettimeofday，可以在 src/main/java/com/github/unidbg/unix/UnixSyscallHandler.java 中修改
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxLqibsOcFwdbyMfR34SYdH6yWybgDUL311PC0WwzNmEPUbdbJPuCXueQ/640?wx_fmt=png)
 
-这样修改后每次调用 a2, a4, a5, a7 都是固定的  
+这样修改后每次调用  a2, a4, a5, a7 都是固定的
 
-然后我们看 a5 这种密文，一看就是 base64 输出方式，那就 hook 住 base64 的函数验证下
+然后我们看 a5 这种密文，一看就是 base64 输出方式，那就  hook 住  base64 的函数验证下
 
 **怎么找 base64 编码函数？  
 **
@@ -420,15 +420,15 @@ mtgsig = {
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxju9pN1M2sXKPm1xic5ib2O1AWVibbib4KRgvYp5t0Umib5aicQkdPEP7W6ew/640?wx_fmt=png)
 
-双击第一个结果  
+双击第一个结果
 
 快捷键 x 查看交叉引用
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxBKBphRTsyyThDGQvmRjXMyfjHkW7P3jrFMC6NgYKIf4xxt94zxOzkQ/640?wx_fmt=png)
 
-双击第一个结果  
+双击第一个结果
 
-f5  
+f5
 
 ```
 int __fastcall sub_B468(int a1, int a2, signed int a3)
@@ -541,21 +541,21 @@ hook sub_B468 和 sub_8C8E0
 
 ```
 
-结果在运行日志里找到了 a5 的密文  
+结果在运行日志里找到了 a5 的密文
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxBupsHkW6Tuvs9OOAPGiaYGIGib2bAdXrU8lrPvGxU1y6JkrgdMiaPjxAw/640?wx_fmt=png)
 
 可以看到 base64 的入参是乱码，所以肯定是某种算法加密后的字节流，
 
-把这个入参经过标准 base64 编码之后发现和 unidbg 算出来的结果一致，说明没有魔改  
+把这个入参经过标准 base64 编码之后发现和 unidbg 算出来的结果一致，说明没有魔改
 
-所以下一步我们要顺藤摸瓜，找到这个某算法  
+所以下一步我们要顺藤摸瓜，找到这个某算法
 
 **定位某算法**
 
 方法很多，我用 trace，因为 unidbg 的地址随机化是关闭的，也就是说，你模拟执行一千次，加密结果存放的内存地址是不会变的，所以可以监控某个地址块的读写操作，从而找到操作地址的地方
 
-console debugger 在 0xB468 处打个断点
+console debugger 在 0xB468  处打个断点
 
 ```
     public void HookByConsoleDebugger(){
@@ -579,7 +579,7 @@ console debugger 在 0xB468 处打个断点
 
 ```
 
-注意地址是 long 类型，不加 L 是 trace 不了的  
+注意地址是 long 类型，不加 L 是 trace 不了的
 
 然后运行
 
@@ -639,11 +639,11 @@ hook
 
 ```
 
-结果  
+结果
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxKEAYpmibrE4EGZnnEbKyx33BQZbG9LtKGYGEwibzSLLlulicwUIZeibBBQ/640?wx_fmt=png)
 
-入参开头是 789c， 是 zlib 压缩算法特征
+入参开头是 789c，是 zlib 压缩算法特征
 
 ```
 import zlib
@@ -728,7 +728,7 @@ int __fastcall sub_88EEA(int a1, int key, int key_len, int a4)
 
 ```
 
-hook sub_88EEA  
+hook sub_88EEA
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxUVvDV0MzFzVdn6NibxhX2pwtAkGxgUohbM9PaPgKNcQCGKAM4mTRFmw/640?wx_fmt=png)
 
@@ -744,9 +744,9 @@ oh shit 标准加密出来结果不对，经过验证，确实是魔改了
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxKPiaHmO9lwITicsRRAADoKFDZMPx7CnWib919jReibqicvTRicWt68Zl57Aw/640?wx_fmt=png)
 
-两个分支，因为我之前搞过 1.5 和 2.0 的， 我发现之前版本是只有下面的分支，下面的是标准 rc4   
+两个分支，因为我之前搞过 1.5 和 2.0  的，我发现之前版本是只有下面的分支，下面的是标准 rc4
 
-现在因为 a4=1 所以走的上面的分支  
+现在因为 a4=1 所以走的上面的分支
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxiaCNnibmVtYXnLvgcTEOicIPSnXYoSblWNlianpLiaahnKYks5spIGowE8A/640?wx_fmt=png)
 
@@ -754,7 +754,7 @@ oh shit 标准加密出来结果不对，经过验证，确实是魔改了
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxBfow7teWPibGWm5Vp6UJ3h0DoOodca4JEqOlyOuRqJrOzebobiby9OMQ/640?wx_fmt=png)
 
-好了 知道了  
+好了 知道了
 
 先搞一份 rc4 py 源码，rc4 原理这个作者也讲的很好
 
@@ -769,11 +769,11 @@ import zlib
 MOD = 256
 def KSA(key):
     key_length = len(key)
-    S = list(range(MOD)) 
+    S = list(range(MOD))
     j=0
     for i in range(MOD):
         j = (j + S[i] + key[i % key_length]) % MOD
-        S[i], S[j] = S[j], S[i] 
+        S[i], S[j] = S[j], S[i]
     return S
 def PRGA(S):
     i = 0
@@ -811,22 +811,22 @@ def decrypt(key, ciphertext)->bytes:
 
 ```
 
-改秘钥 key 生成 S 盒的部分  
+改秘钥 key 生成 S 盒的部分
 
 ```
 def KSA(key):
     key_length = len(key)
-    S = list(range(MOD)) 
+    S = list(range(MOD))
     j=0
     for i in range(MOD):
         #多加了个 i 看到没？？？
         j = (i(我是混进来的) + j + S[i] + key[i % key_length]) % MOD
-        S[i], S[j] = S[j], S[i] 
+        S[i], S[j] = S[j], S[i]
     return S
 
 ```
 
-完整 py 代码  
+完整 py 代码
 
 ```
 # -*- coding: utf-8 -*-
@@ -911,11 +911,11 @@ if __name__ == '__main__':
 
 ```
 
-a5 完结，下篇讲讲 a9  a9 也是魔改了标准算法，应该是 Blowfish 或者 Twofishs 算法，不过因为对这算法不熟悉，愣是不知道魔改了哪里，一气之下 (走投无路![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxqP1jBmibofdMdWea65gblzUwVgYTe3n5jsjC0deJkx0Rl3wbuaHoJmg/640?wx_fmt=png)) 撸了一遍汇编，后面有空再研究研究算法
+a5 完结，下篇讲讲 a9  a9 也是魔改了标准算法，应该是 Blowfish 或者  Twofishs 算法，不过因为对这算法不熟悉，愣是不知道魔改了哪里，一气之下 (走投无路![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxqP1jBmibofdMdWea65gblzUwVgYTe3n5jsjC0deJkx0Rl3wbuaHoJmg/640?wx_fmt=png)) 撸了一遍汇编，后面有空再研究研究算法
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxGMW7icptL9MV5FAC3OXNv8Dxh7x1KLOMuAic6nHtMf9roIWsicWzVLhicg/640?wx_fmt=png)
 
-不过汇编更 6 了 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxQt7dBdXRpp0sWpEN0swibBH5jAtbby9gr2Kl4GuXq5OBcTibMpb4w2zA/640?wx_fmt=png)
+不过汇编更 6 了  ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4Bmp6OCwibuCVX7LWFIibicSxQt7dBdXRpp0sWpEN0swibBH5jAtbby9gr2Kl4GuXq5OBcTibMpb4w2zA/640?wx_fmt=png)
 
 翻译到三分之一我就觉得这样好傻逼 一部分简单指令可以自动化转成 py 代码，然后就加快了速度~
 

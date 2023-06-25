@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [www.yuanrenxue.com](https://www.yuanrenxue.com/app-crawl/app-crawl-1.html)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [www.yuanrenxue.com](https://www.yuanrenxue.com/app-crawl/app-crawl-1.html)
 
 > 本文是跟我学习爬虫的小伙伴：彭良怀的投稿，稿费是 500。
 
@@ -57,7 +57,7 @@ PS：他在北京，有看上的老板可以私信我，为人也不错。
 - t 为当前时间戳；
 - subVersion 为当前 APP 版本号；
 - signKey 是由 k 方法生成的；
-- signKeyV1 等于 KEY_NEW_SIGN， KEY_NEW_SIGN 又是由 k2 方法生成的；
+- signKeyV1 等于 KEY_NEW_SIGN，KEY_NEW_SIGN 又是由 k2 方法生成的；
 - 传入方法 k2 的参数为 formatQueryParaMap 方法的返回值；
 - 方法 k 和 k2 都在 native 层，加载的是 libjdpdj.so 文件；
 

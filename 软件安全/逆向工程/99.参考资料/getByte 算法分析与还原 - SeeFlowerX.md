@@ -1,8 +1,8 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [blog.seeflower.dev](https://blog.seeflower.dev/archives/54/)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [blog.seeflower.dev](https://blog.seeflower.dev/archives/54/)
 
 > Be patient.
 
-*   Lilac，又名：[白龙~](https://blog.csdn.net/qq_38851536)
+- Lilac，又名：[白龙~](https://blog.csdn.net/qq_38851536)
 
 龙哥往往一语中的，给我带来了莫大的帮助，非常感谢
 
@@ -12,24 +12,23 @@
 
 本文将涉及以下内容：
 
-*   OLLVM 虚假控制流 (OLLVM-BCF) 反混淆
-*   cutter 反编译
-*   md5 算法识别
-*   SHA256 算法还原——魔数修改
-*   Salsa20 算法还原——逻辑魔改
-*   trace_natives 与 frida-trace 搭配使用
-*   findhash 使用
-*   gettimeofday 和 lrand48
-*   ~unidbg 模拟调用 (下一篇文章)~
+- OLLVM 虚假控制流 (OLLVM-BCF) 反混淆
+- cutter 反编译
+- md5 算法识别
+- SHA256 算法还原——魔数修改
+- Salsa20 算法还原——逻辑魔改
+- trace_natives 与 frida-trace 搭配使用
+- findhash 使用
+- gettimeofday 和 lrand48
+- ~unidbg 模拟调用 (下一篇文章)~
 
 **！！！为了节省版面，文章中重复的 hook 代码会省略掉，复现时请记得自行补充**
 
 <table><thead><tr><th>名称</th><th>物料</th><th>补充</th></tr></thead><tbody><tr><td>目标方法</td><td>getByte</td><td>-</td></tr><tr><td>目标类</td><td>com.tencent.starprotocol.ByteData</td><td>-</td></tr><tr><td>目标 so</td><td>libpoxy_star.so</td><td>md5: 889415fb8e886dfdc3fdd405c105d262</td></tr><tr><td>目标 apk</td><td>com.tencent.qqlive_V8.3.95.26016.apk</td><td>md5: 6d6cd9c0b36c49f17d0f204cf917774e</td></tr><tr><td>frida-server</td><td><a href="https://github.com/frida/frida/releases/tag/14.2.18" target="_blank">frida-server-14.2.18-android-arm64</a></td><td>-</td></tr><tr><td>python</td><td>3.8.5</td><td>由 miniconda 创建</td></tr><tr><td>IDA</td><td>IDA Pro 7.5</td><td><a href="https://down.52pojie.cn/Tools/Disassemblers/IDA_Pro_v7.5_Portable.zip" target="_blank">爱盘地址</a></td></tr><tr><td>CyberChef</td><td>CyberChef</td><td><a href="https://gchq.github.io/CyberChef" target="_blank">在线地址</a></td></tr><tr><td>findhash</td><td>findhash</td><td><a href="https://github.com/Pr0214/findhash" target="_blank">Github 地址</a></td></tr><tr><td>trace_natives</td><td>trace_natives</td><td><a href="https://github.com/Pr0214/trace_natives" target="_blank">Github 地址</a></td></tr><tr><td>jnitrace</td><td>jnitrace</td><td><a href="https://github.com/chame1eon/jnitrace" target="_blank">Github 地址</a></td></tr><tr><td>JNI-Frida-Hook</td><td>JNI-Frida-Hook</td><td><a href="https://github.com/Areizen/JNI-Frida-Hook" target="_blank">Github 地址</a></td></tr><tr><td>hook_RegisterNatives</td><td>hook_RegisterNatives</td><td><a href="https://github.com/lasting-yang/frida_hook_libart/blob/master/hook_RegisterNatives.js" target="_blank">Github 地址</a></td></tr><tr><td>cutter</td><td>cutter</td><td><a href="https://cutter.re/" target="_blank">官方地址</a></td></tr><tr><td>测试 ROM</td><td>QQ1B.200205.002</td><td><del>能跑 frida 就行</del></td></tr></tbody></table>
 
-*   物料 [https://gofile.io/d/bqu3Hd](https://gofile.io/d/bqu3Hd)
+- 物料 [https://gofile.io/d/bqu3Hd](https://gofile.io/d/bqu3Hd)
 
-算法稳定主动调用
---------
+## 算法稳定主动调用
 
 此处稳定意为固定输入、固定输出
 
@@ -235,8 +234,7 @@ b6abde88  a8 93 35 2d 13 cb 93 27 e8 f7 fd                 ..5-...'...
 
 ```
 
-so 分析准备
--------
+## so 分析准备
 
 通过反编译 apk，可以知道`getByte`是一个 native 函数，熟练打开 IDA、拖入 so、搜索导出函数
 
@@ -287,7 +285,7 @@ so 分析准备
 
 这烦人的 BCF 自然是有方案处理的，具体请参考下面这篇文章
 
-*   [Hex-Rays: 十步杀一人，两步秒 OLLVM-BCF](https://bbs.pediy.com/thread-257213.htm)
+- [Hex-Rays: 十步杀一人，两步秒 OLLVM-BCF](https://bbs.pediy.com/thread-257213.htm)
 
 简单来说就是将 data 段数据的`Write`属性去掉，然后重新 F5 即可，IDA 会自动完成 BCF 的优化
 
@@ -339,8 +337,7 @@ IDA 反编译出来的代码阅读有些问题，比如看不懂变量传递关�
 
 所以搭配使用效果更佳
 
-返回结果追踪定位
---------
+## 返回结果追踪定位
 
 按照常规思路，一般是看 native 函数的返回，然后追踪结果的生成过程
 
@@ -445,7 +442,7 @@ let jni_struct_array = [
 ]
 
 function getJNIFunctionAdress(func_name){
-    
+
     let jnienv_addr = Java.vm.getEnv().handle.readPointer()
     let offset = jni_struct_array.indexOf(func_name) * Process.pointerSize;
     return Memory.readPointer(jnienv_addr.add(offset))
@@ -499,8 +496,7 @@ call_getByte();
 
 [![](https://blog.seeflower.dev/images/Snipaste_2021-07-16_14-26-48.png)](https://blog.seeflower.dev/images/Snipaste_2021-07-16_14-26-48.png)
 
-返回结果反向推导与追踪
------------
+## 返回结果反向推导与追踪
 
 那就这个时候开始反向追踪了吗
 
@@ -563,8 +559,8 @@ frida-trace -UF -O libpoxy_star_1626418239.txt > star_trace.log
 
 `sub_ABD9C`中只有两个函数调用
 
-*   `sub_ABDBC`
-*   `sub_AAE88`
+- `sub_ABDBC`
+- `sub_AAE88`
 
 [![](https://blog.seeflower.dev/images/Snipaste_2021-07-16_15-27-42.png)](https://blog.seeflower.dev/images/Snipaste_2021-07-16_15-27-42.png)
 
@@ -633,7 +629,7 @@ function inline_hook(){
 
 其次是 0x96，为何怀疑它，因为根据经验，一字节或两字节不为 0 前面为 0 的数据，很可能是后面数据的长度
 
-> 0x96 = 150 = 11 + 8 * 16 + 11
+> 0x96 = 150 = 11 + 8 \* 16 + 11
 
 `96`起到`f7 d0`这里，长度刚好是 150，那没跑了，就是长度值
 
@@ -706,8 +702,8 @@ A: tm_us 是微秒，显然这里是 5.151606s，超过 1s 了
 
 **第九个参数**是什么呢，观察长度，发现它是 64 位的，并且变化随机数、时间都会引起改变
 
-*   修改时间的末尾三位不影响第九个参数
-*   修改 getByte 除`obj4`外的参数不影响第九个参数
+- 修改时间的末尾三位不影响第九个参数
+- 修改 getByte 除`obj4`外的参数不影响第九个参数
 
 那么说明这个参数和随机数、时间、obj4 相关
 
@@ -901,7 +897,7 @@ Interceptor.attach(base_addr.add(0x84890).add(1), {
 
 这个可能看起来不太清晰，看这个
 
-*   [https://github.com/bitcoin/bitcoin/blob/master/src/crypto/hmac_sha256.cpp](https://github.com/bitcoin/bitcoin/blob/master/src/crypto/hmac_sha256.cpp)
+- [https://github.com/bitcoin/bitcoin/blob/master/src/crypto/hmac_sha256.cpp](https://github.com/bitcoin/bitcoin/blob/master/src/crypto/hmac_sha256.cpp)
 
 [![](https://blog.seeflower.dev/images/Snipaste_2021-07-16_18-47-11.png)](https://blog.seeflower.dev/images/Snipaste_2021-07-16_18-47-11.png)
 
@@ -1044,24 +1040,25 @@ Interceptor.attach(base_addr.add(0xA605C).add(1), {
 
 [![](https://blog.seeflower.dev/images/Snipaste_2021-07-16_20-17-04.png)](https://blog.seeflower.dev/images/Snipaste_2021-07-16_20-17-04.png)
 
-*   [https://botan.randombit.net/doxygen/salsa20_8cpp_source.html](https://botan.randombit.net/doxygen/salsa20_8cpp_source.html)
+- [https://botan.randombit.net/doxygen/salsa20_8cpp_source.html](https://botan.randombit.net/doxygen/salsa20_8cpp_source.html)
 
 这个代码看着可能吃力，可以看这个版本的
 
-*   [https://github.com/Daeinar/salsa20/blob/master/salsa.py](https://github.com/Daeinar/salsa20/blob/master/salsa.py)
+- [https://github.com/Daeinar/salsa20/blob/master/salsa.py](https://github.com/Daeinar/salsa20/blob/master/salsa.py)
 
 差异表现为以下几点
 
-*   state 数组的顺序不一样
-*   _round 运算内的逻辑不一样，表现为
-    
-    *   原算法两个数先相加，结果循环左移，左移结果与另外的数异或
-    *   魔改算法分两种情况
-        
-        *   两个数相加 -> 结果与新的数相异或 -> 结果循环左移 -> 最终结果
-        *   两个数相加 -> 结果与新的数做`(a & ~b) | (b & ~a)`运算 -> 结果循环左移 -> 最终结果
-*   _round 运算结束后，要交换 state 内数据，魔改算法没有这个过程
-*   10 轮_round 运算
+- state 数组的顺序不一样
+- \_round 运算内的逻辑不一样，表现为
+
+  - 原算法两个数先相加，结果循环左移，左移结果与另外的数异或
+  - 魔改算法分两种情况
+
+    - 两个数相加 -> 结果与新的数相异或 -> 结果循环左移 -> 最终结果
+    - 两个数相加 -> 结果与新的数做`(a & ~b) | (b & ~a)`运算 -> 结果循环左移 -> 最终结果
+
+- \_round 运算结束后，要交换 state 内数据，魔改算法没有这个过程
+- 10 轮\_round 运算
 
 基于上述结果重写了魔改后的 Salsa20 算法，其余信息参见 **Salsa20 算法还原**小节
 
@@ -1266,7 +1263,7 @@ def gen_key(rand_data: bytes = b'hhhhhhiiih'):
 
 ### SHA256 算法还原
 
-*   [https://github.com/keanemind/Python-SHA-256](https://github.com/keanemind/Python-SHA-256)
+- [https://github.com/keanemind/Python-SHA-256](https://github.com/keanemind/Python-SHA-256)
 
 将这个标准 SHA256 算法中的魔数修改，测试一下
 
@@ -1274,7 +1271,7 @@ def gen_key(rand_data: bytes = b'hhhhhhiiih'):
 
 ```
 def generate_hash(message: bytearray) -> bytearray:
-    
+
     h0 = 0x6A09E669
     h1 = 0xBB67AE87
     h2 = 0x3C6BF372
@@ -1283,7 +1280,7 @@ def generate_hash(message: bytearray) -> bytearray:
     h4 = 0x511E527F
     h6 = 0x1F73D9AB
     h7 = 0x5BD0CD19
-    
+
 
 if __name__ == '__main__':
     import binascii
@@ -1326,8 +1323,7 @@ if __name__ == '__main__':
 
 [![](https://blog.seeflower.dev/images/Snipaste_2021-07-16_20-26-32.png)](https://blog.seeflower.dev/images/Snipaste_2021-07-16_20-26-32.png)
 
-返回结果构成总结
---------
+## 返回结果构成总结
 
 表中的明文由`getByte传入参数obj4`和`gettimeofday返回结果`构成
 
@@ -1343,6 +1339,6 @@ hex 如下
 
 其他部分固定值在`sub_AAE88`产生，就不展开了
 
-*   [https://gist.github.com/SeeFlowerX/373101e86529ae04807f634b87ac4c7c](https://gist.github.com/SeeFlowerX/373101e86529ae04807f634b87ac4c7c)
+- [https://gist.github.com/SeeFlowerX/373101e86529ae04807f634b87ac4c7c](https://gist.github.com/SeeFlowerX/373101e86529ae04807f634b87ac4c7c)
 
 感谢龙哥！

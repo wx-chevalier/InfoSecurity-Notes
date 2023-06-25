@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [eternalsakura13.com](https://eternalsakura13.com/2020/07/04/frida/)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [eternalsakura13.com](https://eternalsakura13.com/2020/07/04/frida/)
 
 > 建了一个知识星球：天问之路如果想学习二进制安全，或者和我交流，欢迎来这里找我 w Frida 环境 https://github.com/frida/frida pyenvpython 全版本随机切换，这里提供......
 
@@ -1371,7 +1371,7 @@ var all_methods = inner_classes.class.getDeclaredMethods();
 public static boolean com.example.androiddemo.Activity.FridaActivity4$InnerClasses.check1(),public static boolean com.example.androiddemo.Activity.FridaActivity4$InnerClasses.check2(),public static boolean com.example.androiddemo.Activity.FridaActivity4$InnerClasses.check3(),public static boolean com.example.androiddemo.Activity.FridaActivity4$InnerClasses.check4(),public static boolean com.example.androiddemo.Activity.FridaActivity4$InnerClasses.check5(),public static boolean com.example.androiddemo.Activity.FridaActivity4$InnerClasses.check6()
 ```
 
-### [](#Frida-hook-hook动态加载的dex，与查找interface， "Frida hook : hook动态加载的dex，与查找interface，")Frida hook : hook 动态加载的 dex，与查找 interface，
+### [](#Frida-hook-hook 动态加载的 dex，与查找 interface，"Frida hook : hook 动态加载的 dex，与查找 interface，")Frida hook : hook 动态加载的 dex，与查找 interface，
 
 总结:
 

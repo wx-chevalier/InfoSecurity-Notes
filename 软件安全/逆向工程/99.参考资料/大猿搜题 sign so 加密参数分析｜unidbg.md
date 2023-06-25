@@ -1,17 +1,15 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=Mzg2NjcxNzE3NQ==&mid=2247483906&idx=1&sn=712447f635fb957b0f7d47d7333b865a&chksm=ce47de9af930578c2c3e4181b64de465be78bcc9096731eb6f3eb599768e69f70755bb3bff2e&mpshare=1&scene=1&srcid=0302EmxYsDsZprkUyCAuJRqP&sharer_sharetime=1646203747659&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=Mzg2NjcxNzE3NQ==&mid=2247483906&idx=1&sn=712447f635fb957b0f7d47d7333b865a&chksm=ce47de9af930578c2c3e4181b64de465be78bcc9096731eb6f3eb599768e69f70755bb3bff2e&mpshare=1&scene=1&srcid=0302EmxYsDsZprkUyCAuJRqP&sharer_sharetime=1646203747659&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
 
-前言
-==
+# 前言
 
 > ❝
-> 
+>
 > 「样本: https://www.wandoujia.com/apps/6526244」  
 > 「版本: 11.4.3」
-> 
+>
 > ❞
 
-charles
-=======
+# charles
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/MWQJibR3pCZ8e0djy9O5wmvFHHlWWXbB3ia14OibwPCCXjEYiaoy6qQT6SdicUibSWGia7hHsYS6HYkIqAiaHC3pL7Nl5Q/640?wx_fmt=png)
 
@@ -19,8 +17,7 @@ charles
 
 「这个 app 有 360 加固，需要先脱壳」
 
-dump dex
-========
+# dump dex
 
 「使用的 yang 神的 frida-dump https://github.com/lasting-yang/frida_dump」
 
@@ -108,8 +105,7 @@ if __name__ == '__main__':
 
 脱完壳之后再使用以上脚本，合并 `dex` 生成新的 `apk` 文件，在反编译
 
-java 层分析
-========
+# java 层分析
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/MWQJibR3pCZ8e0djy9O5wmvFHHlWWXbB3vH4wUGvx5TFiax3uVibibatdDhqb8zK3r9DALFsOsLTYgx8wM7AZIialzg/640?wx_fmt=png)
 
@@ -123,8 +119,7 @@ java 层分析
 
 在继续就来到了 `native` 函数处，会调用这个三个函数
 
-frida hook
-==========
+# frida hook
 
 ```
 function getProcessId() {
@@ -196,8 +191,7 @@ Java.perform(function () {
 
 执行脚本，结果保存到文件里，函数都 `hook` 成功
 
-unidbg
-======
+# unidbg
 
 「老规矩，先搭建架子」
 
@@ -338,10 +332,8 @@ return new ArrayObject(dvmObjects);
 
 比如这个 `GetIntArrayElements` 函数逻辑，通过 `getObject` 获取对象，在调用 `_GetArrayCritical` 函数，但是 `char[]` 没有实现对应的 `CharArray`，有两种方法
 
-*   1、自己根据 `GetxxxxArrayElements` 逻辑写一个
-    
-*   2、实现 `CharArray` 跟其他的 `xxxArray` 逻辑保持一致
-    
+- 1、自己根据 `GetxxxxArrayElements` 逻辑写一个
+- 2、实现 `CharArray` 跟其他的 `xxxArray` 逻辑保持一致
 
 推荐方法 2，这样写后面可以避免很多问题（龙哥的精讲课里也提到过，基本数据的构建最好使用 unidbg 提供的 class）
 

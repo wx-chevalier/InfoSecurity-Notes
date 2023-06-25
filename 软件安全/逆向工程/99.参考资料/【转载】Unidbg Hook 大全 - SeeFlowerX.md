@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [blog.seeflower.dev](https://blog.seeflower.dev/archives/67/)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [blog.seeflower.dev](https://blog.seeflower.dev/archives/67/)
 
 > Be patient.
 
@@ -1091,7 +1091,7 @@ _值得一提的是，本节的内容也可用 [LIEF](https://github.com/lief-pr
 
 ## 七、Hook 时机过晚问题
 
-上文中，Hook 代码都位于 **SO 加载后， 执行 JNI_OnLoad 之前**，和如下 Frida 代码同等时机。
+上文中，Hook 代码都位于 **SO 加载后，执行 JNI_OnLoad 之前**，和如下 Frida 代码同等时机。
 
 ```
 var android_dlopen_ext = Module.findExportByName(null, "android_dlopen_ext");

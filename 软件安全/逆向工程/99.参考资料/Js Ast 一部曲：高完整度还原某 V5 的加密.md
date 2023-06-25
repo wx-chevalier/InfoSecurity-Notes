@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [bbs.nightteam.cn](https://bbs.nightteam.cn/forum.php?mod=viewthread&tid=1496&highlight=ast) ![](https://bbs.nightteam.cn/uc_server/avatar.php?uid=1616&size=middle)Nanda  
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [bbs.nightteam.cn](https://bbs.nightteam.cn/forum.php?mod=viewthread&tid=1496&highlight=ast) ![](https://bbs.nightteam.cn/uc_server/avatar.php?uid=1616&size=middle)Nanda  
 > 声明：本文内容仅供学习交流，严禁用于商业用途，请于 24 小时内删除。
 > 今天让我们玩一点有意思的东西，使用 **ast** 解决某 v5 加密的 js 代码。
 > 作为一个爬虫爱好者，可能你并不会使用 ast 处理混淆文件，但肯定是听过这个名字的，对吧？而且被传的神乎其神，又是编译原理，又是词法语法分析的。但实际上，底层的东西都已经有大佬封装好了，并不需要从头造轮子，而且 ast 对逆向工作中是真的很有效果！所以，最近我也是研究学习了一下，本次我就使用 babel 这一工具，为大家揭开 ast 的神秘面纱。

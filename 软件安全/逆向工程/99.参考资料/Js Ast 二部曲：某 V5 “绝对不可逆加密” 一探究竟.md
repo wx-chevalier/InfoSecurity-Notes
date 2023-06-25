@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [bbs.nightteam.cn](https://bbs.nightteam.cn/forum.php?mod=viewthread&tid=1498&highlight=ast) ![](https://bbs.nightteam.cn/uc_server/avatar.php?uid=1616&size=middle)Nanda 声明：本文内容仅供学习交流，严禁用于商业用途，否则由此产生的一切后果均与作者无关，请于 24 小时内删除。
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [bbs.nightteam.cn](https://bbs.nightteam.cn/forum.php?mod=viewthread&tid=1498&highlight=ast) ![](https://bbs.nightteam.cn/uc_server/avatar.php?uid=1616&size=middle)Nanda 声明：本文内容仅供学习交流，严禁用于商业用途，否则由此产生的一切后果均与作者无关，请于 24 小时内删除。
 > 本文是前几天发的《Js Ast 一部曲：高完整度还原某 V5 的加密》的进阶，上一篇文章提到过的内容本文就不重新讲解了，所以还没看过上一篇文章的小伙伴记得先去看一下哦。
 > 我就不说闲话了，直入主题。本文既然是进阶篇，当然要加大难度，所以，选项配置如下图，全部点亮 & 系数选最高。
 > ![](https://bbs.nightteam.cn/forum.php?mod=attachment&aid=MzAzfDRjZWU4Yzk1fDE2NDY0MDczMzJ8MjIyMnwxNDk4&noupdate=yes)
@@ -371,28 +371,23 @@ function(path)
     if (!t.isBlockStatement(node.body))  
         return;
 
-  
-    var body = node.body.body;  
+var body = node.body.body;  
     if (!t.isSwitchStatement(body[0]) || !t.isMemberExpression(body[0].discriminant) || !t.isBreakStatement(body[1]))  
         return;
 
-  
-    var swithStm = body[0];  
+var swithStm = body[0];  
     var arrName = swithStm.discriminant.object.name;
 
-  
-    //  找到 path 节点的前一个兄弟节点，即\_0x289a30 所在的节点，然后获取\_0x289a30 数组  
+//  找到 path 节点的前一个兄弟节点，即\_0x289a30 所在的节点，然后获取\_0x289a30 数组  
     var prevSiblingPath = path.getPrevSibling();  
     var arrNode = prevSiblingPath.node.declarations.filter(declarator => declarator.id.name == arrName)[0];  
     var idxArr = arrNode.init.callee.object.value.split('|');
 
-  
-    // SwitchCase 节点集合  
+// SwitchCase 节点集合  
     var caseList = swithStm.cases;  
     var resultBody = [];
 
-  
-    idxArr.map(targetIdx => {  
+idxArr.map(targetIdx => {  
     var targetBody = caseList[targetIdx].consequent;  
     //  删除 ContinueStatement 块 (continue 语句)  
     if (t.isContinueStatement(targetBody[targetBody.length - 1]))  
@@ -400,12 +395,10 @@ function(path)
     resultBody = resultBody.concat(targetBody)  
     });
 
-  
-    //  多个节点替换一个节点的话使用 replaceWithMultiple 方法  
+//  多个节点替换一个节点的话使用 replaceWithMultiple 方法  
     path.replaceWithMultiple(resultBody);
 
-  
-    //  删除\_0x289a30 所在的节点  
+//  删除\_0x289a30 所在的节点  
     prevSiblingPath.remove();  
 }  
 还原后效果:  

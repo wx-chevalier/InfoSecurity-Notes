@@ -1,8 +1,8 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzkzMjE4NDgyMg==&mid=2247485635&idx=1&sn=cc496104f7ac8fd584f2d34800a63f3c&chksm=c25edf5af529564c2037b31b9b080b3e5e72b98770e3822cef6b27006db6f29a55b0b5232169&mpshare=1&scene=1&srcid=0303BEkGyo0ipMnH418bEqua&sharer_sharetime=1646295077139&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzkzMjE4NDgyMg==&mid=2247485635&idx=1&sn=cc496104f7ac8fd584f2d34800a63f3c&chksm=c25edf5af529564c2037b31b9b080b3e5e72b98770e3822cef6b27006db6f29a55b0b5232169&mpshare=1&scene=1&srcid=0303BEkGyo0ipMnH418bEqua&sharer_sharetime=1646295077139&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/j6JcMCXCIIgjR4j04DUarll32p0Y8SYoeo8jNsFMARNkY2BrIic2VdSwK6o3k3BDshb8KJic9UTKhACvbibib1hiaicg/640?wx_fmt=png)
 
-因为相信， 所以看见
+因为相信，所以看见
 
 答疑，就是在每周四，把问的比较多的，统一回答下。
 
@@ -243,7 +243,7 @@ Java.perform(function()
 
 打包签名新 apk 执行
 
-这里把 改名后的 frida-gadget.so 和 配置文件， 放到 lib 下面 **libnative-lib.so** 同级目录
+这里把 改名后的 frida-gadget.so 和 配置文件，放到 lib 下面 **libnative-lib.so** 同级目录
 
 再压缩
 

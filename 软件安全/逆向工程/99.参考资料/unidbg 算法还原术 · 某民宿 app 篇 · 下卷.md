@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzA4MjA5NDE1OQ==&mid=2247485139&idx=1&sn=6875f205e642ef27880c8935e7756217&chksm=9f8bb7f3a8fc3ee592dc4320a8996179b975214319ad8ba1434dff2c3c90f6bbbcc26137dd6a&mpshare=1&scene=1&srcid=1030u3BXGR0GFJ5hM59qxMBf&sharer_sharetime=1635588940320&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzA4MjA5NDE1OQ==&mid=2247485139&idx=1&sn=6875f205e642ef27880c8935e7756217&chksm=9f8bb7f3a8fc3ee592dc4320a8996179b975214319ad8ba1434dff2c3c90f6bbbcc26137dd6a&mpshare=1&scene=1&srcid=1030u3BXGR0GFJ5hM59qxMBf&sharer_sharetime=1635588940320&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
 
 ![](https://mmbiz.qpic.cn/mmbiz_jpg/icBZkwGO7uH7Gwg06nY3t8zv0Pz9icqpy3xBMR1a091Vb8Zxc7LcpA3Q6GDeLSF6NYbVPaAygKTuwSZh0Dk1IqPw/640?wx_fmt=jpeg)![](https://mmbiz.qpic.cn/mmbiz_jpg/icBZkwGO7uH7Gwg06nY3t8zv0Pz9icqpy3wwia1uOgibv9l3txQaMYIUic4HpoefGKIy9d9xpGDgnBDcXmJEONBuNtQ/640?wx_fmt=jpeg)
 
@@ -69,7 +69,7 @@ return result;
 
 ```
 
-v19 是经过加密函数 j_tj_crypt  加密后生成的 bytes，再经过 j_tjtxtutf8（上篇知道第三个参数为 10 的时候是标准的 base64）base64 编码  
+v19 是经过加密函数 j_tj_crypt  加密后生成的 bytes，再经过 j_tjtxtutf8（上篇知道第三个参数为 10 的时候是标准的 base64）base64 编码
 
 可以打个断点验证下
 
@@ -79,13 +79,13 @@ j_tjtxtutf8：
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4kBzMcllIeOMlWyRbvalfyvBhkSRRbxNX9aG2JVzbGNpvPAicTqbWcRcFv4riaoiawcDiaxr477qqSSQ/640?wx_fmt=png)
 
-打印 r0 的值，长度是 0x31
+打印 r0 的值，长度是  0x31
 
-mr0 0x31  
+mr0 0x31
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4kBzMcllIeOMlWyRbvalfyz6blLggE2nic2lUDZ4DSe4xhTHZ0xgj1JNHhBj76eQ1ru5nyWgEfQFQ/640?wx_fmt=png)
 
-blr 添加函数结束后断点  
+blr 添加函数结束后断点
 
 c 跳到下个断点
 
@@ -116,7 +116,7 @@ stmcmp 是 c 函数
 
 也就是根据第一个参数的值才决定用哪种加密
 
-我们可以在 unidbg 上修改第一个参数的值，可以看到三种加密的结果是不一样的
+我们可以在  unidbg 上修改第一个参数的值，可以看到三种加密的结果是不一样的
 
 ```
     public void get_bodyencrypt() throws FileNotFoundException {
@@ -147,7 +147,7 @@ stmcmp 是 c 函数
 
 ```
 
-当 String arg0_str = "1"  
+当 String arg0_str = "1"
 
 结果为
 
@@ -174,7 +174,7 @@ HAT5BvN81B8PjW69r1sqCvf0cwN/Pey9XoAWBnkuGYEeVpqWTDBuyei8kaZ00XTJig/SKP4qThHwuGgW
 
 ```
 
-开始逐一击破  
+开始逐一击破
 
 **加密模式 1**
 
@@ -235,7 +235,7 @@ hook CCCrypt:
 
 ```
 
-hook 结果  
+hook 结果
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIcMAtV76Nico7rLvuial1xlcvvvrQXOBicUluYW9qDkYj0tT8oPsWSOK8g/640?wx_fmt=png)
 
@@ -245,13 +245,13 @@ arg6(a7) 就是明文，是什么加密还不知道，反正 99% 是对称加密
 
 这时候是先看密钥怎么生成的还是先找出是什么加密算法呢？
 
-都可以，我喜欢倒着推，所以先看 CCCrypt，双击进入函数
+都可以，我喜欢倒着推，所以先看  CCCrypt，双击进入函数
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6j2r8xlLLamev2aSYplQAHtr5I62m4IGmyKLF5auKcldIiaiaw6uet42WmvN665y62K6eC63j5dT1g/640?wx_fmt=png)
 
-显而易见  j_CCCryptorCreate 是加密的初始化函数
+显而易见   j_CCCryptorCreate 是加密的初始化函数
 
-双击进去 
+双击进去
 
 ```
 int __fastcall CCCryptorCreate(int a1, unsigned int a2, void *a3, int a4, int a5, int a6, _DWORD *a7)
@@ -320,7 +320,7 @@ LABEL_6:
 
 ```
 
-这里伪代码看着有点懵？看上去好像没函数? 但是这里不对劲？  
+这里伪代码看着有点懵？看上去好像没函数? 但是这里不对劲？
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6j2r8xlLLamev2aSYplQAHVdqQTCaGsI2Mlb8elWicib3dBjVufVurFMKPbnBLRCbmpDeNHibuyk5yg/640?wx_fmt=png)
 
@@ -425,8 +425,8 @@ LABEL_6:
 汇编: BLX  R4
 
 ```
-指令BLX 
-指令的格式为：BLX 目标地址BLX 
+指令BLX
+指令的格式为：BLX 目标地址BLX
 指令从ARM 指令集跳转到指令中所指定的目标地址，
 并将处理器的工作状态有ARM 状态切换到Thumb 状态。
 
@@ -442,7 +442,7 @@ LABEL_6:
 
 先挑战一下第二种方法看看能出来不？
 
-R4 哪来的？  
+R4 哪来的？
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWI87A4xEjgiaU8GGejzWEWVQ3MR0ZFYgWd6ibPGQDpL3uSS5qzCgpBicZaQ/640?wx_fmt=png)
 
@@ -452,7 +452,7 @@ R4 哪来的？
 
 ```
 
-R8 哪来的？
+R8  哪来的？
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWI6m5BT2GpRSibWFBkVUkvBiawSfn89Ro86vm2iabOtj1RAM8OAABQL3qIQ/640?wx_fmt=png)
 
@@ -462,7 +462,7 @@ R8 哪来的？
 
 ```
 
-R0 哪来的？
+R0  哪来的？
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWISIqsvQH2AKMqibKyOiaiaotlOAU68uibbpCibzjz5Rz866X6HQZWJXibfXJQ/640?wx_fmt=png)
 
@@ -472,7 +472,7 @@ R0 哪来的？
 
 ```
 
-R5 哪来的？
+R5  哪来的？
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIkrhQeHJMhxPdNCiaFiaAtV4TryI8fcLguInQs5pKGlDfqjssCJanA9aw/640?wx_fmt=png)
 
@@ -509,7 +509,7 @@ R8 = [R0+(4<<2)] = [0x1EB24]
 
 R4 = [R8+4]
 
-[0x1EB24] 表示取 0x1EB24 的指针，也就是指向的地址，怎么看
+[0x1EB24]  表示取 0x1EB24 的指针，也就是指向的地址，怎么看
 
 Ida 中按 g 输入 0x1EB24，回车
 
@@ -519,7 +519,7 @@ Ida 中按 g 输入 0x1EB24，回车
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6j2r8xlLLamev2aSYplQAHiaiaXwyVxYfyPkianZKAMLiapjv1rVbF6rm6xP1KTJlb00iaJAYmO4xMCdA/640?wx_fmt=png)
 
-0x1EC3C 就是 0x1EB24 的指针
+0x1EC3C  就是 0x1EB24 的指针
 
 所以 R8 = 0x1EC3C
 
@@ -556,7 +556,7 @@ Hook 这个函数就能拿到 rc4 的密钥
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIJc2I6FjBcWHdW4DYv0L6jVricXwWCG7BibxUzqX6nsA2pkUibkFHTS6icw/640?wx_fmt=png)
 
-打个断点  
+打个断点
 
 ```
 debugger.addBreakPoint(module.base+0xC244);
@@ -575,7 +575,7 @@ debugger.addBreakPoint(module.base+0xC244);
 
 然后最终加密的函数呢？
 
-回到 CCCrypt 函数  
+回到 CCCrypt 函数
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIibnoBdVtAFZhziaxBiaaaVKPzvQLV8X0yHy6gT65dbAec26ibS5ttxCEqw/640?wx_fmt=png)
 
@@ -584,7 +584,7 @@ v12 = (*(*(v21 + 16) + 12))(v21 + 20);
 
 ```
 
-有经验了，这一行一看跟上面差不多嘛，看看汇编  
+有经验了，这一行一看跟上面差不多嘛，看看汇编
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIZU7YQaibDCBNWF1HFeO7C0uqZTAuFoCQNkTr8P3fI4o0d2zmpuB1Stg/640?wx_fmt=png)
 
@@ -597,19 +597,19 @@ debugger.addBreakPoint(module.base+0x453A);
 
 ```
 
-运行  
+运行
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWInU9QhOmP3e7g3JoDB8WB2OF1Wv33a8tp99VzgrW2oL5Um2tCYCxh3Q/640?wx_fmt=png)
 
-BLX R4 等价于 BLX 0x4ea5 
+BLX R4 等价于 BLX 0x4ea5
 
-ida 中按 g 输入 0x4ea5  跳转
+ida 中按 g 输入 0x4ea5   跳转
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIaaJ3iaT1a3vVIKPnLhVOibMnbmCMmlocibc05h4JKble1bZfl1OVGeYNg/640?wx_fmt=png)
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFWdgIeHCd7j1zZ6fotroN4VECNrEdW4bo0Nicca7kZlMmHvyYib3ZCZTw/640?wx_fmt=png)
 
-二话不说 hook 这个函数  
+二话不说 hook 这个函数
 
 ```
     public void hook_CC_RC4(){
@@ -642,19 +642,19 @@ ida 中按 g 输入 0x4ea5  跳转
 
 ```
 
-hook 结果：  
+hook 结果：
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIBNVtvI6I0NEOicMqbhAEFiaic0P4NJ9qep1OatsGGceXuSCoxnB56c0ng/640?wx_fmt=png)
 
 看来前面猜的都没错嘛,
 
-现在就用逆向之友看看这个 rc4 是不是标准的 rc4 了  
+现在就用逆向之友看看这个 rc4 是不是标准的 rc4 了
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWICAOibwcFYaB36C8tyCOp5vPBDTqkw2Zx2A43AZrRX2De6jV4r2jOVNA/640?wx_fmt=png)
 
-没毛病  
+没毛病
 
-现在明文知道了，也就是 bodyencrypt 的 第五个参数，
+现在明文知道了，也就是 bodyencrypt  的 第五个参数，
 
 加密方式也知道了，对称算法 rc4
 
@@ -738,7 +738,7 @@ char *__fastcall sub_302C(int a1, int a2, int a3, int a4)
 
 显而易见是个 hmac 哈希编码
 
-hook 结果：  
+hook 结果：
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAF0c21kFm3IJ5TQ7LM9wpj0U2Kz3uJeHTXWCE6N53SqFNicUABN9Yu8LQ/640?wx_fmt=png)
 
@@ -760,9 +760,9 @@ arg2 是密钥，结果是长度 20 个字节（00 00 00 00 是结束标志）�
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWI595uBNN3TOW4fYKE0Vm5sCyCl1Vhsa9R9ibdiaKGibTyaDkvb5kd2MdDQ/640?wx_fmt=png)
 
-j_CCHmac 下面还有个 sub_33E4(v8, 20)
+j_CCHmac 下面还有个  sub_33E4(v8, 20)
 
-应该是 sub_33E4 搞得鬼
+应该是  sub_33E4 搞得鬼
 
 hook hook 看
 
@@ -804,7 +804,7 @@ int __fastcall CCHmac(int a1, int a2, int a3, int a4, int a5, int a6)
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIAU615QtliaVOLECuN8gUX8zpvFVWEUWh7NicEHb5dSQM30F94bCOh6mQ/640?wx_fmt=png)
 
-所以进到这里  
+所以进到这里
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIsfSibOcw7dfexkWNKiae829B5nSlXZe7lztic3Z4v93u3g0NvlE8npJibA/640?wx_fmt=png)
 
@@ -812,7 +812,7 @@ int __fastcall CCHmac(int a1, int a2, int a3, int a4, int a5, int a6)
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIJ56hG6Y0gUgKfFM6zciam7kjc3WTia2hyT2adFzy0OvUicW1P9PK3A8OQ/640?wx_fmt=png)
 
-回到上面  
+回到上面
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6TasXnTSrq21cYUkEIRGWIAXdlXwGAwMh8IqtMMOkoj1EH6hvvuibywp4KUZsBnibKNhCuaRhZJAaw/640?wx_fmt=png)
 
@@ -894,11 +894,11 @@ const char *__fastcall sub_33E4(const char *result, unsigned int a2)
 
 ```
 
-就是对 hmacsha1 编码后的 byte 移位
+就是对 hmacsha1 编码后的  byte 移位
 
 看着 ida 反编译的伪代码不好翻译，可以伪代码为主，汇编为辅助去还原；
 
-也可以汇编为主，伪代码和 unidbg 动态调试为辅助去还原；  
+也可以汇编为主，伪代码和 unidbg 动态调试为辅助去还原；
 
 都不会的还有个更简单的，只需要多搞几组数据对比下，找出规律自己实现就行了；
 
@@ -952,7 +952,7 @@ if __name__ == '__main__':
 
 ```
 
- rc4 自己写  
+rc4 自己写
 
 **加密模式 2**
 
@@ -972,7 +972,7 @@ R8, [R0,R5,LSL#2]
 
 即：R8=[R0+(0<<2)]=[0x1EB14]
 
-同理可得 0x1EB14 的指针是 0x1EB2C
+同理可得  0x1EB14 的指针是 0x1EB2C
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFKRHTicjeGdLAlItMB4EjVA5wtPkeJNPP5rxGBdoOvAWMmtgf1Hnt8hw/640?wx_fmt=png)
 
@@ -980,9 +980,9 @@ R4=[R8+4]
 
 最后 R4=[R8+0x4]=[0x1EB2C+4] = [0x1EB30]
 
-[0x1EB30] 表示取 0x1EB30 的指针，就是 0x4829
+[0x1EB30] 表示取  0x1EB30  的指针，就是 0x4829
 
-不信的话用 unidbg 打个断点  
+不信的话用 unidbg 打个断点
 
 还是这个地方
 
@@ -995,7 +995,7 @@ debugger.addBreakPoint(module.base+0x4304);
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFKzniakxtVKtDd4qSR5JSe6eSw0IQ4cHBibVuNyW01PDdrYfjib9Opicc5Q/640?wx_fmt=png)
 
-废话不多说，直接 g 0x4829 跳过去
+废话不多说，直接 g 0x4829  跳过去
 
 ```
 signed int __fastcall sub_4828(int a1, int a2, int a3, char a4, int a5, unsigned int a6, int a7)
@@ -1157,7 +1157,7 @@ hook 之
 
 ida g 0x119e9
 
-unidbg b 0x119e9   
+unidbg b 0x119e9
 
 c
 
@@ -1171,9 +1171,9 @@ hook 之
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAF0icOM8bUgNUACodPD8rcRmMgrjToxsAprlrkQ56jriciaC6SvcnYfYykQ/640?wx_fmt=png)
 
-b0xE398 
+b0xE398
 
-c  
+c
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFx2Wd9qzWbeuHFtBcibG5vQ7ibT945mBiasWVHPibVKicibI2Lz2hWBc38ePQ/640?wx_fmt=png)
 
@@ -1203,15 +1203,15 @@ hook 这里
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFCqw8zIzbZYRGRZtVcicbFc9ib7yb7tOZFYuTJqnzLOT23ojtK4fTEcibA/640?wx_fmt=png)
 
-拿到 R4 地址  
+拿到 R4 地址
 
-再 hook 这里   
+再 hook 这里
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFVXmV3hUvTia9fT50qkiaBLFkHYlxeCyHXzVUhkx4AbnZ2rXC3PupfEPg/640?wx_fmt=png)
 
 拿到 R5 地址
 
-就是了  
+就是了
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFm7LhibqcZhZgjuia37P9jwZFESye2PoDAXrccPb0MAOolxRFW74ZNUzA/640?wx_fmt=png)
 
@@ -1260,7 +1260,7 @@ public void hook_sub_302C(){
 
 然后后边的流程就跟模式二就没区别了，就不说了
 
-hook aes_cc_set_iv  
+hook aes_cc_set_iv
 
 ```
 debugger.addBreakPoint(module.base+0x11A50);
@@ -1283,7 +1283,7 @@ aes_iv:7b53e03485ddbbcf07bd9698718abc8a
 
 ```
 
-逆向之友验证  
+逆向之友验证
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFJmY27BCqict3TuRMbtiac1EwaKq3wFrrsRU0A9I6qp1dDaVvDtgGXpHQ/640?wx_fmt=png)
 
@@ -1293,7 +1293,7 @@ aes_iv:7b53e03485ddbbcf07bd9698718abc8a
 
 ![](https://mmbiz.qpic.cn/mmbiz_jpg/icBZkwGO7uH6Tsm0MiceegNzEQmZCyXVAFMbJr6icmbiallGwbX4rjWuLJeBPSyug2vxIpL0YzULgmH3GlLbVnfSNA/640?wx_fmt=jpeg)
 
-****完结！****  
+\***\*完结！\*\***
 
 **饮茶去了**
 

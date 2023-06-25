@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzIxNjMwMzkwOA==&mid=2247485239&idx=1&sn=be7cb8e18cad26ba242a44d5de496bde&chksm=978a577ca0fdde6a274bc79a4eb6d386fddf48c0085b084e715020ed4e8d414b5dcced3d1f97&mpshare=1&scene=1&srcid=0216MEd0pVJ6ywEAa986ZKU5&sharer_sharetime=1644973105735&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzIxNjMwMzkwOA==&mid=2247485239&idx=1&sn=be7cb8e18cad26ba242a44d5de496bde&chksm=978a577ca0fdde6a274bc79a4eb6d386fddf48c0085b084e715020ed4e8d414b5dcced3d1f97&mpshare=1&scene=1&srcid=0216MEd0pVJ6ywEAa986ZKU5&sharer_sharetime=1644973105735&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
 
 安卓题目指路：https://www.52pojie.cn/thread-1582582-1-1.html
 
@@ -900,15 +900,15 @@ print(hex(x31), hex(x30), hex(x29), hex(x28))
 
 ```
 
-得出结果【0xe8c7206e597620， 0x42da144b90bfd4， 0xfb05da8b160b2c， 0x9c426515d81013】
+得出结果【0xe8c7206e597620，0x42da144b90bfd4，0xfb05da8b160b2c，0x9c426515d81013】
 
-再分别取每个值的低 8 位：【0x6e597620， 0x4b90bfd4， 0x8b160b2c， 0x15d81013】
+再分别取每个值的低 8 位：【0x6e597620，0x4b90bfd4，0x8b160b2c，0x15d81013】
 
 是不是就与上面下部分计算最终想要拿到的计算传参一样了呢，整个 decrypt 流程就完整解析出来了
 
 把上述 decrypt 传参修改为【0x6e496630，0x05c80003，0x9b061b3c，0x5b80afc4】
 
-计算得到结果【0x4e12ab59517c7f， 0xc75c9e64420645， 0xa60707c0890756， 0x5457c9ce8e3cc9】
+计算得到结果【0x4e12ab59517c7f，0xc75c9e64420645，0xa60707c0890756，0x5457c9ce8e3cc9】
 
 分别取低八位：【0x59517c7f，0x64420645，0xc0890756，0xce8e3cc9】，此即为上部分计算的计算传参
 

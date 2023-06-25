@@ -1,4 +1,4 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzA4MjA5NDE1OQ==&mid=2247485004&idx=1&sn=069bc22bc51804156ae4195d85cc83fc&chksm=9f8bb76ca8fc3e7ac35ead494f6365f5d34d7b4775e627b5b3aa339b275f62d7e690873f7e96&mpshare=1&scene=1&srcid=10131nsND0h4vAvW6oFb8k7g&sharer_sharetime=1634055434006&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
+> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码，原文地址 [mp.weixin.qq.com](https://mp.weixin.qq.com/s?__biz=MzA4MjA5NDE1OQ==&mid=2247485004&idx=1&sn=069bc22bc51804156ae4195d85cc83fc&chksm=9f8bb76ca8fc3e7ac35ead494f6365f5d34d7b4775e627b5b3aa339b275f62d7e690873f7e96&mpshare=1&scene=1&srcid=10131nsND0h4vAvW6oFb8k7g&sharer_sharetime=1634055434006&sharer_shareid=56da189f782ce62249ab4f6494feca50&version=3.1.20.90367&platform=mac#rd)
 
 上回说到 EncodeHTTP 函数
 
@@ -16,7 +16,7 @@ tjcreate 函数里面有点东西
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH7Gwg06nY3t8zv0Pz9icqpy33wDQAenUUrtM4s3U8pGkamNQCXPHKHoqu9oKeeawbgbfJk4Qo75t0Q/640?wx_fmt=png)
 
-有个 sha1 的特征，为什么？  
+有个 sha1 的特征，为什么？
 
 哈希算法最明显的特征就是初始化链接常量 (幻数) 和固定常数 K 值
 
@@ -43,9 +43,9 @@ A=0x67452301，B=0xefcdab89，C=0x98badcfe，D=0x10325476，E=0xCA62C1D6
 
 ```
 
-**k 值**  
+**k 值**
 
-md5 k 值取值 （64 个，对应 64 步运算）  
+md5 k 值取值 （64 个，对应 64 步运算）
 
 ```
 constTable=[
@@ -75,30 +75,27 @@ sha1 k 值取值（4 个 k 值，每个 k 值对应 20 步运算）
 
 ```
 
-回到 ida  
+回到 ida
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH42GylcEhBjdBbp7pLyu7kLfOW5HtibXLPLiaxWx5Ls4Qr8zIqbpEwq3ibXQed08ZG2PjNDdZ51RgsMA/640?wx_fmt=png)
 
 这个 0xCA62C1D6 就是 sha1 的 k 值之一，所以说这个函数有 sha1 的特征
 
-而在工程标准化中，哈希加密一般分为 Init、Update、Final 三步  
+而在工程标准化中，哈希加密一般分为 Init、Update、Final 三步
 
 简单来说：
 
 1.  Init 是一个初始化函数，初始化核心变量
-    
 2.  Update 是主计算过程
-    
 3.  Final 整理和填写输出结果
-    
 
 tjcreate 函数可以看作是第一步的 Init; 但是其他四个常量哪去了呢？
 
-看汇编就知道了 (这些汇编划到最下面有解释)  
+看汇编就知道了 (这些汇编划到最下面有解释)
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH42GylcEhBjdBbp7pLyu7kLIny2iaicBhWdI77HNkia94awdgFmLUqb2J1gYSC00tRXQgyRDTl03hwBQ/640?wx_fmt=png)
 
-为啥还是少了一个幻数  
+为啥还是少了一个幻数
 
 因为 ida 把 2C70 识别成函数了，我们手动修改它的数据类型
 
@@ -106,7 +103,7 @@ tjcreate 函数可以看作是第一步的 Init; 但是其他四个常量哪去�
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH42GylcEhBjdBbp7pLyu7kLEolSjsvklEPujaiaqAxWfpgibQeSgf7BTfIicfzicHJaEhNIUg8NXwqatQ/640?wx_fmt=png)
 
-再按 d 转成 word  
+再按 d 转成 word
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH42GylcEhBjdBbp7pLyu7kLSLKcibRY7RwDS1nb8tVEd34HE7V5yibzrnD0vqXMOYZOaDJ7yEdTRteA/640?wx_fmt=png)
 
@@ -148,7 +145,7 @@ int __fastcall tjreset(signed __int64 a1, int a2)
 
 ```
 
-一般来说只要 hook 这个函数，拿到入参，就能拿到明文  
+一般来说只要 hook 这个函数，拿到入参，就能拿到明文
 
 我们先用 frida 来试试，
 
@@ -179,7 +176,7 @@ function tjreset() {
 
 ```
 
-注意：这里 ida 识别函数参数个数错了，实际应该是三个参数，看汇编就知道了  
+注意：这里 ida 识别函数参数个数错了，实际应该是三个参数，看汇编就知道了
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IVdrFxIibnRdm38WZ8U6ib6YQbwYkCfDoBhLxKibVC5OGmGRmSGs7GkrUA/640?wx_fmt=png)
 
@@ -225,7 +222,7 @@ public static void main(String[] args) throws FileNotFoundException {
 
 ```
 
-unidbg 的输出跟 frida 是一样的：  
+unidbg 的输出跟 frida 是一样的：
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IOC3yZyyDLWemsoNPiaktB6bQHtB1qo9xJ6ib967ZjNXLWdVGF7UgWApA/640?wx_fmt=png)
 
@@ -446,7 +443,7 @@ int __fastcall tjupdate(int a1, int a2)
 
 回到 tjupdate 函数
 
-每一个分组进行 4 轮变换，每一轮计算 20 步，伪代码也很明显（78 行、94 行、109 行、125 行）  
+每一个分组进行 4 轮变换，每一轮计算 20 步，伪代码也很明显（78 行、94 行、109 行、125 行）
 
 我们 hook 这个函数，就能知道每一轮的明文；
 
@@ -496,7 +493,7 @@ public void hook_2AB4(){
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IVsov6JbDlCkNGHiazE7Ce12SOh7yibgaJ6zGOEYqR4QVCBwokhsQ4l8A/640?wx_fmt=png)
 
-然后再 sha1，是不是一样？  
+然后再 sha1，是不是一样？
 
 话说回来，Final 还没看呢，Final 是最后整理输出的，
 
@@ -522,7 +519,7 @@ function tjget() {
 
 ```
 
-unidbg hook：  
+unidbg hook：
 
 ```
     public void hook_2CEA(){
@@ -553,7 +550,7 @@ hook 结果：
 
 **明文的生成**
 
-分析完最后一步的标准算法，回过头来分析明文的生成  
+分析完最后一步的标准算法，回过头来分析明文的生成
 
 看看具体实现的代码：
 
@@ -586,7 +583,7 @@ hook 结果：
 
 ```
 
-运行，程序会断下  
+运行，程序会断下
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IiconIbURy6ozHUKhqxgfMxMkKjgVyhyfw0SsEqic92jYMelACFPvre6w/640?wx_fmt=png)
 
@@ -602,7 +599,7 @@ hook 结果：
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IIDQLZhHam42GM83GSHqt8JiafLhmypW1Gwk1wGichiacESAFGiclPHULJA/640?wx_fmt=png)
 
-默认 size 是 112，可以指定长度  
+默认 size 是 112，可以指定长度
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IIglibS7jgiboV8iajOd9qOuV9jnWq34hKwKWbhucqyEdCrJxOe9y3axlw/640?wx_fmt=png)
 
@@ -628,7 +625,7 @@ hook 结果：
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8ILE41sQahfzt48xT4K18NmgBJUqcXl23DhwVK7qicSqrLUzCL4jVwr2A/640?wx_fmt=png)
 
-还有一种方法能获取返回值  
+还有一种方法能获取返回值
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8I3Uzbn1MtEFl0KYNFXdjib9eiaBNk4RPTseuKNsP6b3WXnOJRwmnasMqg/640?wx_fmt=png)
 
@@ -639,7 +636,7 @@ debugger.addBreakPoint(module.base+0x291C);
 
 ```
 
-重新运行程序  
+重新运行程序
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IgPfiaAsRBqBmskyFOXUwyjVuFzv1wQUpWFOibevSN1PblS1mwuDV4Ffg/640?wx_fmt=png)
 
@@ -659,11 +656,11 @@ c（跳到一下个断点）
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8Iys1HVKfWPASYPx9iblmsVTnvNkskScQHbhTEricZFnBzIBhNhcq29ZDQ/640?wx_fmt=png)
 
-这些都是把各个参数先异或 0x21，再拼接，最后是在 j_tjsplittxt 函数做字符串翻转  
+这些都是把各个参数先异或 0x21，再拼接，最后是在 j_tjsplittxt 函数做字符串翻转
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IHoZKq1JnpzyPXGIZdAJgh0AX5qDBCZgV7ibYXUwlGUdaicUQberPASdQ/640?wx_fmt=png)
 
-来打个断点瞧瞧  
+来打个断点瞧瞧
 
 ```
 debugger.addBreakPoint(module.base+0x2DEC);
@@ -672,7 +669,7 @@ debugger.addBreakPoint(module.base+0x2DEC);
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IDl6QpE4nOH0tHreDkpjafNfq6icxtKwKibjnBrpgFEd1K55yyLAEsqJw/640?wx_fmt=png)
 
-这个参数 1 是乱码，我们把他异或 0x21 试试呢  
+这个参数 1 是乱码，我们把他异或 0x21 试试呢
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IdVb87jC2ruYWWxlZXndgL9cZibGxe7H9bDwoYrKJicFyMIl7WgZrzx1g/640?wx_fmt=png)
 
@@ -682,7 +679,7 @@ debugger.addBreakPoint(module.base+0x2DEC);
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IicibZYub2z5MxA3tuwsFNYWEDllOqZrwbtKHx6YDldrgFr2X0aOwe4KQ/640?wx_fmt=png)
 
-这里的返回值在 r8，我猜是因为在 Thumb 程序中，只能使用 r4~r7 来保存局部变量
+这里的返回值在 r8，我猜是因为在  Thumb  程序中，只能使用  r4~r7  来保存局部变量
 
 直接 mr8 是不行的，
 
@@ -692,7 +689,7 @@ debugger.addBreakPoint(module.base+0x2DEC);
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IOUzMZnBd7jqCiceMXhhUKzicfw2icnjdax1b8aEkB0ZjWh4cZWMeybaFA/640?wx_fmt=png)
 
-或者输入 s，单步调试，让它把 r8 赋值到 r0  
+或者输入 s，单步调试，让它把 r8 赋值到 r0
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH4CSjdGEGiabI6rw0gJY5e8IibXVFvtKrm6VfBqZ1TQsI6xKShI9YlFe47L3uR4Z8gw0uXDS6u1tp7A/640?wx_fmt=png)
 
@@ -721,30 +718,19 @@ debugger.addBreakPoint(module.base+0x2DEC);
 所以总结下来就是，
 
 1.  每个参数和固定的 key 分别异或 0x21（有个参数要排序）
-    
 2.  拼接
-    
 3.  翻转（j_tjsplittxt）
-    
 4.  异或 0x21（tjtxtutf8）
-    
 5.  base64 编码（tjtxtutf8）
-    
 6.  异或 0x21（tjtxtutf8）
-    
 7.  异或 0x21（j_tjreset）
-    
 8.  sha1（j_tjreset）
-    
 
 发现没有，4 次异或 0x21，等于就是没有异或。。所以可以简化成 3 步
 
 1.  参数拼接（有个参数要排序）
-    
 2.  翻转
-    
 3.  sha1
-    
 
 剩下就是写代码了。。
 
@@ -756,11 +742,11 @@ debugger.addBreakPoint(module.base+0x2DEC);
 
 初始化链接常数加载汇编指令解析
 
-0x2C48 下个断点  blr  c  查看 r0
+0x2C48 下个断点   blr  c  查看 r0
 
 ![](https://mmbiz.qpic.cn/mmbiz_png/icBZkwGO7uH42GylcEhBjdBbp7pLyu7kLsOEvIgmm516UKMJywsBDea11jxic8MJUueVZVA4UwicjJcq24h11ianIg/640?wx_fmt=png)
 
-上面说了转成小端就是 sha1 五个幻数
+上面说了转成小端就是  sha1 五个幻数
 
 ```
 0x67452301 0xEFCDAB89 0x98BADCFE  0x10325476 0xC3DEE1F0
