@@ -1809,7 +1809,7 @@ r_to_hex:0064736c707d6f510020646b73247c4d0068202b4159516700502a214d24675100
 - 数组 /(字符串) 对象数组 / gson/Java.array
 - 对象 / 多态、强转 Java.cast / 接口 Java.register
 - 泛型、List、Map、Set、迭代打印
-- non-ascii、 child-gating、rpc 上传到 PC 上打印
+- non-ascii、child-gating、rpc 上传到 PC 上打印
 
   ### [](#char-Object-Object "char[]/[Object Object]")char[]/[Object Object]
 
