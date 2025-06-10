@@ -36,7 +36,7 @@ APP 常见的对数据加密有三种情况：
 
 所以还得从头来聊 Protobuf 。
 
-## 一、什么是 Protobuf ？
+## 一、什么是 Protobuf？
 
 Protobuf 是 Google 开发的一套数据存储传输协议，跟 xml 和 json 一样的，都是用来储存和传输数据的。  因为 Protobuf 能够把数据压缩得很小，所以传输数据就比 xml 和 json 快几倍，Protobuf 解析数据的速度也比它两快，所以在数据网络传输上，用 Protobuf 而不用 json 就有点受欢迎了。
 
